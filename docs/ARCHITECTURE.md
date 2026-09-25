@@ -2,7 +2,7 @@
 
 ## このリポジトリの役割
 
-`gu-sakkyoku/gu-sakkyoku-home`は、群馬大学作曲部の新しい公式サイトを管理するリポジトリです。2026年以降のコンテンツを追加し、今後の管理者へ引き継げる構成を目指します。
+`gu-sakkyoku/gu-sakkyoku.github.io`は、群馬大学作曲部の新しい公式サイトを管理するリポジトリです。2026年以降のコンテンツを追加し、今後の管理者へ引き継げる構成を目指します。
 
 従来の`endo1192/gu-sakkyoku-album`と旧ホスティングは、過去のCDに印刷済みのURLを維持するためのレガシー環境です。このリポジトリから削除・移管・上書きしません。
 
@@ -13,7 +13,7 @@
 
 2026年以降の公式URL
     -> 新ドメイン / GitHub Pages
-    -> gu-sakkyoku/gu-sakkyoku-home
+    -> gu-sakkyoku/gu-sakkyoku.github.io
 ```
 
 ## 静的サイトを優先する理由
@@ -39,18 +39,20 @@
 - サーバーセッション
 - 利用者へ公開してはいけないURL
 
-## 将来のダウンロード構成
+## ダウンロード構成
 
-ダウンロード機能を実装する場合は、表示・認証・保存を分離します。
+ダウンロード機能では、表示・認証・保存を分離します。
 
 ```text
 GitHub Pagesの/download
-    -> 年度とコードをPOST
+    -> 年度、コード、TurnstileトークンをPOST
     -> Cloudflare Worker
         -> Turnstileを検証
-        -> Cloudflare Secretに保存した年度コードを検証
+        -> Cloudflare Secretに保存した年度コードのSHA-256と照合
         -> 固定allowlistからR2オブジェクトを選択
-        -> 非公開R2のZIPを返す
+        -> 15分有効な署名付きWorker URLを発行
+    -> ブラウザがWorker URLへGET
+        -> 署名と年度を再検証し、非公開R2のZIPをストリーミング
 ```
 
 次のサービスは、必要性が出るまで追加しません。
@@ -72,6 +74,7 @@ GitHub Pagesの/download
 3. 歌詞ページを追加する
 4. R2へ年度ZIPを追加する
 5. 必要なら年度コードをCloudflare Secretへ追加する
+6. 年度データを取り込むWorkerを再デプロイする
 
 コンポーネントや認証処理を年度ごとに複製しません。
 
@@ -79,12 +82,14 @@ GitHub Pagesの/download
 
 - 新GitHub Organization：作成済み
 - 新リポジトリ：作成済み
-- 旧サイトの静的コード：初期コピー対象
+- 旧サイトの静的コード：初期コピー済み（旧サイト自体は維持）
 - GitHub Actions CI：この初期設定で追加
-- 作曲部専用Cloudflare Account：参加・アクセス確認済み
-- GitHub Pages公開：リポジトリの公開範囲と新ドメインを決めてから設定
-- 新ドメイン：未設定
-- Cloudflare Worker / R2 / Turnstile：未実装
-- ダウンロードコード：未発行
+- 作曲部専用Cloudflare Account：参加・アクセス確認済み。無料プランのWorker`gu-sakkyoku-download`を配置済み
+- リポジトリ名：`gu-sakkyoku.github.io`。Pagesの標準URLは`https://gu-sakkyoku.github.io/`
+- GitHub Pages：リポジトリはPublic、公開元はGitHub Actionsに設定済み。`main`への反映で公開する
+- 独自ドメイン：未設定。まずはOrganizationの標準URLを使用する
+- `/download/`、Worker、Turnstile連携：ローカル実装・検証済み。Workerと本番Turnstileは作曲部アカウントへ配置済み。購入者画面からの総合試験は公開後に行う
+- R2：作曲部アカウントで有効化済み。非公開・Standardの`gu-sakkyoku-albums`に2024・2025の本番ZIPを登録し、元ZIPとのSHA-256一致を確認済み。無料枠超過時の請求に注意する
+- ダウンロードコード：2024・2025の本番用をGit管理外で発行済み。Workerにはハッシュのみ登録済み。実値の部内保管・印刷原稿への反映は別途行う
 
 この一覧は構成が変わったときに更新してください。
