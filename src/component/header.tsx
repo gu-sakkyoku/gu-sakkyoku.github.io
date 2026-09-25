@@ -33,6 +33,8 @@ function Cheader() {
                 <span>|</span>
                 <Link href="/Nijiiro">虹色memory</Link>
                 <span>|</span>
+                <Link href="/download">ダウンロード</Link>
+                <span>|</span>
                 <Link href="/">トップページ</Link>
             </Snav>
             <Sbutton
@@ -90,6 +92,11 @@ function Cheader() {
               <li className="">
                 <Link href="/Nijiiro" className="py-2 inline-block" onClick={handleMenuClose}>
                   虹色memory
+                </Link>
+              </li>
+              <li>
+                <Link href="/download" className="py-2 inline-block" onClick={handleMenuClose}>
+                  ダウンロード
                 </Link>
               </li>
               <li className="">

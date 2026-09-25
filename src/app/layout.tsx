@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import StyledComponentsRegistry from "../lib/styled-components-registry";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -22,11 +23,11 @@ export const metadata: Metadata = {
   openGraph: {
     title: '群馬大学作曲部アルバム紹介サイト',
     description: '群馬大学作曲部のオリジナルアルバムの歌詞掲載などを行っています',
-    url: 'https://gu-sakkyoku-album.pages.dev/',
+    url: 'https://gu-sakkyoku.github.io/',
     siteName: '群馬大学作曲部アルバム紹介サイト',
     images: [
       {
-        url: 'https://gu-sakkyoku-album.pages.dev/sakkyokukyara.png',
+        url: 'https://gu-sakkyoku.github.io/sakkyokukyara.png',
         width: 1280,
         height: 1280,
       },
@@ -44,8 +45,7 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <head>
-        {/* ✅ ここに自由にHTMLタグを追加 */}
-        <meta name="google-site-verification" content="NyDgJnwnlaAeo0i6AVHg_Y0LtZfS7ru4ab9x6dn6eFE" />
+        {/* 旧サイトの所有確認タグは引き継がず、新サイトで必要になった場合だけ再設定します。 */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="群馬大学作曲部アルバム紹介サイト" />
         <meta
@@ -54,17 +54,17 @@ export default function RootLayout({
         />
         <meta
           name="twitter:image"
-          content="https://gu-sakkyoku-album.pages.dev/sakkyokukyara.png"
+          content="https://gu-sakkyoku.github.io/sakkyokukyara.png"
         />
         <link
           rel="icon"
-          href="https://gu-sakkyoku-album.pages.dev/favicon.ico"
+          href="/favicon.ico"
         />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <StyledComponentsRegistry>{children}</StyledComponentsRegistry>
       </body>
     </html>
   );

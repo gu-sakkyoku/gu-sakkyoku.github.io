@@ -22,6 +22,12 @@ const MainPage = () => {
         )のDMまでお願いします。
       </p>
 
+      <p className="mt-6 text-center">
+        <Link href="/download" className="font-semibold text-blue-800 underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-900">
+          ダウンロードカードをお持ちの方はこちらから
+        </Link>
+      </p>
+
       <br />
       <br />
       <br />
