@@ -1,0 +1,16 @@
+{
+  // R2バケットとSecretの実値はここに書かず、作曲部Cloudflare Accountで設定します。
+  "name": "gu-sakkyoku-download",
+  // 個人アカウントへの誤デプロイを防ぐため、作曲部のCloudflare Accountへ固定します。
+  "account_id": "c3d35d7704f525ee96ca5872913acf5e",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-09-25",
+  "workers_dev": true,
+  "vars": {
+    "ALLOWED_ORIGIN": "https://gu-sakkyoku.github.io",
+    "RUNTIME_MODE": "production"
+  },
+  "r2_buckets": [
+    { "binding": "ALBUMS", "bucket_name": "gu-sakkyoku-albums" }
+  ]
+}
