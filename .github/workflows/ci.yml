@@ -36,6 +36,9 @@ jobs:
       - name: Lint source
         run: npm run lint
 
+      - name: Test download authorization
+        run: npm test
+
       - name: Build static site
         run: npm run build
 
