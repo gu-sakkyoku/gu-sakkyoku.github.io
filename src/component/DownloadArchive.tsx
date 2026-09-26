@@ -123,8 +123,8 @@ function DownloadForm({ year, scriptReady }: { year: number; scriptReady: boolea
   }
 
   return (
-    <form id={`download-form-${year}`} onSubmit={handleSubmit} className="mt-5 rounded-xl border border-blue-200 bg-blue-50 p-4 sm:p-5">
-      <p className="mb-4 text-sm leading-6">{year}年のカードに印刷されたコードを入力してください。</p>
+    <form id={`download-form-${year}`} onSubmit={handleSubmit} className="mx-auto mt-9 max-w-xl border-t border-zinc-500 pt-6 text-left">
+      <p className="mb-5 text-sm leading-6">{year}年のカードに印刷されたコードを入力してください。</p>
       <label htmlFor={`download-code-${year}`} className="block text-sm font-semibold">ダウンロードコード</label>
       <input
         id={`download-code-${year}`}
@@ -138,13 +138,13 @@ function DownloadForm({ year, scriptReady }: { year: number; scriptReady: boolea
         required
         maxLength={32}
         placeholder={`${year}-XXXX-XXXX-XXXX-XXXX`}
-        className="mt-2 w-full rounded-lg border border-slate-500 bg-white px-4 py-3 font-mono text-sm tracking-wide focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-900"
+        className="mt-2 w-full rounded-lg border border-zinc-500 bg-white px-4 py-3 font-mono text-sm tracking-wide text-zinc-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
       />
       <div ref={widgetContainer} className="mt-4 min-h-18" aria-label="認証チェック" />
-      <button type="submit" disabled={pending} className="mt-4 w-full rounded-full bg-blue-900 px-5 py-3 font-semibold text-white hover:bg-blue-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-900 disabled:cursor-wait disabled:opacity-70">
+      <button type="submit" disabled={pending} className="mt-4 w-full rounded-full border-2 border-zinc-400 px-5 py-3 font-serif text-lg transition-colors hover:bg-zinc-500/15 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 disabled:cursor-wait disabled:opacity-70">
         {pending ? "確認中…" : "コードを確認してダウンロード"}
       </button>
-      <p role="status" aria-live="polite" className="mt-3 min-h-6 text-sm text-blue-950">{message}</p>
+      <p role="status" aria-live="polite" className="mt-3 min-h-6 text-sm">{message}</p>
     </form>
   );
 }
@@ -162,54 +162,54 @@ export default function DownloadArchive({ albums }: { albums: Album[] }) {
           onReady={() => setScriptReady(true)}
         />
       )}
-      <div className="space-y-8">
+      <div className="space-y-20 sm:space-y-24">
         {/* スマホでは最初に受け取れる作品を見せ、準備中の年度は末尾へ置きます。 */}
         {[...albums].sort((a, b) => Number(b.downloadEnabled) - Number(a.downloadEnabled) || b.year - a.year).map((album) => (
-          <article key={album.year} className="overflow-hidden rounded-2xl border border-slate-300 bg-white p-5 shadow-lg sm:p-7">
-            <div className="grid gap-6 sm:grid-cols-[minmax(180px,260px)_1fr] sm:gap-8">
-              {album.artwork ? (
-                <Image
-                  src={album.artwork}
-                  alt={`${album.title}のアルバムジャケット`}
-                  width={500}
-                  height={500}
-                  className="aspect-square w-full rounded-xl object-cover shadow-md"
-                />
-              ) : (
-                <div aria-hidden="true" className="flex min-h-40 items-center justify-center rounded-xl bg-blue-100 font-serif text-5xl text-blue-900 sm:aspect-square">{album.year}</div>
-              )}
-              <div>
-                <p className="font-serif text-lg font-semibold text-blue-900">{album.year}</p>
-                <h2 className="mt-1 font-serif text-2xl font-semibold">{album.title}</h2>
-                {album.detailPath && (
-                  <Link href={album.detailPath} className="mt-3 inline-block rounded-sm font-semibold text-blue-800 underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-900">
-                    曲紹介・歌詞を見る
-                  </Link>
-                )}
-                {album.discs.map((disc) => (
-                  <details key={disc.name} className="mt-4 rounded-lg border border-slate-200 p-3">
-                    <summary className="cursor-pointer font-semibold text-blue-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-900">{disc.name}（{disc.tracks.length}曲）</summary>
-                    <ol className="mt-3 list-decimal space-y-1 pl-7 text-sm leading-6 text-slate-800">
-                      {disc.tracks.map((track) => <li key={track}>{track}</li>)}
-                    </ol>
-                  </details>
-                ))}
-                {album.downloadEnabled ? (
-                  <button
-                    type="button"
-                    aria-expanded={selectedYear === album.year}
-                    aria-controls={`download-form-${album.year}`}
-                    onClick={() => setSelectedYear(selectedYear === album.year ? null : album.year)}
-                    className="mt-5 w-full rounded-full border-2 border-blue-900 bg-blue-900 px-5 py-3 text-center font-semibold text-white transition-colors hover:bg-white hover:text-blue-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-900 sm:w-auto"
-                  >
-                    ダウンロードはこちらから
-                  </button>
-                ) : (
-                  <p className="mt-5 rounded-full border border-slate-400 bg-slate-100 px-5 py-3 text-center font-semibold text-slate-700 sm:inline-block">ダウンロードは準備中です</p>
-                )}
-                {selectedYear === album.year && <DownloadForm key={album.year} year={album.year} scriptReady={scriptReady} />}
-              </div>
+          <article key={album.year} className="mx-auto w-[80%] max-w-4xl border-t border-zinc-500 pt-12 text-center">
+            {/* 既存の作品ページと同じく、見出し・ジャケット・曲リストを縦に配置します。 */}
+            <p className="text-sm opacity-75">{album.year}年</p>
+            <h2 className="mt-2 font-serif text-[30px] leading-snug">{album.title}</h2>
+            {album.artwork && (
+              <Image
+                src={album.artwork}
+                alt={`${album.title}のアルバムジャケット`}
+                width={700}
+                height={700}
+                className="mx-auto mt-8 aspect-square w-full max-w-[340px] rounded-xl object-cover shadow-[0_8px_20px_rgba(0,0,0,0.3)] sm:max-w-[420px]"
+              />
+            )}
+            {album.detailPath && (
+              <Link href={album.detailPath} className="mt-9 inline-block rounded-full border-2 border-zinc-400 px-5 py-3 font-serif text-lg text-blue-700 underline underline-offset-4 transition-colors hover:bg-zinc-500/15 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 dark:text-blue-300">
+                歌詞ページはこちらから
+              </Link>
+            )}
+            <div className="mx-auto mt-8 max-w-xl">
+              {album.discs.map((disc) => (
+                <details key={disc.name} className="border-b border-zinc-500 py-4">
+                  <summary className="cursor-pointer font-serif text-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">{disc.name}（{disc.tracks.length}曲）</summary>
+                  <ol className="mt-4 list-decimal space-y-2 pl-7 text-left text-sm leading-6">
+                    {disc.tracks.map((track) => <li key={track}>{track}</li>)}
+                  </ol>
+                </details>
+              ))}
             </div>
+            {album.downloadEnabled ? (
+              <button
+                type="button"
+                aria-expanded={selectedYear === album.year}
+                aria-controls={selectedYear === album.year ? `download-form-${album.year}` : undefined}
+                onClick={() => setSelectedYear(selectedYear === album.year ? null : album.year)}
+                className="mt-9 w-full rounded-full border-2 border-zinc-400 px-5 py-3 text-center font-serif text-lg transition-colors hover:bg-zinc-500/15 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 sm:w-auto"
+              >
+                ダウンロードはこちらから
+              </button>
+            ) : (
+              <div className="mt-9">
+                <p className="font-serif text-2xl">Coming Soon</p>
+                <p className="mt-2 text-sm opacity-75">ダウンロードは準備中です</p>
+              </div>
+            )}
+            {selectedYear === album.year && <DownloadForm key={album.year} year={album.year} scriptReady={scriptReady} />}
           </article>
         ))}
       </div>
