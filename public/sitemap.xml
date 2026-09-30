@@ -12,5 +12,14 @@
     <loc>https://gu-sakkyoku.github.io/Nijiiro/</loc>
     <priority>0.8</priority>
   </url>
+  <url><loc>https://gu-sakkyoku.github.io/Horoscope/cant/</loc></url>
+  <url><loc>https://gu-sakkyoku.github.io/Horoscope/fead/</loc></url>
+  <url><loc>https://gu-sakkyoku.github.io/Horoscope/fuwa/</loc></url>
+  <url><loc>https://gu-sakkyoku.github.io/Horoscope/hoshikuzu/</loc></url>
+  <url><loc>https://gu-sakkyoku.github.io/Horoscope/melt/</loc></url>
+  <url><loc>https://gu-sakkyoku.github.io/Horoscope/mosimo/</loc></url>
+  <url><loc>https://gu-sakkyoku.github.io/Horoscope/tameiki/</loc></url>
+  <url><loc>https://gu-sakkyoku.github.io/Horoscope/teza/</loc></url>
+  <url><loc>https://gu-sakkyoku.github.io/Nijiiro/kumori/</loc></url>
   <!-- /download/ はnoindexのため載せません。 -->
 </urlset>

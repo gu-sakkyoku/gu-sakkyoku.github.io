@@ -9,13 +9,13 @@ const MainPage = () => {
     <>
       <br /><br /><br /><br /><br /><br /><br />
       <h1 className="text-[30px] px-[10%] font-serif text-center">
-        群馬大学作曲部アルバム紹介ページ
+        群馬大学作曲部 公式サイト
       </h1>
       <br />
       <hr className="w-[80%] mx-auto" />
       <br />
       <p className="w-[80%] mx-auto text-center">
-        こちらは群馬大学作曲部のアルバムの歌詞掲載サイトです。ご連絡はメール(gusakkyoku[@]gmail.com)または公式X(
+        群馬大学作曲部の公式サイトです。オリジナルアルバム「Horoscope」「虹色memory」の歌詞・作品情報と、ダウンロードカードの案内を掲載しています。ご連絡はメール(gusakkyoku[@]gmail.com)または公式X(
         <a href="https://x.com/GUsakkyoku" className="text-blue-600 underline">
           @GUsakkyoku
         </a>
@@ -68,7 +68,7 @@ const MainPage = () => {
         >
           <Image
             src="/cover1.png"
-            alt="アルバム1"
+            alt="Horoscopeのアルバムジャケット"
             width={1500}
             height={1500}
             style={{
@@ -100,7 +100,7 @@ const MainPage = () => {
         >
           <Image
             src="/cover2.png"
-            alt="アルバム2"
+            alt="Horoscopeのもう一つのジャケット画像"
             width={1500}
             height={1500}
             style={{
@@ -140,7 +140,7 @@ const MainPage = () => {
       <br /><br />
       <Image
             src="/cover31.png"
-            alt="ジャケット画像"
+            alt="虹色memoryのアルバムジャケット"
             width={2160}
             height={2160}
             style={{
