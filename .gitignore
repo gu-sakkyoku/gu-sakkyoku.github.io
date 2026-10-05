@@ -1,7 +1,8 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-/node_modules
+# ローカル開発用の互換処理にも依存が入るため、子フォルダのnode_modulesも除外します。
+node_modules/
 /.pnp
 .pnp.*
 .yarn/*
