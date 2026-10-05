@@ -15,7 +15,7 @@ if (!requestedYears.length || new Set(requestedYears).size !== requestedYears.le
 const years = requestedYears.sort((a, b) => a - b);
 for (const year of years) {
   // 公開前にコードとZIPを準備できるよう、downloadEnabledがfalseでも発行できます。
-  // ただし、配信先のR2キーが決まっていない年度（例: 準備中の2026）は拒否します。
+  // ただし、配信先のR2キーが決まっていない年度は拒否します。
   if (!Number.isInteger(year) || !albums.some((album) => album.year === year && album.r2Key)) {
     throw new Error(`${year}年はR2キーを設定したアルバム情報がありません`);
   }

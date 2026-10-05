@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import test from "node:test";
+import { albums } from "../src/data/albums.ts";
 import worker from "../worker/src/index.ts";
 
 // ここで使うコードは単体テスト専用の固定値です。配布カードのコードとは無関係です。
@@ -77,6 +78,30 @@ test("コード誤り、2026、異なるOrigin、直接URLを拒否する", asyn
   assert.equal(foreign.headers.get("Access-Control-Allow-Origin"), null);
   assert.equal((await worker.fetch(new Request("http://localhost:8787/download/2024"), env)).status, 403);
   assert.equal((await worker.fetch(new Request("http://localhost:8787/download/2026?token=fake"), env)).status, 404);
+});
+
+test("2026はR2キーとコードのハッシュを準備しても公開フラグが立つまで拒否する", async () => {
+  const album = albums.find((item) => item.year === 2026);
+  assert.equal(album?.r2Key, "albums/2026.zip");
+  assert.equal(album?.downloadEnabled, false);
+
+  // ここで使う文字列はテスト専用です。本番カードのコードはテストへ書きません。
+  const testCode = "2026-ABCD-EFGH-JKLM-NPQR";
+  const preparedEnv = {
+    ...env,
+    DOWNLOAD_CODE_HASHES: JSON.stringify({
+      ...hashes,
+      2026: createHash("sha256").update(testCode).digest("hex"),
+    }),
+    ALBUMS: {
+      ...storage,
+      async head(key) {
+        return key === "albums/2026.zip" ? { size: zipBytes.length } : storage.head(key);
+      },
+    },
+  };
+  assert.equal((await post(2026, testCode, origin, "XXXX.DUMMY.TOKEN.XXXX", preparedEnv)).status, 400);
+  assert.equal((await worker.fetch(new Request("http://localhost:8787/download/2026?token=fake"), preparedEnv)).status, 404);
 });
 
 test("トークン改ざんと有効期限切れを拒否する", async () => {
