@@ -16,10 +16,12 @@ export type Album = {
 export const albums: Album[] = [
   {
     year: 2026,
-    title: "2026年のアルバム",
-    artwork: "/cover2026.webp",
-    // ジャケットだけ先に公開。音源とコードの準備ができるまでダウンロードは無効のままにします。
+    title: "炭酸予報",
+    // タイトル入りの新ジャケット。旧画像と別名にして、ブラウザのキャッシュ残りを避けます。
+    artwork: "/cover2026-tansan-yohou.png",
+    // ZIPの置き場所だけ先に予約。音源が完成し、認証と配信を確認するまで公開しません。
     downloadEnabled: false,
+    r2Key: "albums/2026.zip",
     discs: [],
   },
   {
