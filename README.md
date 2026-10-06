@@ -211,9 +211,3 @@ Cloudflare R2        非公開の音源ZIP
 - 依存関係のメジャーバージョン更新は、通常の機能追加と分けてください。
 - `main`へのforce pushや、レビュー前の大規模変更を避けてください。
 - 年度ごとの情報は一箇所で管理し、複数ページへ重複させない方針です。
-
-### 技術担当向け：開発用ライブラリの監査
-
-`braces`の未修正High（[GHSA-vfj7-8cjw-p6xm](https://github.com/advisories/GHSA-vfj7-8cjw-p6xm)）を避けるため、TypeScriptのlint用ライブラリを8.71.0に揃え、Next.js 15のlintが使う`fast-glob`を`tools/lint-glob`へ限定的に置き換えています。互換処理は`tinyglobby`を使い、Nextのルートフォルダ検索に必要な`globSync`だけを提供します。静的サイト・Workerの認証処理には使いません。
-
-これは監査エラーを無視する設定ではありません。未修正の依存経路自体を取り除く対応です。`npm ci`・`npm run check`・`npm audit --audit-level=high`で検証し、互換性は`tests/lint-glob.test.mjs`で確認します。将来Nextのlintが安全な検索ライブラリへ移行したら、この置き換えを外せるか技術担当が確認してください。監査を通すためだけの強制ダウングレードやチェック無効化は行いません。
