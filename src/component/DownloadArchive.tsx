@@ -165,7 +165,11 @@ export default function DownloadArchive({ albums }: { albums: Album[] }) {
       <div className="space-y-20 sm:space-y-24">
         {/* スマホでは最初に受け取れる作品を見せ、準備中・一時停止中の年度は末尾へ置きます。 */}
         {[...albums].sort((a, b) => Number(b.downloadEnabled) - Number(a.downloadEnabled) || b.year - a.year).map((album) => (
-          <article key={album.year} className="mx-auto w-[80%] max-w-4xl border-t border-zinc-500 pt-12 text-center">
+          <article
+            key={album.year}
+            id={`album-${album.year}`}
+            className="mx-auto w-[80%] max-w-4xl scroll-mt-32 border-t border-zinc-500 pt-12 text-center sm:scroll-mt-36"
+          >
             {/* 既存の作品ページと同じく、見出し・ジャケット・曲リストを縦に配置します。 */}
             <p className="text-sm opacity-75">{album.year}年</p>
             <h2 className="mt-2 font-serif text-[30px] leading-snug">{album.title}</h2>

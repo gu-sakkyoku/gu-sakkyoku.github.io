@@ -2,20 +2,29 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
+import NewAlbumAnnouncement from "./NewAlbumAnnouncement";
+import { albums } from "../data/albums";
+import { site } from "../data/site";
 
-const MainPage = () => {
+// 年度を追加すると新作告知も自動で切り替わります。作品情報をトップへ二重に書きません。
+const latestAlbum = [...albums].sort((a, b) => b.year - a.year)[0];
+
+const MainPage = ({ announcementReady = true }: { announcementReady?: boolean }) => {
+  const reducedMotion = useReducedMotion();
   return (
     <>
       <br /><br /><br /><br /><br /><br /><br />
       <h1 className="text-[30px] px-[10%] font-serif text-center">
         群馬大学作曲部 公式サイト
       </h1>
+      {/* 検索用の希望サイト名と、閲覧者が見える呼び名を一致させます。 */}
+      <p className="mt-2 text-center text-sm">{site.name}</p>
       <br />
       <hr className="w-[80%] mx-auto" />
       <br />
       <p className="w-[80%] mx-auto text-center">
-        群馬大学作曲部の公式サイトです。オリジナルアルバム「Horoscope」「虹色memory」の歌詞・作品情報と、ダウンロードカードの案内を掲載しています。ご連絡はメール(gusakkyoku[@]gmail.com)または公式X(
+        群馬大学作曲部の公式サイトです。オリジナルアルバムの作品情報・歌詞と、ダウンロードカードの案内を掲載しています。ご連絡はメール(gusakkyoku[@]gmail.com)または公式X(
         <a href="https://x.com/GUsakkyoku" className="text-blue-600 underline">
           @GUsakkyoku
         </a>
@@ -27,6 +36,8 @@ const MainPage = () => {
           ダウンロードカードをお持ちの方はこちらから
         </Link>
       </p>
+
+      {latestAlbum && <NewAlbumAnnouncement album={latestAlbum} motionReady={announcementReady} />}
 
       <br />
       <br />
@@ -50,11 +61,11 @@ const MainPage = () => {
       >
         {/* 左上の画像（ゆらゆら） */}
         <motion.div
-          animate={{
+          animate={reducedMotion !== false ? { rotate: -8, y: 0 } : {
             rotate: [-8, -10, -8, -6, -8],
             y: [0, -4, 0, 4, 0],
           }}
-          transition={{
+          transition={reducedMotion !== false ? { duration: 0 } : {
             duration: 10,
             repeat: Infinity,
             ease: "easeInOut",
@@ -82,11 +93,11 @@ const MainPage = () => {
 
         {/* 右下の画像（ゆらゆら） */}
         <motion.div
-          animate={{
+          animate={reducedMotion !== false ? { rotate: 8, y: 0 } : {
             rotate: [8, 10, 8, 6, 8],
             y: [0, 6, 0, -6, 0],
           }}
-          transition={{
+          transition={reducedMotion !== false ? { duration: 0 } : {
             duration: 10,
             repeat: Infinity,
             ease: "easeInOut",
