@@ -58,16 +58,18 @@ function post(year, code, requestOrigin = origin, token = "XXXX.DUMMY.TOKEN.XXXX
 
 // 修正版の公開後も同じコードで再開できるかを、実際の公開設定を変更せずに検証します。
 // グローバルの年度データを使うため、変更はこの逐次実行のテスト内だけに限定し必ず戻します。
-async function withEnabledAlbum(year, check) {
+async function withAlbumAvailability(year, enabled, check) {
   const album = albums.find((item) => item.year === year);
   const wasEnabled = album.downloadEnabled;
-  album.downloadEnabled = true;
+  album.downloadEnabled = enabled;
   try {
     return await check();
   } finally {
     album.downloadEnabled = wasEnabled;
   }
 }
+
+const withEnabledAlbum = (year, check) => withAlbumAvailability(year, true, check);
 
 test("正しい年度コードだけが短時間のダウンロードURLを取得できる", async () => {
   for (const [year, code] of issuedCodes.filter(([year]) => albums.find((album) => album.year === year)?.downloadEnabled)) {
@@ -95,15 +97,13 @@ test("コード誤り、未登録年度、異なるOrigin、直接URLを拒否�
   assert.equal(foreign.status, 403);
   assert.equal(foreign.headers.get("Access-Control-Allow-Origin"), null);
   assert.equal((await worker.fetch(new Request("http://localhost:8787/download/2024"), env)).status, 403);
-  assert.equal((await worker.fetch(new Request("http://localhost:8787/download/2026?token=fake"), env)).status, 404);
+  assert.equal((await worker.fetch(new Request("http://localhost:8787/download/2026?token=fake"), env)).status, 403);
   assert.equal((await worker.fetch(new Request("http://localhost:8787/download/2027?token=fake"), env)).status, 404);
 });
 
 test("停止中の2026は正しいコードと停止前の有効トークンがあっても取得できない", async () => {
   const album = albums.find((item) => item.year === 2026);
   assert.equal(album?.r2Key, "albums/2026.zip");
-  assert.equal(album?.downloadEnabled, false);
-  assert.equal(album?.unavailableReason, "paused");
   // 停止前に取得した有効リンクを再現し、画面だけの停止ではないことを確かめます。
   const { token } = await withEnabledAlbum(2026, async () => {
     const response = await post(2026, code2026);
@@ -117,13 +117,17 @@ test("停止中の2026は正しいコードと停止前の有効トークンが�
       async get() { storageReads++; throw new Error("paused album must not read R2"); },
     },
   };
-  const rejected = await post(2026, code2026, origin, "XXXX.DUMMY.TOKEN.XXXX", stoppedEnv);
-  assert.equal(rejected.status, 400);
-  assert.equal("token" in await rejected.json(), false);
-  const stoppedDownload = await worker.fetch(new Request(`http://localhost:8787/download/2026?token=${token}`), { ...env, ...stoppedEnv });
-  assert.equal(stoppedDownload.status, 404);
-  assert.equal(stoppedDownload.headers.get("Content-Disposition"), null);
-  assert.equal(storageReads, 0);
+  // 本番設定が再開済みでも、将来また停止した場合の保護が働くことを検証します。
+  // 一時的な停止状態はテスト内だけで使い、失敗した場合も元の設定へ必ず戻します。
+  await withAlbumAvailability(2026, false, async () => {
+    const rejected = await post(2026, code2026, origin, "XXXX.DUMMY.TOKEN.XXXX", stoppedEnv);
+    assert.equal(rejected.status, 400);
+    assert.equal("token" in await rejected.json(), false);
+    const stoppedDownload = await worker.fetch(new Request(`http://localhost:8787/download/2026?token=${token}`), { ...env, ...stoppedEnv });
+    assert.equal(stoppedDownload.status, 404);
+    assert.equal(stoppedDownload.headers.get("Content-Disposition"), null);
+    assert.equal(storageReads, 0);
+  });
   assert.equal(albums.find((item) => item.year === 2024)?.downloadEnabled, true);
   assert.equal(albums.find((item) => item.year === 2025)?.downloadEnabled, true);
 });
@@ -203,14 +207,15 @@ test("R2にZIPがない場合はリンクを発行しない", async () => {
   }
 });
 
-test("2026は同じ年度コードのまま配信を再開できる", async () => withEnabledAlbum(2026, async () => {
+test("2026は同じ年度コードのまま配信を再開できる", async () => {
+  assert.equal(albums.find((item) => item.year === 2026)?.downloadEnabled, true);
   const authorized = await post(2026, code2026);
   assert.equal(authorized.status, 200);
   const { token } = await authorized.json();
   const download = await worker.fetch(new Request(`http://localhost:8787/download/2026?token=${token}`), env);
   assert.equal(download.status, 200);
   assert.deepEqual(new Uint8Array(await download.arrayBuffer()), zipBytes);
-}));
+});
 
 test("R2障害時は内部情報を出さずに失敗を案内する", async () => {
   const brokenStorage = {

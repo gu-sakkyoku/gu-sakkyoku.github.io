@@ -85,7 +85,7 @@ aws s3 cp /path/to/2025.zip s3://gu-sakkyoku-albums/albums/2025.zip --endpoint-u
 aws s3 cp /path/to/2026.zip s3://gu-sakkyoku-albums/albums/2026.zip --endpoint-url https://<ACCOUNT_ID>.r2.cloudflarestorage.com --profile <R2専用プロファイル>
 ```
 
-アップロード後はサイズと内容を確認します。ダウンロード試験を1回行い、元ZIPとのSHA-256を照合してから販売してください。2026年10月の更新用ZIPは、2024年が約622MB、2025年が約191MB、2026年が約446MBで、合計約1.26GBです（10進数）。Standard Storageの無料枠は月10GBですが、他の保存物・操作やプラン条件で料金が変わるため、無料枠を超えない保証とは考えないでください。
+アップロード後はサイズと内容を確認します。ダウンロード試験を1回行い、元ZIPとのSHA-256を照合してから販売してください。2026年10月の修正版を含む更新用ZIPは、2024年が約622MB、2025年が約191MB、2026年が約630MBで、合計約1.44GBです（10進数）。Standard Storageの無料枠は月10GBですが、他の保存物・操作やプラン条件で料金が変わるため、無料枠を超えない保証とは考えないでください。
 
 ### ZIPだけを修正版へ差し替えるとき
 

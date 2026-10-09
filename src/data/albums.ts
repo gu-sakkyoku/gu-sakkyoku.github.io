@@ -21,11 +21,9 @@ export const albums: Album[] = [
     title: "炭酸予報",
     // タイトル入りの新ジャケット。旧画像と別名にして、ブラウザのキャッシュ残りを避けます。
     artwork: "/cover2026-tansan-yohou.png",
-    // 2026-10-09: 収録内容の不備により一時停止。Workerもこのフラグを使って取得を拒否します。
-    // 修正版を同じR2キーへ差し替えて確認後、trueへ戻し、unavailableReasonを削除します。
-    // 停止・再開のどちらでも、印刷済みの年度コードとQRは変えません。
-    downloadEnabled: false,
-    unavailableReason: "paused",
+    // 2026-10-09: 修正版を同じR2キーへ差し替え、全量のSHA-256一致を確認して配信を再開します。
+    // ZIPの更新とコードの更新は別の操作です。印刷済みの年度コード・QR・Secretは変更しません。
+    downloadEnabled: true,
     r2Key: "albums/2026.zip",
     // 正式な曲名・曲順が届いたら追記。ZIPのファイル名から推測して掲載しません。
     discs: [],
