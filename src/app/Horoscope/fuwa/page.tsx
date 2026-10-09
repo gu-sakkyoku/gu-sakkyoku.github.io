@@ -1,16 +1,13 @@
 "use client";
 
 import Image from "next/image";
-import Cheader from "../../../component/header";
-import Cfooter from "../../../component/footer";
+import ClientWrapper from "../../../component/ClientWrapper";
 
 
 
 const MainPage = () => {
   return (
-    <>
-    <Cheader />
-      <br /><br /><br /><br /><br /><br /><br />
+    <ClientWrapper>
       <h1 className="text-[30px] px-[10%] font-serif text-center">
         フワっと！スペースえすけ～ぷ！！ feat. 知声, 花隈千冬
       </h1>
@@ -75,8 +72,7 @@ Yo　突き抜ける大気圏　月超えて大冒険　未体験<br />
 もうなにを言われても上の空<br />
 しばし地に足つけずにだらだら　あと少しだけ</p>
 <br /><br />
-      <Cfooter />
-    </>
+    </ClientWrapper>
   );
 };
 

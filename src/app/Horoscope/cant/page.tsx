@@ -1,16 +1,13 @@
 "use client";
 
 
-import Cheader from "../../../component/header";
-import Cfooter from "../../../component/footer";
+import ClientWrapper from "../../../component/ClientWrapper";
 
 
 
 const MainPage = () => {
   return (
-    <>
-    <Cheader />
-      <br /><br /><br /><br /><br /><br /><br />
+    <ClientWrapper>
       <h1 className="text-[30px] px-[10%] font-serif text-center">
         can&apos;t ESCAPE!!! feat. 雨歌エル
       </h1>
@@ -94,8 +91,7 @@ const MainPage = () => {
 今回も全部<br />
 ずっとずっと覚えてるから</p>
       <br /><br />
-      <Cfooter />
-    </>
+    </ClientWrapper>
   );
 };
 

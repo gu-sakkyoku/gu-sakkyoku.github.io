@@ -2,12 +2,11 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import AlbumJackets from "./AlbumJackets";
 
 const MainPage = () => {
   return (
     <>
-      <br /><br /><br /><br /><br /><br /><br />
       <h1 className="text-[30px] px-[10%] font-serif text-center">
         群馬大学作曲部 公式サイト
       </h1>
@@ -16,14 +15,14 @@ const MainPage = () => {
       <br />
       <p className="w-[80%] mx-auto text-center">
         群馬大学作曲部の公式サイトです。オリジナルアルバム「Horoscope」「虹色memory」の歌詞・作品情報と、ダウンロードカードの案内を掲載しています。ご連絡はメール(gusakkyoku[@]gmail.com)または公式X(
-        <a href="https://x.com/GUsakkyoku" className="text-blue-600 underline">
+        <a href="https://x.com/GUsakkyoku" className="site-text-link">
           @GUsakkyoku
         </a>
         )のDMまでお願いします。
       </p>
 
       <p className="mt-6 text-center">
-        <Link href="/download" className="font-semibold text-blue-800 underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-900">
+        <Link href="/download" className="site-text-link font-semibold">
           ダウンロードカードをお持ちの方はこちらから
         </Link>
       </p>
@@ -38,80 +37,7 @@ const MainPage = () => {
       <br /><br />
 
       {/* 画像を斜めに重ねるコンテナ */}
-      <div
-        style={{
-          position: "relative",
-          width: "100%",
-          height: "60vw",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        {/* 左上の画像（ゆらゆら） */}
-        <motion.div
-          animate={{
-            rotate: [-8, -10, -8, -6, -8],
-            y: [0, -4, 0, 4, 0],
-          }}
-          transition={{
-            duration: 10,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-          style={{
-            position: "absolute",
-            top: "6%",
-            left: "20%",
-            zIndex: 2,
-          }}
-        >
-          <Image
-            src="/cover1.png"
-            alt="Horoscopeのアルバムジャケット"
-            width={1500}
-            height={1500}
-            style={{
-              width: "33vw",
-              height: "auto",
-              boxShadow: "0 8px 20px rgba(0, 0, 0, 0.3)",
-              borderRadius: "10px",
-            }}
-          />
-        </motion.div>
-
-        {/* 右下の画像（ゆらゆら） */}
-        <motion.div
-          animate={{
-            rotate: [8, 10, 8, 6, 8],
-            y: [0, 6, 0, -6, 0],
-          }}
-          transition={{
-            duration: 10,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-          style={{
-            position: "absolute",
-            bottom: "6%",
-            right: "20%",
-            zIndex: 1,
-          }}
-        >
-          <Image
-            src="/cover2.png"
-            alt="Horoscopeのもう一つのジャケット画像"
-            width={1500}
-            height={1500}
-            style={{
-              width: "35vw",
-              height: "auto",
-              boxShadow: "0 8px 20px rgba(0, 0, 0, 0.3)",
-              borderRadius: "10px",
-            }}
-          />
-        </motion.div>
-      </div>
+      <AlbumJackets />
 
       <br />
       <br />

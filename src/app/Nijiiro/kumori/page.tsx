@@ -1,15 +1,12 @@
 "use client";
 
-import Cheader from "../../../component/header";
-import Cfooter from "../../../component/footer";
+import ClientWrapper from "../../../component/ClientWrapper";
 
 
 
 const MainPage = () => {
   return (
-    <>
-    <Cheader />
-      <br /><br /><br /><br /><br /><br /><br />
+    <ClientWrapper>
       <h1 className="text-[30px] px-[10%] font-serif text-center">
         曇りのち晴れ feat. 音街ウナ
       </h1>
@@ -54,8 +51,7 @@ const MainPage = () => {
 君と生きるこの人生<br />
 必ず先に道が続くから</p>
 <br /><br />
-      <Cfooter />
-    </>
+    </ClientWrapper>
   );
 };
 

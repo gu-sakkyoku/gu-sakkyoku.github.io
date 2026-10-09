@@ -1,18 +1,15 @@
 "use client";
 
 import Image from "next/image";
-import Cheader from "../../component/header";
-import Cfooter from "../../component/footer";
+import ClientWrapper from "../../component/ClientWrapper";
 import LyricLink from "../../component/LyricLink";
-import { motion } from "framer-motion";
+import AlbumJackets from "../../component/AlbumJackets";
 
 
 
 const MainPage = () => {
   return (
-    <>
-    <Cheader />
-      <br /><br /><br /><br /><br /><br /><br />
+    <ClientWrapper>
       <h1 className="text-[30px] px-[10%] font-serif text-center">
         群馬大学作曲部オリジナルアルバム2作目「Horoscope」
       </h1>
@@ -32,80 +29,7 @@ const MainPage = () => {
       <br /><br /><br /><br />
       <h1 className="text-[30px] px-[10%] font-serif text-center">「Horoscope」曲リスト</h1>
       <br /><br />
-      <div
-        style={{
-          position: "relative",
-          width: "100%",
-          height: "60vw",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        {/* 左上の画像（ゆらゆら） */}
-        <motion.div
-          animate={{
-            rotate: [-8, -10, -8, -6, -8],
-            y: [0, -4, 0, 4, 0],
-          }}
-          transition={{
-            duration: 10,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-          style={{
-            position: "absolute",
-            top: "6%",
-            left: "20%",
-            zIndex: 2,
-          }}
-        >
-          <Image
-            src="/cover1.png"
-            alt="アルバム1"
-            width={1500}
-            height={1500}
-            style={{
-              width: "33vw",
-              height: "auto",
-              boxShadow: "0 8px 20px rgba(0, 0, 0, 0.3)",
-              borderRadius: "10px",
-            }}
-          />
-        </motion.div>
-
-        {/* 右下の画像（ゆらゆら） */}
-        <motion.div
-          animate={{
-            rotate: [8, 10, 8, 6, 8],
-            y: [0, 6, 0, -6, 0],
-          }}
-          transition={{
-            duration: 10,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-          style={{
-            position: "absolute",
-            bottom: "6%",
-            right: "20%",
-            zIndex: 1,
-          }}
-        >
-          <Image
-            src="/cover2.png"
-            alt="アルバム2"
-            width={1500}
-            height={1500}
-            style={{
-              width: "35vw",
-              height: "auto",
-              boxShadow: "0 8px 20px rgba(0, 0, 0, 0.3)",
-              borderRadius: "10px",
-            }}
-          />
-        </motion.div>
-      </div>
+      <AlbumJackets />
 
           <br /><br />
           <br />
@@ -231,8 +155,7 @@ const MainPage = () => {
 
 
       <br /><br /><br />
-      <Cfooter />
-    </>
+    </ClientWrapper>
   );
 };
 

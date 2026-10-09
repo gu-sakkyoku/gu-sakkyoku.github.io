@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import Cheader from "../../component/header";
-import Cfooter from "../../component/footer";
+import ClientWrapper from "../../component/ClientWrapper";
 import DownloadArchive from "../../component/DownloadArchive";
 import { albums } from "../../data/albums";
 
@@ -15,9 +14,7 @@ export default function DownloadPage() {
   // 背景色と本文色は既存ページと同じくglobals.cssへ任せます。
   // /downloadだけ白背景を固定すると、ダーク表示の歌詞ページから浮いてしまいます。
   return (
-    <div className="min-h-screen">
-      <Cheader />
-      <main className="mx-auto max-w-6xl pb-20 pt-32 sm:pt-36">
+    <ClientWrapper className="mx-auto max-w-6xl pb-20">
         <header className="px-[10%] text-center">
           <h1 className="font-serif text-[30px] font-normal leading-snug sm:text-[34px]">
             アルバムダウンロード
@@ -42,8 +39,6 @@ export default function DownloadPage() {
           </a>
           へご連絡ください。
         </p>
-      </main>
-      <Cfooter />
-    </div>
+    </ClientWrapper>
   );
 }
