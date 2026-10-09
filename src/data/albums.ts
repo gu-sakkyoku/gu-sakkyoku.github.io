@@ -19,9 +19,10 @@ export const albums: Album[] = [
     title: "炭酸予報",
     // タイトル入りの新ジャケット。旧画像と別名にして、ブラウザのキャッシュ残りを避けます。
     artwork: "/cover2026-tansan-yohou.png",
-    // ZIPの置き場所だけ先に予約。音源が完成し、認証と配信を確認するまで公開しません。
-    downloadEnabled: false,
+    // 完成ZIPは非公開R2へ配置します。差し替え時もキーと年度コードは変えません。
+    downloadEnabled: true,
     r2Key: "albums/2026.zip",
+    // 正式な曲名・曲順が届いたら追記。ZIPのファイル名から推測して掲載しません。
     discs: [],
   },
   {
