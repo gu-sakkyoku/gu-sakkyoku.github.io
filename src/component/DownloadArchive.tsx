@@ -163,7 +163,7 @@ export default function DownloadArchive({ albums }: { albums: Album[] }) {
         />
       )}
       <div className="space-y-20 sm:space-y-24">
-        {/* スマホでは最初に受け取れる作品を見せ、準備中の年度は末尾へ置きます。 */}
+        {/* スマホでは最初に受け取れる作品を見せ、準備中・一時停止中の年度は末尾へ置きます。 */}
         {[...albums].sort((a, b) => Number(b.downloadEnabled) - Number(a.downloadEnabled) || b.year - a.year).map((album) => (
           <article key={album.year} className="mx-auto w-[80%] max-w-4xl border-t border-zinc-500 pt-12 text-center">
             {/* 既存の作品ページと同じく、見出し・ジャケット・曲リストを縦に配置します。 */}
@@ -205,11 +205,15 @@ export default function DownloadArchive({ albums }: { albums: Album[] }) {
               </button>
             ) : (
               <div className="mt-9">
-                <p className="font-serif text-2xl">Coming Soon</p>
-                <p className="mt-2 text-sm opacity-75">ダウンロードは準備中です</p>
+                <p className="font-serif text-2xl">{album.unavailableReason === "paused" ? "一時停止中" : "Coming Soon"}</p>
+                <p className="mt-2 text-sm opacity-75">
+                  {album.unavailableReason === "paused"
+                    ? "ZIPの修正版を準備しています。しばらくお待ちください。"
+                    : "ダウンロードは準備中です"}
+                </p>
               </div>
             )}
-            {selectedYear === album.year && <DownloadForm key={album.year} year={album.year} scriptReady={scriptReady} />}
+            {album.downloadEnabled && selectedYear === album.year && <DownloadForm key={album.year} year={album.year} scriptReady={scriptReady} />}
           </article>
         ))}
       </div>
