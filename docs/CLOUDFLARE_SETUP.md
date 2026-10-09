@@ -57,21 +57,21 @@ GitHub Pagesの代わりにCloudflare PagesやWorkers Static Assetsでサイト�
 
 ## ダウンロード機能の本番設定
 
-作曲部Cloudflare AccountのR2は有効化済みで、非公開・Standardの`gu-sakkyoku-albums`バケットには`albums/2024.zip`と`albums/2025.zip`があります。両方をR2から全量読み戻し、手元の配布用ZIPとのSHA-256一致を確認済みです。無料枠超過時の請求があり得るため、担当者が利用量と請求先を継続して確認してください。
+2026-10-09時点で、作曲部Cloudflare Accountの非公開・Standardの`gu-sakkyoku-albums`バケットには`albums/2024.zip`・`albums/2025.zip`・`albums/2026.zip`があります。2024・2025を新ZIPへ差し替え、2026を追加し、3本とも一時保存先・配信先から全量を読み戻して元ZIPとのSHA-256一致を確認しました。旧版と一時コピーは削除済みです。無料枠超過時の請求があり得るため、担当者が利用量と請求先を継続して確認してください。
 
-2026-09-26時点で、作曲部アカウントへ`gu-sakkyoku-download` Workerをデプロイ済みです。R2 Bindingは`ALBUMS`、Worker URLは`https://gu-sakkyoku-download.super-butterfly-1ee0.workers.dev`です。本番Turnstile Widgetは`gu-sakkyoku-download-production`で、許可hostnameは`gu-sakkyoku.github.io`のみです。Workerには年度コードのハッシュ・短期ダウンロードURL署名鍵・Turnstile Secretを、Cloudflare Secretとして登録済みです。**Secretの実値をGitHubへ書かないでください。** GitHubリポジトリはPublic、Pagesの公開元はGitHub Actionsに設定済みです。上記は設定完了の記録であり、購入者の画面からの正規ダウンロード確認は別に行います。
+作曲部アカウントへ`gu-sakkyoku-download` Workerを配置しています。R2 Bindingは`ALBUMS`、Worker URLは`https://gu-sakkyoku-download.super-butterfly-1ee0.workers.dev`です。本番Turnstile Widgetは`gu-sakkyoku-download-production`で、許可hostnameは`gu-sakkyoku.github.io`のみです。Workerには3年度のコードハッシュ・短期ダウンロードURL署名鍵・Turnstile Secretを、Cloudflare Secretとして登録済みです。2026追加時も既存年度のコードは変えず、署名鍵・Turnstile Secretも変更していません。**Secretの実値をGitHubへ書かないでください。** GitHubリポジトリはPublic、Pagesの公開元はGitHub Actionsに設定済みです。各更新後には購入者画面からの正規ダウンロード確認も行います。
 
 以下の順番で、本番での配信を有効にします。
 
 1. 共同管理者とURL・費用の承認方法・運用責任者を確認する。支払い責任者は暫定決定済みでR2は有効化済みですが、費用の確認・引き継ぎは続きます。Budget Alertは料金上限として利用を自動停止しません。リポジトリはPublic、Pages標準URLは`https://gu-sakkyoku.github.io/`です。印刷するQRは公開後に実機で確認する。
 2. **済：** 作曲部アカウントでR2を有効化し、Standard Storageの非公開バケット`gu-sakkyoku-albums`を作成した。`r2.dev`の公開URLは有効化しないまま維持する。
-3. **済：** `albums/2024.zip`と`albums/2025.zip`をS3互換APIのマルチパートでアップロードし、全量のSHA-256一致を確認した。Cloudflare APIの単純なアップロードは300MB制限があるため、これらのZIPには使わない。
-4. **済：** 部内だけで本番コードを年度別に発行した。**コードそのものは印刷原稿などアクセスを絞った場所にのみ置く**。Worker Secret`DOWNLOAD_CODE_HASHES`には年度ごとのSHA-256ハッシュをJSONで保存する。例：`{"2024":"<64文字のハッシュ>","2025":"<64文字のハッシュ>"}`。ローカルのテストコードを本番に使わない。
+3. **済：** 2024・2025・2026のZIPをS3互換APIのマルチパートでアップロードし、全量のSHA-256一致を確認した。大容量ZIPはS3互換APIで転送する。
+4. **済：** 部内だけで本番コードを年度別に発行した。**コードそのものは印刷原稿などアクセスを絞った場所にのみ置く**。Worker Secret`DOWNLOAD_CODE_HASHES`には年度ごとのSHA-256ハッシュをJSONで保存する。例：`{"2024":"<64文字のハッシュ>","2025":"<64文字のハッシュ>","2026":"<64文字のハッシュ>"}`。既存年度を残して追加し、ローカルのテストコードを本番に使わない。
 5. **済：** Worker Secret`DOWNLOAD_TOKEN_SECRET`には32バイト以上のランダム値をbase64url形式で設定し、`TURNSTILE_SECRET_KEY`には本番Turnstile Secretを設定した。Turnstile Widgetは作曲部アカウントで作成し、許可hostnameは`gu-sakkyoku.github.io`だけ。Managedモード、事前クリアランス無効。公開テスト用sitekey/secretを本番に使わない。`RUNTIME_MODE`は本番で`production`のままにする。
 6. **済：** `worker/wrangler.jsonc`の`ALLOWED_ORIGIN`をサイトのOriginへ合わせ、Workerをデプロイした。
 7. **済：** GitHubのRepository Settings > Secrets and variables > Actions > **Variables**に`NEXT_PUBLIC_DOWNLOAD_WORKER_URL`（本番WorkerのHTTPS Origin）と`NEXT_PUBLIC_TURNSTILE_SITE_KEY`（本番用の公開sitekey）を設定した。Secretそのものではないので、Secrets欄ではなくVariables欄です。未設定だとデプロイWorkflowはスキップされます。テスト用sitekeyやHTTPのWorker URLはWorkflowで拒否します。
 8. **設定済み：** リポジトリはPublic、GitHub Pagesの公開元は**GitHub Actions**。`main`へ反映すると`.github/workflows/deploy-pages.yml`が`out/`をアップロードします。Pull Requestからはデプロイしません。
-9. 本番公開前に、誤コード、正コード、2026の準備中表示、スマホ表示、R2が非公開であることを別の管理者と確認する。最後に共通QRを読み取り、印刷URLを確定する。
+9. 本番公開前に、誤コード、正コード、公開年度のZIP取得、次年度の準備中表示、スマホ表示、R2が非公開であることを別の管理者と確認する。最後に共通QRを読み取り、印刷URLを確定する。
 
 2027以降は`src/data/albums.ts`に1件追加し、R2の`albums/2027.zip`とハッシュ・ジャケットを用意します。年度データはWorkerのビルドにも含まれるため、公開時には`npx wrangler deploy --config worker/wrangler.jsonc`でWorkerも再デプロイします。Cloudflare Workerの認証ロジックを年度ごとにコピーしません。
 
@@ -82,9 +82,22 @@ AWS CLIのS3互換APIなら大容量ファイルをマルチパートで転送�
 ```bash
 aws s3 cp /path/to/2024.zip s3://gu-sakkyoku-albums/albums/2024.zip --endpoint-url https://<ACCOUNT_ID>.r2.cloudflarestorage.com --profile <R2専用プロファイル>
 aws s3 cp /path/to/2025.zip s3://gu-sakkyoku-albums/albums/2025.zip --endpoint-url https://<ACCOUNT_ID>.r2.cloudflarestorage.com --profile <R2専用プロファイル>
+aws s3 cp /path/to/2026.zip s3://gu-sakkyoku-albums/albums/2026.zip --endpoint-url https://<ACCOUNT_ID>.r2.cloudflarestorage.com --profile <R2専用プロファイル>
 ```
 
-アップロード後はサイズと内容を確認します。ダウンロード試験を1回行い、元ZIPとのSHA-256を照合してから販売してください。2024・2025の手元ZIPはそれぞれ約1.29GB・約1.69GBです。Standard Storageの無料枠は月10GBですが、他の保存物・操作やプラン条件で料金が変わるため、無料枠を超えない保証とは考えないでください。
+アップロード後はサイズと内容を確認します。ダウンロード試験を1回行い、元ZIPとのSHA-256を照合してから販売してください。2026年10月の更新用ZIPは、2024年が約622MB、2025年が約191MB、2026年が約446MBで、合計約1.26GBです（10進数）。Standard Storageの無料枠は月10GBですが、他の保存物・操作やプラン条件で料金が変わるため、無料枠を超えない保証とは考えないでください。
+
+### ZIPだけを修正版へ差し替えるとき
+
+カードのQR・年度コード・Worker Secretは**そのまま**です。差し替えるのは同じ`albums/<年度>.zip`の中身だけです。コードの再発行コマンドは実行しません。
+
+1. 新ZIPを開けることを確認し、サイズとSHA-256を記録します。
+2. 非公開R2の一時キーへ新ZIPをアップロードし、**ファイル全体を読み戻して**照合します。マルチパートのETagは単純なファイルハッシュではないので、ETagだけで内容一致を判断しません。
+3. 完成した一時オブジェクトを本来の`albums/<年度>.zip`へコピーします。先に旧ZIPを削除して配信を止めないでください。
+4. 本来のキーも全量照合し、既存のコードで画面から保存できることを確認します。署名付きURLやコードを確認記録へ載せません。
+5. 旧版を残さない方針の場合、照合成功後に一時コピーを削除し、作業用R2トークンも無効化します。旧版へ戻すには部内で保管した元ZIPが必要です。PCの元ZIPまで一緒に消しません。
+
+新年度を追加するときだけ、既存年度のハッシュを残して新年度分をSecretへ追加し、公開フラグを変更してWorkerとGitHub Pagesを両方更新します。署名鍵・Turnstile Secret・許可Originの変更は不要です。
 
 ### ローカル試験（Cloudflareへの請求なし）
 
@@ -103,7 +116,7 @@ npx wrangler r2 object put gu-sakkyoku-albums/albums/2025.zip --file=/path/to/20
 node scripts/verify-local-downloads.mjs /path/to/ZIPのあるフォルダ
 ```
 
-最後のコマンドは、ローカルWorkerから2本のZIPを最後まで取得して元ファイルのSHA-256と比較します。約3GBを読み取るため時間と空き容量に注意してください。ローカルR2のデータは`.wrangler/`に保存され、Gitには含まれません。
+最後のコマンドは、ローカルWorkerから2024・2025の2本を最後まで取得して元ファイルのSHA-256と比較します。この確認用スクリプトとテストカードの自動生成対象は2年度です。本番の2026確認は2026の既存コードを使い、公開ページから別途行います。元ZIPのサイズに応じて時間と空き容量に注意してください。ローカルR2のデータは`.wrangler/`に保存され、Gitには含まれません。
 
 - R2バケットは非公開にする
 - `r2.dev`公開URLを有効にしない
