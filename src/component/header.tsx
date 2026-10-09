@@ -16,6 +16,7 @@ const navigation = [
 export default function Cheader() {
   const [openMenu, setOpenMenu] = useState(false);
   const menuButton = useRef<HTMLButtonElement>(null);
+  const header = useRef<HTMLElement>(null);
 
   useEffect(() => {
     if (!openMenu) return;
@@ -26,6 +27,13 @@ export default function Cheader() {
         menuButton.current?.focus();
       }
     };
+    // Tabで本文へ進んだら閉じます。メニューが本文のフォーカス位置を覆わないためです。
+    // Escapeとは違い、移動先のフォーカスをボタンへ戻す必要はありません。
+    const closeOnOutsideFocus = (event: FocusEvent) => {
+      if (event.target instanceof Node && !header.current?.contains(event.target)) {
+        setOpenMenu(false);
+      }
+    };
     // PC表示へ広げた後にスマホ幅へ戻しても、以前のメニューが突然開かないようにします。
     const desktop = window.matchMedia("(min-width: 64rem)");
     const closeOnDesktop = () => {
@@ -34,14 +42,16 @@ export default function Cheader() {
     closeOnDesktop();
     desktop.addEventListener("change", closeOnDesktop);
     document.addEventListener("keydown", closeOnEscape);
+    document.addEventListener("focusin", closeOnOutsideFocus);
     return () => {
       desktop.removeEventListener("change", closeOnDesktop);
       document.removeEventListener("keydown", closeOnEscape);
+      document.removeEventListener("focusin", closeOnOutsideFocus);
     };
   }, [openMenu]);
 
   return (
-    <Sheader>
+    <Sheader ref={header}>
       <Sinner>
         <Sbrand href="/" aria-label="群馬大学作曲部 トップページ">
           <Image
