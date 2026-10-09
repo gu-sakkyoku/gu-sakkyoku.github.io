@@ -9,6 +9,8 @@ export type Album = {
   artwork?: string;
   detailPath?: string;
   downloadEnabled: boolean;
+  // 既に公開した作品の配布停止を、まだ未公開の「Coming Soon」と区別する表示用の理由です。
+  unavailableReason?: "paused";
   r2Key?: string;
   discs: { name: string; tracks: string[] }[];
 };
@@ -19,8 +21,11 @@ export const albums: Album[] = [
     title: "炭酸予報",
     // タイトル入りの新ジャケット。旧画像と別名にして、ブラウザのキャッシュ残りを避けます。
     artwork: "/cover2026-tansan-yohou.png",
-    // 完成ZIPは非公開R2へ配置します。差し替え時もキーと年度コードは変えません。
-    downloadEnabled: true,
+    // 2026-10-09: 収録内容の不備により一時停止。Workerもこのフラグを使って取得を拒否します。
+    // 修正版を同じR2キーへ差し替えて確認後、trueへ戻し、unavailableReasonを削除します。
+    // 停止・再開のどちらでも、印刷済みの年度コードとQRは変えません。
+    downloadEnabled: false,
+    unavailableReason: "paused",
     r2Key: "albums/2026.zip",
     // 正式な曲名・曲順が届いたら追記。ZIPのファイル名から推測して掲載しません。
     discs: [],
