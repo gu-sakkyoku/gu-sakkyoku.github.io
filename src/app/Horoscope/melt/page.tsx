@@ -1,16 +1,13 @@
 "use client";
 
 
-import Cheader from "../../../component/header";
-import Cfooter from "../../../component/footer";
+import ClientWrapper from "../../../component/ClientWrapper";
 
 
 
 const MainPage = () => {
   return (
-    <>
-    <Cheader />
-      <br /><br /><br /><br /><br /><br /><br />
+    <ClientWrapper>
       <h1 className="text-[30px] px-[10%] font-serif text-center">
         クチグルマジャーニー
       </h1>
@@ -77,8 +74,7 @@ const MainPage = () => {
 勝手にちゃっかりどこか連れ出して<br />
 君と君と君とどこまでも</p>
       <br /><br />
-      <Cfooter />
-    </>
+    </ClientWrapper>
   );
 };
 

@@ -3,6 +3,10 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  /* ヘッダーと本文の先頭余白は同じ値を参照します。画像の読み込みを待つ必要はありません。 */
+  --site-header-height: 5rem;
+  --site-page-gap: clamp(2.5rem, 4vw, 4rem);
+  --site-link: #1d4ed8;
 }
 
 @theme inline {
@@ -16,7 +20,72 @@
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+    --site-link: #93c5fd;
   }
+}
+
+/* header.tsxのメニュー切り替え幅と揃えること。片方だけ変えると境界で表示が食い違います。 */
+@media (min-width: 64rem) {
+  :root {
+    --site-header-height: 6rem;
+  }
+}
+
+.site-main {
+  /* brの個数ではなく、固定ヘッダーの高さ＋読み始めの余白で本文を配置します。 */
+  padding-top: calc(var(--site-header-height) + var(--site-page-gap));
+  min-height: calc(100svh - 3rem);
+}
+
+.site-main :where(a, button, input, summary, [id]) {
+  scroll-margin-top: calc(var(--site-header-height) + 1rem);
+}
+
+.site-text-link {
+  color: var(--site-link);
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+}
+
+.site-text-link:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 4px;
+}
+
+/* 既存の2枚を斜めに重ねる配置を維持し、WQHD/4Kでは1200pxを上限にします。 */
+.album-jackets {
+  position: relative;
+  width: min(100%, 75rem);
+  aspect-ratio: 5 / 3;
+  margin-inline: auto;
+}
+
+.album-jackets-front {
+  position: absolute;
+  width: 33%;
+  top: 6%;
+  left: 20%;
+  z-index: 2;
+}
+
+.album-jackets-back {
+  position: absolute;
+  width: 35%;
+  bottom: 6%;
+  right: 20%;
+  z-index: 1;
+}
+
+.album-jackets img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* 動きを減らす設定では、待機演出に本文を隠さずすぐ読めるようにします。 */
+  #homepage-loading { display: none; }
 }
 
 body {

@@ -1,32 +1,17 @@
-"use client";
-
-import { useEffect, useState } from "react";
+import type { ReactNode } from "react";
 import Cheader from "./header";
 import Cfooter from "./footer";
 
-export default function ClientWrapper({ children }: { children: React.ReactNode }) {
-  const [headerHeight, setHeaderHeight] = useState(0);
-
-  useEffect(() => {
-    const updateHeight = () => {
-      const header = document.querySelector("header");
-      if (header) {
-        setHeaderHeight(header.clientHeight);
-      }
-    };
-
-    updateHeight();
-    window.addEventListener("resize", updateHeight);
-
-    return () => {
-      window.removeEventListener("resize", updateHeight);
-    };
-  }, []);
-
+/**
+ * 既存の名前を保った、全ページ共通の外枠です。
+ * 高さの実測をやめ、globals.cssのsite-mainで静的HTMLの段階から余白を確保します。
+ * 新しいページもこれで囲めば、ロゴの読み込みや画面幅によってタイトルが隠れません。
+ */
+export default function ClientWrapper({ children, className = "" }: { children: ReactNode; className?: string }) {
   return (
     <>
       <Cheader />
-      <main style={{ paddingTop: headerHeight }}>{children}</main>
+      <main className={`site-main ${className}`}>{children}</main>
       <Cfooter />
     </>
   );

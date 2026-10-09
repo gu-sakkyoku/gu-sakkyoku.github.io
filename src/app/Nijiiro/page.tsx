@@ -1,17 +1,14 @@
 "use client";
 
 import Image from "next/image";
-import Cheader from "../../component/header";
-import Cfooter from "../../component/footer";
+import ClientWrapper from "../../component/ClientWrapper";
 import LyricLink from "../../component/LyricLink";
 
 
 
 const MainPage = () => {
   return (
-    <>
-    <Cheader />
-      <br /><br /><br /><br /><br /><br /><br />
+    <ClientWrapper>
       <h1 className="text-[30px] px-[10%] font-serif text-center">
         群馬大学作曲部オリジナルアルバム1作目「虹色memory」
       </h1>
@@ -74,8 +71,7 @@ const MainPage = () => {
 
 
       <br /><br /><br />
-      <Cfooter />
-    </>
+    </ClientWrapper>
   );
 };
 

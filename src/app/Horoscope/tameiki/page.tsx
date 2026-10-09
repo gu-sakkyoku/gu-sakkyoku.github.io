@@ -1,16 +1,13 @@
 "use client";
 
 
-import Cheader from "../../../component/header";
-import Cfooter from "../../../component/footer";
+import ClientWrapper from "../../../component/ClientWrapper";
 
 
 
 const MainPage = () => {
   return (
-    <>
-    <Cheader />
-      <br /><br /><br /><br /><br /><br /><br />
+    <ClientWrapper>
       <h1 className="text-[30px] px-[10%] font-serif text-center">
         ため息は空に溶けた feat. 花隈千冬
       </h1>
@@ -35,8 +32,7 @@ const MainPage = () => {
 いつかの雨も　泣き止んだの<br />
 上から　幸せが　降ってこないかな</p>
       <br /><br />
-      <Cfooter />
-    </>
+    </ClientWrapper>
   );
 };
 

@@ -1,181 +1,229 @@
-"use client"
+"use client";
 
-import React, { useState } from 'react';
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import styled from "styled-components";
-import Image from 'next/image';
 
-function Cheader() {
+// PCとスマートフォンで同じリンクを使います。メニュー項目を増やす場合もここだけ変更してください。
+const navigation = [
+  { href: "/Horoscope", label: "Horoscope" },
+  { href: "/Nijiiro", label: "虹色memory" },
+  { href: "/download", label: "ダウンロード" },
+  { href: "/", label: "トップページ" },
+];
+
+export default function Cheader() {
   const [openMenu, setOpenMenu] = useState(false);
+  const menuButton = useRef<HTMLButtonElement>(null);
+  const header = useRef<HTMLElement>(null);
 
-  const handleMenuOpen = () => {
-    setOpenMenu((current) => !current);
-  };
+  useEffect(() => {
+    if (!openMenu) return;
 
-  const handleMenuClose = () => setOpenMenu(false);
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setOpenMenu(false);
+        menuButton.current?.focus();
+      }
+    };
+    // Tabで本文へ進んだら閉じます。メニューが本文のフォーカス位置を覆わないためです。
+    // Escapeとは違い、移動先のフォーカスをボタンへ戻す必要はありません。
+    const closeOnOutsideFocus = (event: FocusEvent) => {
+      if (event.target instanceof Node && !header.current?.contains(event.target)) {
+        setOpenMenu(false);
+      }
+    };
+    // PC表示へ広げた後にスマホ幅へ戻しても、以前のメニューが突然開かないようにします。
+    const desktop = window.matchMedia("(min-width: 64rem)");
+    const closeOnDesktop = () => {
+      if (desktop.matches) setOpenMenu(false);
+    };
+    closeOnDesktop();
+    desktop.addEventListener("change", closeOnDesktop);
+    document.addEventListener("keydown", closeOnEscape);
+    document.addEventListener("focusin", closeOnOutsideFocus);
+    return () => {
+      desktop.removeEventListener("change", closeOnDesktop);
+      document.removeEventListener("keydown", closeOnEscape);
+      document.removeEventListener("focusin", closeOnOutsideFocus);
+    };
+  }, [openMenu]);
 
-    return (
-        <Sheader>
-          <Sleft>
-            <Link href="/"><Image src="/sakkyokukyara.png" alt="群馬大学作曲部のロゴキャラクター" width={1280} height={1280} style={{ width: "30%", height: "auto" }}/></Link>
-          </Sleft>
+  return (
+    <Sheader ref={header}>
+      <Sinner>
+        <Sbrand href="/" aria-label="群馬大学作曲部 トップページ">
+          <Image
+            src="/sakkyokukyara.png"
+            alt="群馬大学作曲部のロゴ"
+            width={1280}
+            height={1280}
+            sizes="(min-width: 1024px) 64px, 48px"
+          />
+          {/* ページのh1と区別するため、サイト名は見出しではなくspanにします。 */}
+          <span>群馬大学作曲部</span>
+        </Sbrand>
 
-          <SImage>
-          <Link href="/"><Image src="/sakkyokukyara.png" alt="群馬大学作曲部のロゴキャラクター" width={1280} height={1280} style={{ width: "50%", height: "auto" }}/></Link>
-          <h1 className="text-blue-900">群馬大学作曲部</h1>
-          </SImage>
-
-
-
-
-            <Snav>
-                <Link href="/Horoscope">Horoscope</Link>
-                <span>|</span>
-                <Link href="/Nijiiro">虹色memory</Link>
-                <span>|</span>
-                <Link href="/download">ダウンロード</Link>
-                <span>|</span>
-                <Link href="/">トップページ</Link>
-            </Snav>
-            <Sbutton
-              onClick={handleMenuOpen}
-              type="button"
-              className="z-10 space-y-2"
-              aria-label={openMenu ? "メニューを閉じる" : "メニューを開く"}
-              aria-expanded={openMenu}
-              aria-controls="mobile-navigation"
-            >
-            <div
-              className={
-                openMenu
-                  ? 'w-8 h-0.5 bg-gray-600 translate-y-2.5 rotate-45 transition duration-500 ease-in-out'
-                  : 'w-8 h-0.5 bg-gray-600 transition duration-500 ease-in-out'
-              }
-            />
-            <div
-              className={
-                openMenu
-                  ? 'opacity-0 transition duration-500 ease-in-out'
-                  : 'w-8 h-0.5 bg-gray-600 transition duration-500 ease-in-out'
-              }
-            />
-            <div
-              className={
-                openMenu
-                  ? 'w-8 h-0.5 bg-gray-600 -rotate-45 transition duration-500 ease-in-out'
-                  : 'w-8 h-0.5 bg-gray-600 transition duration-500 ease-in-out'
-              }
-            />
-          </Sbutton>
-
-          {/*
-            閉じて画面外にあるリンクへTabキーで移動しないよう、
-            見た目の移動に加えてaria-hiddenとinertも同期させます。
-          */}
-          <nav
-            id="mobile-navigation"
-            aria-label="モバイルメニュー"
-            aria-hidden={!openMenu}
-            inert={!openMenu}
-            className={
-              openMenu
-                ? 'text-left fixed bg-slate-50 right-0 top-0 w-8/12 h-screen flex flex-col justify-start pt-8 px-3 ease-linear duration-300'
-                : 'fixed right-[-100%] ease-linear duration-300'
-            }
-          >
-            <ul className="mt-6">
-              <li className="">
-                <Link href="/Horoscope" className="py-2 inline-block" onClick={handleMenuClose}>
-                  Horoscope
-                </Link>
+        <Snav aria-label="メインメニュー">
+          <ul>
+            {navigation.map(({ href, label }, index) => (
+              <li key={href}>
+                {index > 0 && <span aria-hidden="true">|</span>}
+                <Link href={href}>{label}</Link>
               </li>
-              <li className="">
-                <Link href="/Nijiiro" className="py-2 inline-block" onClick={handleMenuClose}>
-                  虹色memory
-                </Link>
-              </li>
-              <li>
-                <Link href="/download" className="py-2 inline-block" onClick={handleMenuClose}>
-                  ダウンロード
-                </Link>
-              </li>
-              <li className="">
-                <Link href="/" className="py-2 inline-block" onClick={handleMenuClose}>
-                  トップページ
-                </Link>
-              </li>
-            </ul>
-          </nav>
-        </Sheader>
-    );
+            ))}
+          </ul>
+        </Snav>
+
+        <Sbutton
+          ref={menuButton}
+          type="button"
+          onClick={() => setOpenMenu((current) => !current)}
+          aria-label={openMenu ? "メニューを閉じる" : "メニューを開く"}
+          aria-expanded={openMenu}
+          aria-controls="mobile-navigation"
+          $open={openMenu}
+        >
+          <span aria-hidden="true" />
+          <span aria-hidden="true" />
+          <span aria-hidden="true" />
+        </Sbutton>
+      </Sinner>
+
+      {/* 本文を覆う全画面モーダルにはせず、ヘッダーの下に開く通常のナビです。 */}
+      <SmobileNav
+        id="mobile-navigation"
+        aria-label="モバイルメニュー"
+        aria-hidden={!openMenu}
+        inert={!openMenu}
+        $open={openMenu}
+      >
+        <ul>
+          {navigation.map(({ href, label }) => (
+            <li key={href}>
+              <Link href={href} onClick={() => setOpenMenu(false)}>{label}</Link>
+            </li>
+          ))}
+        </ul>
+      </SmobileNav>
+    </Sheader>
+  );
 }
 
-export default Cheader;
+const Sheader = styled.header`
+  /* 固定サイズ＋上限付きの中身で、WQHD/4Kでもロゴが巨大化しないようにします。 */
+  height: var(--site-header-height);
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 999;
+  background: #fff;
+  color: #171717;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  padding-inline: clamp(1rem, 3vw, 2rem);
 
-const Sleft = styled.div`
-  width: 33.33%;
+  :where(a, button):focus-visible {
+    outline: 2px solid #1d4ed8;
+    outline-offset: 4px;
+    border-radius: 4px;
+  }
+`;
+
+const Sinner = styled.div`
+  max-width: 80rem;
+  height: 100%;
+  margin-inline: auto;
   display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+`;
+
+const Sbrand = styled(Link)`
+  display: inline-flex;
   align-items: center;
   gap: 1rem;
-  @media (min-width: 821px) {
-    display: none; /* 完全に非表示 */
-  }
-`;
-
-const SImage = styled.div`
-  width: 25%;
-  display: flex;
-  align-items: center; /* 縦方向の中央揃え */
-  justify-content: flex-start; /* 左詰め（自然な横並び） */
-  gap: 1rem; /* 画像と文字の間のスペース */
-  @media (max-width: 821px) {
-    display: none; /* 完全に非表示 */
-  }
-
-  h1 {
-    font-size: 1.5rem; /* 見やすい大きさに調整 */
-    font-weight: bold;
-    color: #1e3a8a; /* Tailwind の text-blue-900 相当 */
-    white-space: nowrap; /* 改行を防ぐ */
-  }
+  flex-shrink: 0;
 
   img {
-    display: block;
+    /* 親の25%・画像の50%という割合指定をやめ、必ず正方形のまま収めます。 */
+    width: 3rem;
+    height: 3rem;
+    object-fit: contain;
+    flex-shrink: 0;
+  }
+
+  span {
+    display: none;
+    color: #1e3a8a;
+    font-size: 1.5rem;
+    font-weight: bold;
+    white-space: nowrap;
+  }
+
+  @media (min-width: 64rem) {
+    img { width: 4rem; height: 4rem; }
+    span { display: inline; }
   }
 `;
-
-
-
-const Sheader = styled.header`
-  background-color: white;
-  color: black;
-  padding: 0.8rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  z-index: 999;
-  width: 100%;
-  position: fixed;
-  top: 0;
-  left: 0;
-`;
-
 
 const Snav = styled.nav`
-  display: flex;
-  align-items: center;
-  gap: 1rem; /* 要素間の間隔を調整 */
-  @media (max-width: 821px) {
-    display: none; /* 完全に非表示 */
+  display: none;
+
+  @media (min-width: 64rem) {
+    display: block;
   }
-  span {
-    color: black; /* 区切り線の色を変更 */
-  }
+
+  /* 区切り線は読み上げ対象から外し、リンクの押せる高さを確保します。 */
+  ul { display: flex; align-items: center; }
+  li { display: flex; align-items: center; gap: 0.75rem; }
+  li + li { margin-left: 0.75rem; }
+  a { display: inline-flex; align-items: center; min-height: 2.75rem; white-space: nowrap; }
+  a:hover { text-decoration: underline; text-underline-offset: 0.25em; }
 `;
 
-const Sbutton = styled.button`
-  @media (min-width: 822px) {
-    display: none; /* 完全に非表示 */
+const Sbutton = styled.button<{ $open: boolean }>`
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+
+  span {
+    width: 28px;
+    height: 2px;
+    background: #52525b;
+    transition: transform 180ms ease, opacity 180ms ease;
   }
+  span:first-child { transform: ${({ $open }) => $open ? "translateY(8px) rotate(45deg)" : "none"}; }
+  span:nth-child(2) { opacity: ${({ $open }) => $open ? 0 : 1}; }
+  span:last-child { transform: ${({ $open }) => $open ? "translateY(-8px) rotate(-45deg)" : "none"}; }
+
+  @media (min-width: 64rem) { display: none; }
+  @media (prefers-reduced-motion: reduce) { span { transition: none; } }
+`;
+
+const SmobileNav = styled.nav<{ $open: boolean }>`
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: min(22rem, 100%);
+  max-height: calc(100dvh - var(--site-header-height));
+  overflow-y: auto;
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.12);
+  padding: 1rem;
+  visibility: ${({ $open }) => $open ? "visible" : "hidden"};
+  opacity: ${({ $open }) => $open ? 1 : 0};
+  transition: opacity 180ms ease;
+
+  /* 閉じるボタンは常にヘッダー内に残るので、ナビに隠されません。 */
+  a { display: flex; align-items: center; min-height: 3rem; padding: 0.5rem 0.75rem; }
+  a:hover { background: #e2e8f0; }
+  @media (min-width: 64rem) { display: none; }
+  @media (prefers-reduced-motion: reduce) { transition: none; }
 `;
