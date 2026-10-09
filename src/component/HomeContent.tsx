@@ -17,7 +17,8 @@ export default function HomeContent() {
   return (
     <>
       {/* 本文は最初から描画し、静的HTMLにも含めます。読み込み演出だけを上に重ねます。 */}
-      <ClientWrapper><Mainpage /></ClientWrapper>
+      {/* 告知の演出は読み込み画面が消え始めてから。本文の静的出力は維持します。 */}
+      <ClientWrapper><Mainpage announcementReady={!isLoading} /></ClientWrapper>
       {/* JavaScriptを使わない閲覧環境では、演出が消えず本文を覆わないようにします。 */}
       <noscript><style>{"#homepage-loading { display: none; }"}</style></noscript>
       <AnimatePresence>

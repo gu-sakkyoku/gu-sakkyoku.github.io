@@ -3,18 +3,26 @@
 import Link from "next/link";
 import Image from "next/image";
 import AlbumJackets from "./AlbumJackets";
+import NewAlbumAnnouncement from "./NewAlbumAnnouncement";
+import { albums } from "../data/albums";
+import { site } from "../data/site";
 
-const MainPage = () => {
+// 年度を追加すると新作告知も自動で切り替わります。作品情報をトップへ二重に書きません。
+const latestAlbum = [...albums].sort((a, b) => b.year - a.year)[0];
+
+const MainPage = ({ announcementReady = true }: { announcementReady?: boolean }) => {
   return (
     <>
       <h1 className="text-[30px] px-[10%] font-serif text-center">
         群馬大学作曲部 公式サイト
       </h1>
+      {/* 検索用の希望サイト名と、閲覧者が見える呼び名を一致させます。 */}
+      <p className="mt-2 text-center text-sm">{site.name}</p>
       <br />
       <hr className="w-[80%] mx-auto" />
       <br />
       <p className="w-[80%] mx-auto text-center">
-        群馬大学作曲部の公式サイトです。オリジナルアルバム「Horoscope」「虹色memory」の歌詞・作品情報と、ダウンロードカードの案内を掲載しています。ご連絡はメール(gusakkyoku[@]gmail.com)または公式X(
+        群馬大学作曲部の公式サイトです。オリジナルアルバムの作品情報・歌詞と、ダウンロードカードの案内を掲載しています。ご連絡はメール(gusakkyoku[@]gmail.com)または公式X(
         <a href="https://x.com/GUsakkyoku" className="site-text-link">
           @GUsakkyoku
         </a>
@@ -27,6 +35,8 @@ const MainPage = () => {
         </Link>
       </p>
 
+      {latestAlbum && <NewAlbumAnnouncement album={latestAlbum} motionReady={announcementReady} />}
+
       <br />
       <br />
       <br />
@@ -36,7 +46,7 @@ const MainPage = () => {
       <h1 className="text-[30px] px-[10%] font-serif text-center">作曲部オリジナルアルバム2作目「Horoscope」</h1>
       <br /><br />
 
-      {/* 画像を斜めに重ねるコンテナ */}
+      {/* 既存の斜めに重なる演出を再利用し、大きな画面でも画像の幅を一定以内に収めます。 */}
       <AlbumJackets />
 
       <br />

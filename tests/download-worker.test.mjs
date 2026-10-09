@@ -7,20 +7,24 @@ import worker from "../worker/src/index.ts";
 // ここで使うコードは単体テスト専用の固定値です。配布カードのコードとは無関係です。
 const code2024 = "2024-ABCD-EFGH-JKLM-NPQR";
 const code2025 = "2025-ABCD-EFGH-JKLM-NPQR";
+const code2026 = "2026-ABCD-EFGH-JKLM-NPQR";
+const issuedCodes = [[2024, code2024], [2025, code2025], [2026, code2026]];
 const origin = "http://localhost:3000";
 const hashes = {
   2024: createHash("sha256").update(code2024).digest("hex"),
   2025: createHash("sha256").update(code2025).digest("hex"),
+  2026: createHash("sha256").update(code2026).digest("hex"),
 };
 const zipBytes = new TextEncoder().encode("PK\x03\x04test fixture");
 const tokenSecret = Buffer.alloc(32, 7).toString("base64url");
+const publishedKeys = new Set(issuedCodes.map(([year]) => `albums/${year}.zip`));
 
 const storage = {
   async head(key) {
-    return key === "albums/2024.zip" || key === "albums/2025.zip" ? { size: zipBytes.length } : null;
+    return publishedKeys.has(key) ? { size: zipBytes.length } : null;
   },
   async get(key) {
-    if (key !== "albums/2024.zip" && key !== "albums/2025.zip") return null;
+    if (!publishedKeys.has(key)) return null;
     return {
       size: zipBytes.length,
       body: new ReadableStream({ start(controller) { controller.enqueue(zipBytes); controller.close(); } }),
@@ -52,8 +56,23 @@ function post(year, code, requestOrigin = origin, token = "XXXX.DUMMY.TOKEN.XXXX
   }), { ...env, ...extraEnv });
 }
 
+// 修正版の公開後も同じコードで再開できるかを、実際の公開設定を変更せずに検証します。
+// グローバルの年度データを使うため、変更はこの逐次実行のテスト内だけに限定し必ず戻します。
+async function withAlbumAvailability(year, enabled, check) {
+  const album = albums.find((item) => item.year === year);
+  const wasEnabled = album.downloadEnabled;
+  album.downloadEnabled = enabled;
+  try {
+    return await check();
+  } finally {
+    album.downloadEnabled = wasEnabled;
+  }
+}
+
+const withEnabledAlbum = (year, check) => withAlbumAvailability(year, true, check);
+
 test("正しい年度コードだけが短時間のダウンロードURLを取得できる", async () => {
-  for (const [year, code] of [[2024, code2024], [2025, code2025]]) {
+  for (const [year, code] of issuedCodes.filter(([year]) => albums.find((album) => album.year === year)?.downloadEnabled)) {
     const authorized = await post(year, code);
     assert.equal(authorized.status, 200);
     assert.equal(authorized.headers.get("Access-Control-Allow-Origin"), origin);
@@ -70,39 +89,57 @@ test("正しい年度コードだけが短時間のダウンロードURLを取�
   }
 });
 
-test("コード誤り、2026、異なるOrigin、直接URLを拒否する", async () => {
+test("コード誤り、未登録年度、異なるOrigin、直接URLを拒否する", async () => {
   assert.equal((await post(2024, "2024-AAAA-AAAA-AAAA-AAAA")).status, 401);
-  assert.equal((await post(2026, "2026-AAAA-AAAA-AAAA-AAAA")).status, 400);
+  assert.equal((await post(2027, "2027-AAAA-AAAA-AAAA-AAAA")).status, 400);
+  assert.equal((await post(2026, code2025)).status, 400);
   const foreign = await post(2024, code2024, "https://evil.example");
   assert.equal(foreign.status, 403);
   assert.equal(foreign.headers.get("Access-Control-Allow-Origin"), null);
   assert.equal((await worker.fetch(new Request("http://localhost:8787/download/2024"), env)).status, 403);
-  assert.equal((await worker.fetch(new Request("http://localhost:8787/download/2026?token=fake"), env)).status, 404);
+  assert.equal((await worker.fetch(new Request("http://localhost:8787/download/2026?token=fake"), env)).status, 403);
+  assert.equal((await worker.fetch(new Request("http://localhost:8787/download/2027?token=fake"), env)).status, 404);
 });
 
-test("2026はR2キーとコードのハッシュを準備しても公開フラグが立つまで拒否する", async () => {
+test("停止中の2026は正しいコードと停止前の有効トークンがあっても取得できない", async () => {
   const album = albums.find((item) => item.year === 2026);
   assert.equal(album?.r2Key, "albums/2026.zip");
-  assert.equal(album?.downloadEnabled, false);
-
-  // ここで使う文字列はテスト専用です。本番カードのコードはテストへ書きません。
-  const testCode = "2026-ABCD-EFGH-JKLM-NPQR";
-  const preparedEnv = {
-    ...env,
-    DOWNLOAD_CODE_HASHES: JSON.stringify({
-      ...hashes,
-      2026: createHash("sha256").update(testCode).digest("hex"),
-    }),
+  // 停止前に取得した有効リンクを再現し、画面だけの停止ではないことを確かめます。
+  const { token } = await withEnabledAlbum(2026, async () => {
+    const response = await post(2026, code2026);
+    assert.equal(response.status, 200);
+    return response.json();
+  });
+  let storageReads = 0;
+  const stoppedEnv = {
     ALBUMS: {
-      ...storage,
-      async head(key) {
-        return key === "albums/2026.zip" ? { size: zipBytes.length } : storage.head(key);
-      },
+      async head() { storageReads++; throw new Error("paused album must not read R2"); },
+      async get() { storageReads++; throw new Error("paused album must not read R2"); },
     },
   };
-  assert.equal((await post(2026, testCode, origin, "XXXX.DUMMY.TOKEN.XXXX", preparedEnv)).status, 400);
-  assert.equal((await worker.fetch(new Request("http://localhost:8787/download/2026?token=fake"), preparedEnv)).status, 404);
+  // 本番設定が再開済みでも、将来また停止した場合の保護が働くことを検証します。
+  // 一時的な停止状態はテスト内だけで使い、失敗した場合も元の設定へ必ず戻します。
+  await withAlbumAvailability(2026, false, async () => {
+    const rejected = await post(2026, code2026, origin, "XXXX.DUMMY.TOKEN.XXXX", stoppedEnv);
+    assert.equal(rejected.status, 400);
+    assert.equal("token" in await rejected.json(), false);
+    const stoppedDownload = await worker.fetch(new Request(`http://localhost:8787/download/2026?token=${token}`), { ...env, ...stoppedEnv });
+    assert.equal(stoppedDownload.status, 404);
+    assert.equal(stoppedDownload.headers.get("Content-Disposition"), null);
+    assert.equal(storageReads, 0);
+  });
+  assert.equal(albums.find((item) => item.year === 2024)?.downloadEnabled, true);
+  assert.equal(albums.find((item) => item.year === 2025)?.downloadEnabled, true);
 });
+
+test("再開後の2026のハッシュ登録が欠けた場合は安全に停止する", async () => withEnabledAlbum(2026, async () => {
+  const previousYearHashes = { 2024: hashes[2024], 2025: hashes[2025] };
+  const response = await post(2026, code2026, origin, "XXXX.DUMMY.TOKEN.XXXX", {
+    DOWNLOAD_CODE_HASHES: JSON.stringify(previousYearHashes),
+  });
+  assert.equal(response.status, 503);
+  assert.equal("token" in await response.json(), false);
+}));
 
 test("トークン改ざんと有効期限切れを拒否する", async () => {
   const { token } = await (await post(2024, code2024)).json();
@@ -159,11 +196,25 @@ test("本番Turnstileは公開hostnameとdownloadアクションの両方を要�
 });
 
 test("R2にZIPがない場合はリンクを発行しない", async () => {
-  const response = await post(2024, code2024, origin, "XXXX.DUMMY.TOKEN.XXXX", {
-    ALBUMS: { ...storage, async head() { return null; } },
-  });
-  assert.equal(response.status, 503);
-  assert.equal("token" in await response.json(), false);
+  for (const [year, code] of issuedCodes) {
+    await withEnabledAlbum(year, async () => {
+      const response = await post(year, code, origin, "XXXX.DUMMY.TOKEN.XXXX", {
+        ALBUMS: { ...storage, async head() { return null; } },
+      });
+      assert.equal(response.status, 503);
+      assert.equal("token" in await response.json(), false);
+    });
+  }
+});
+
+test("2026は同じ年度コードのまま配信を再開できる", async () => {
+  assert.equal(albums.find((item) => item.year === 2026)?.downloadEnabled, true);
+  const authorized = await post(2026, code2026);
+  assert.equal(authorized.status, 200);
+  const { token } = await authorized.json();
+  const download = await worker.fetch(new Request(`http://localhost:8787/download/2026?token=${token}`), env);
+  assert.equal(download.status, 200);
+  assert.deepEqual(new Uint8Array(await download.arrayBuffer()), zipBytes);
 });
 
 test("R2障害時は内部情報を出さずに失敗を案内する", async () => {
