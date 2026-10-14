@@ -14,6 +14,10 @@ node_modules/
 # testing
 /coverage
 
+# 配布用ZIP作成ツールのPythonキャッシュ（ソースや音源ではありません）。
+__pycache__/
+*.pyc
+
 # next.js
 /.next/
 /out/

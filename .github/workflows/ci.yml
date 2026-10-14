@@ -39,6 +39,10 @@ jobs:
       - name: Test download authorization
         run: npm test
 
+      # 標準ライブラリとダミー音源だけでZIPのファイル名・内容保持を確認します。
+      - name: Test album ZIP compatibility
+        run: python3 -m unittest discover -s tests -p test_album_zip.py -v
+
       - name: Build static site
         run: npm run build
 
