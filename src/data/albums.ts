@@ -1,3 +1,5 @@
+import { album2026, type AlbumEvent } from "./album2026.ts";
+
 /**
  * ダウンロード一覧の唯一の年度データです。
  * 新しい年を公開するときは、まずこの配列に1件追加してください。
@@ -8,6 +10,8 @@ export type Album = {
   title: string;
   artwork?: string;
   detailPath?: string;
+  crossfadeVideoId?: string;
+  event?: AlbumEvent;
   downloadEnabled: boolean;
   // 既に公開した作品の配布停止を、まだ未公開の「Coming Soon」と区別する表示用の理由です。
   unavailableReason?: "paused";
@@ -18,15 +22,18 @@ export type Album = {
 export const albums: Album[] = [
   {
     year: 2026,
-    title: "炭酸予報",
+    title: album2026.title,
     // タイトル入りの新ジャケット。旧画像と別名にして、ブラウザのキャッシュ残りを避けます。
-    artwork: "/cover2026-tansan-yohou.png",
+    artwork: album2026.artwork,
+    detailPath: album2026.detailPath,
+    crossfadeVideoId: album2026.crossfadeVideoId,
+    event: album2026.event,
     // 2026-10-09: 修正版を同じR2キーへ差し替え、全量のSHA-256一致を確認して配信を再開します。
     // ZIPの更新とコードの更新は別の操作です。印刷済みの年度コード・QR・Secretは変更しません。
     downloadEnabled: true,
     r2Key: "albums/2026.zip",
-    // 正式な曲名・曲順が届いたら追記。ZIPのファイル名から推測して掲載しません。
-    discs: [],
+    // 詳細ページと同じ正式曲目から生成します。歌詞本文はここへ読み込みません。
+    discs: album2026.discs.map((disc) => ({ name: disc.name, tracks: disc.tracks.map((track) => track.title) })),
   },
   {
     year: 2025,
