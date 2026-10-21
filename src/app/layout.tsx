@@ -35,8 +35,8 @@ export const metadata: Metadata = {
     images: [
       {
         url: site.logo,
-        width: 4167,
-        height: 4167,
+        width: site.logoSize,
+        height: site.logoSize,
       },
     ],
     locale: "ja_JP",

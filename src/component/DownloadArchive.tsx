@@ -12,6 +12,7 @@ type TurnstileApi = {
     options: {
       sitekey: string;
       action: string;
+      size: "compact";
       callback: (token: string) => void;
       "expired-callback": () => void;
       "error-callback": () => void;
@@ -54,6 +55,9 @@ function DownloadForm({ year, scriptReady }: { year: number; scriptReady: boolea
     widgetId.current = api.render(widgetContainer.current, {
       sitekey: siteKey,
       action: "download",
+      // 通常版は横300px必要で、320px幅のスマホのカード内に収まりません。
+      // 公式のコンパクト表示（150×140px）だけを指定し、認証条件は変更しません。
+      size: "compact",
       callback: setTurnstileToken,
       "expired-callback": () => setTurnstileToken(""),
       "error-callback": () => {
@@ -138,9 +142,10 @@ function DownloadForm({ year, scriptReady }: { year: number; scriptReady: boolea
         required
         maxLength={32}
         placeholder={`${year}-XXXX-XXXX-XXXX-XXXX`}
-        className="mt-2 w-full rounded-lg border border-zinc-500 bg-white px-4 py-3 font-mono text-sm tracking-wide text-zinc-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
+        className="mt-2 w-full rounded-lg border border-zinc-500 bg-white px-4 py-3 font-mono text-base tracking-wide text-zinc-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
       />
-      <div ref={widgetContainer} className="mt-4 min-h-18" aria-label="認証チェック" />
+      {/* 読み込み前からコンパクト版の高さを確保し、表示後にボタンが飛び跳ねないようにします。 */}
+      <div ref={widgetContainer} className="mt-4 flex min-h-36 justify-center" aria-label="認証チェック" />
       <button type="submit" disabled={pending} className="mt-4 w-full rounded-full border-2 border-zinc-400 px-5 py-3 font-serif text-lg transition-colors hover:bg-zinc-500/15 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 disabled:cursor-wait disabled:opacity-70">
         {pending ? "確認中…" : "コードを確認してダウンロード"}
       </button>

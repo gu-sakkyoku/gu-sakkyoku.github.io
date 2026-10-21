@@ -8,7 +8,10 @@ export const site = {
   title: "群馬大学作曲部 | 公式サイト",
   url: "https://gu-sakkyoku.github.io/",
   description: "群馬大学作曲部の公式サイト。オリジナルアルバム「炭酸予報」「Horoscope」「虹色memory」の作品情報・歌詞、ダウンロードカードの案内を掲載しています。",
-  logo: "/sakkyokukyara.png",
+  // 2026-10-21からの正式ロゴ。白いヘッダーには支給された青色の透過版を使います。
+  // 画像を差し替える際はlogoSizeも確認し、検索用アイコンを再生成してください。
+  logo: "/site-logo-blue.png",
+  logoSize: 2084,
   icon: "/site-icon.png",
   appleIcon: "/apple-touch-icon.png",
 };

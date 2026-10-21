@@ -1,15 +1,17 @@
 import { createRequire } from "node:module";
 import { readFile, writeFile } from "node:fs/promises";
+import { site } from "../src/data/site.ts";
 
 /**
- * ヘッダーの既存ロゴを、見た目・比率・透明度を変えず小さくするだけの処理です。
+ * 正式ロゴを、見た目・比率・透明度を変えず小さくするだけの処理です。
  * Next.jsが画像処理用に持つsharpを使うため、新しい依存関係・有料APIは不要です。
  * ロゴを更新した技術担当が、npm ciの後に node scripts/generate-site-icons.mjs を実行します。
  * 書き換えるのは下記のアイコン3ファイルだけ。元のロゴは上書きしません。
  */
 const requireFromNext = createRequire(import.meta.resolve("next"));
 const sharp = requireFromNext("sharp");
-const source = await readFile(new URL("../public/sakkyokukyara.png", import.meta.url));
+// ヘッダー・SNS共有と同じ参照先を使い、古いロゴから再生成してしまう事故を防ぎます。
+const source = await readFile(new URL(`../public${site.logo}`, import.meta.url));
 
 await writeFile(new URL("../public/site-icon.png", import.meta.url),
   await sharp(source).resize(192, 192, { fit: "contain" }).png().toBuffer());

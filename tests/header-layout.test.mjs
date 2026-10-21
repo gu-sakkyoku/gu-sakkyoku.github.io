@@ -43,3 +43,22 @@ test("CSS統合後も新作告知と検索用サイト名を残し、動きの�
   assert.match(await source("src/component/AlbumJackets.tsx"), /canAnimate = reducedMotion === false/);
   assert.match(await source("src/app/globals.css"), /prefers-reduced-motion: reduce/);
 });
+
+test("ヘッダーを低くしても本文の余白とメニュー位置を同じ高さに揃える", async () => {
+  const css = await source("src/app/globals.css");
+  assert.match(css, /--site-header-height: 4rem;/);
+  assert.match(css, /@media \(min-width: 64rem\) \{\s*:root \{\s*--site-header-height: 4\.5rem;/);
+  const header = await source("src/component/header.tsx");
+  assert.match(header, /height: var\(--site-header-height\)/);
+  assert.match(header, /max-height: calc\(100dvh - var\(--site-header-height\)\)/);
+});
+
+test("ダウンロードは常設の移動リンクとし、PCナビでは重複させない", async () => {
+  const header = await source("src/component/header.tsx");
+  assert.match(header, /const downloadNavigation = \{ href: "\/download", label: "ダウンロード" \}/);
+  assert.match(header, /navigation.filter\(\(\{ href \}\) => href !== downloadNavigation.href\)/);
+  assert.match(header, /desktopNavigation.map/);
+  assert.match(header, /<SdownloadLink href=\{downloadNavigation.href\} onClick=\{\(\) => setOpenMenu\(false\)\}/);
+  assert.match(header, /const SdownloadLink = styled\(Link\)/);
+  assert.match(header, /min-height: 2.75rem/);
+});

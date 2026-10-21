@@ -4,15 +4,20 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import styled from "styled-components";
+import { site } from "../data/site";
 
+// 常設ボタンとメニューで、行き先・表示名を二重管理しません。
+const downloadNavigation = { href: "/download", label: "ダウンロード" };
 // PCとスマートフォンで同じリンクを使います。メニュー項目を増やす場合もここだけ変更してください。
 const navigation = [
   { href: "/TansanYohou/", label: "炭酸予報" },
   { href: "/Horoscope", label: "Horoscope" },
   { href: "/Nijiiro", label: "虹色memory" },
-  { href: "/download", label: "ダウンロード" },
+  downloadNavigation,
   { href: "/", label: "トップページ" },
 ];
+// PCでは常設ボタンと同じリンクを重複させず、スマホの展開メニューには残します。
+const desktopNavigation = navigation.filter(({ href }) => href !== downloadNavigation.href);
 
 export default function Cheader() {
   const [openMenu, setOpenMenu] = useState(false);
@@ -56,11 +61,12 @@ export default function Cheader() {
       <Sinner>
         <Sbrand href="/" aria-label="群馬大学作曲部 トップページ">
           <Image
-            src="/sakkyokukyara.png"
+            src={site.logo}
             alt="群馬大学作曲部のロゴ"
-            width={1280}
-            height={1280}
-            sizes="(min-width: 1024px) 64px, 48px"
+            width={site.logoSize}
+            height={site.logoSize}
+            sizes="(min-width: 1024px) 104px, 96px"
+            priority
           />
           {/* ページのh1と区別するため、サイト名は見出しではなくspanにします。 */}
           <span>群馬大学作曲部</span>
@@ -68,7 +74,7 @@ export default function Cheader() {
 
         <Snav aria-label="メインメニュー">
           <ul>
-            {navigation.map(({ href, label }, index) => (
+            {desktopNavigation.map(({ href, label }, index) => (
               <li key={href}>
                 {index > 0 && <span aria-hidden="true">|</span>}
                 <Link href={href}>{label}</Link>
@@ -77,19 +83,25 @@ export default function Cheader() {
           </ul>
         </Snav>
 
-        <Sbutton
-          ref={menuButton}
-          type="button"
-          onClick={() => setOpenMenu((current) => !current)}
-          aria-label={openMenu ? "メニューを閉じる" : "メニューを開く"}
-          aria-expanded={openMenu}
-          aria-controls="mobile-navigation"
-          $open={openMenu}
-        >
-          <span aria-hidden="true" />
-          <span aria-hidden="true" />
-          <span aria-hidden="true" />
-        </Sbutton>
+        <Sactions>
+          {/* ページ移動なのでbuttonではなくLink。メニューを開かず音源の入口へ進めます。 */}
+          <SdownloadLink href={downloadNavigation.href} onClick={() => setOpenMenu(false)}>
+            {downloadNavigation.label}
+          </SdownloadLink>
+          <Sbutton
+            ref={menuButton}
+            type="button"
+            onClick={() => setOpenMenu((current) => !current)}
+            aria-label={openMenu ? "メニューを閉じる" : "メニューを開く"}
+            aria-expanded={openMenu}
+            aria-controls="mobile-navigation"
+            $open={openMenu}
+          >
+            <span aria-hidden="true" />
+            <span aria-hidden="true" />
+            <span aria-hidden="true" />
+          </Sbutton>
+        </Sactions>
       </Sinner>
 
       {/* 本文を覆う全画面モーダルにはせず、ヘッダーの下に開く通常のナビです。 */}
@@ -137,7 +149,7 @@ const Sinner = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1.5rem;
+  gap: 0.75rem;
 `;
 
 const Sbrand = styled(Link)`
@@ -147,10 +159,11 @@ const Sbrand = styled(Link)`
   flex-shrink: 0;
 
   img {
-    /* 親の25%・画像の50%という割合指定をやめ、必ず正方形のまま収めます。 */
-    width: 3rem;
-    height: 3rem;
-    object-fit: contain;
+    /* 支給PNGの大きな透明余白だけを表示領域の外へ出します。
+       object-fitで絵柄の縦横比を保ち、元画像自体は切り抜き・上書きしません。 */
+    width: 6rem;
+    height: 3.25rem;
+    object-fit: cover;
     flex-shrink: 0;
   }
 
@@ -163,7 +176,7 @@ const Sbrand = styled(Link)`
   }
 
   @media (min-width: 64rem) {
-    img { width: 4rem; height: 4rem; }
+    img { width: 6.5rem; height: 3.5rem; }
     span { display: inline; }
   }
 `;
@@ -183,9 +196,39 @@ const Snav = styled.nav`
   a:hover { text-decoration: underline; text-underline-offset: 0.25em; }
 `;
 
+const Sactions = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+`;
+
+const SdownloadLink = styled(Link)`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* ヘッダーを薄くしても、押せる高さ44pxは確保します。 */
+  min-height: 2.75rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #adc9dc;
+  border-radius: 999px;
+  background: linear-gradient(120deg, #fff, #eaf5ff, #fff4fb);
+  color: #315b77;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.4;
+  white-space: nowrap;
+  transition: border-color 180ms ease;
+
+  &:hover { border-color: #315b77; }
+  &:active { background: #e3f0fa; }
+  @media (prefers-reduced-motion: reduce) { transition: none; }
+`;
+
 const Sbutton = styled.button<{ $open: boolean }>`
   width: 3rem;
   height: 3rem;
+  flex-shrink: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
