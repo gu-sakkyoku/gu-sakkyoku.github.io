@@ -4,7 +4,7 @@
   --background: #ffffff;
   --foreground: #171717;
   /* ヘッダーと本文の先頭余白は同じ値を参照します。画像の読み込みを待つ必要はありません。 */
-  --site-header-height: 5rem;
+  --site-header-height: 4rem;
   --site-page-gap: clamp(2.5rem, 4vw, 4rem);
   --site-link: #1d4ed8;
 }
@@ -27,7 +27,7 @@
 /* header.tsxのメニュー切り替え幅と揃えること。片方だけ変えると境界で表示が食い違います。 */
 @media (min-width: 64rem) {
   :root {
-    --site-header-height: 6rem;
+    --site-header-height: 4.5rem;
   }
 }
 
@@ -122,7 +122,11 @@
 .release-feature-sleeve { position: relative; z-index: 1; overflow: hidden; padding: 0.65rem; border: 1px solid #fff; border-radius: 1rem; background: linear-gradient(135deg, #fff, #eef8ff 65%, #f8f0fc); box-shadow: 0 24px 50px rgb(72 117 153 / 22%), 0 4px 12px rgb(255 255 255 / 90%); }
 .release-feature-art img { box-shadow: 0 4px 14px rgb(74 113 140 / 14%); }
 .release-feature-disc { position: absolute; top: 8%; right: -12%; width: 86%; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle, transparent 0 8%, #c8dce7 8.5% 12%, transparent 12.5%), repeating-radial-gradient(circle, rgb(255 255 255 / 30%) 0 1px, transparent 1px 4px), conic-gradient(from 20deg, #e9f8ff, #c8e2f2, #faf0fa, #d1e7f3, #fff, #b8d9ed, #e9f8ff); border: 1px solid #e2edf5; box-shadow: 8px 14px 30px rgb(92 133 165 / 18%); }
-.release-feature-art-caption { display: flex; justify-content: space-between; gap: 1rem; margin-top: 1.5rem; color: #526b80; font-family: Arial, Helvetica, sans-serif; font-size: 0.75rem; letter-spacing: 0.16em; }
+.release-feature-art-caption { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin-top: 1.5rem; color: #526b80; font-family: Arial, Helvetica, sans-serif; font-size: 0.75rem; letter-spacing: 0.16em; }
+/* 狭い画面でも年度の4桁は分割しません。枚数・曲数側だけを縮めて自然に改行します。
+   カード全体のoverflow-wrapを外さず、長い作品名などのはみ出し対策は維持します。 */
+.release-feature-art-caption > :first-child { flex-shrink: 0; white-space: nowrap; }
+.release-feature-art-caption > :last-child { min-width: 0; text-align: right; }
 .release-feature-actions { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 0.5rem 1.5rem; margin-top: 1.75rem; }
 .release-feature-primary { display: inline-flex; align-items: center; justify-content: center; min-height: 3rem; padding: 0.8rem 1.5rem; border: 1px solid #8eb3c9; border-radius: 5rem; background: linear-gradient(125deg, #fff 10%, #e8f4ff 65%, #f8f0fc); color: #315b77; box-shadow: 0 6px 18px rgb(111 156 186 / 14%), inset 0 2px 0 #fff; text-decoration: underline; text-underline-offset: 0.25em; line-height: 1.6; transition: transform 180ms ease, box-shadow 180ms ease; }
 .release-feature-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 22px rgb(111 156 186 / 22%); }

@@ -141,3 +141,10 @@ test("トップの部紹介から公式YouTubeチャンネルへ移動できる"
   const home = await source("src/component/Mainpage.tsx");
   assert.match(home, /href="https:\/\/www\.youtube\.com\/@gusakkyoku"[^>]*>群馬大学作曲部のYouTubeチャンネル<\/a>/);
 });
+
+test("ジャケット下の年度は途中で改行せず、枚数・曲数側で狭い幅に対応する", async () => {
+  const css = await source("src/app/globals.css");
+  assert.match(css, /\.release-feature-art-caption \{[^}]*align-items: baseline;/);
+  assert.match(css, /\.release-feature-art-caption > :first-child \{[^}]*flex-shrink: 0;[^}]*white-space: nowrap;/);
+  assert.match(css, /\.release-feature-art-caption > :last-child \{[^}]*min-width: 0;[^}]*text-align: right;/);
+});
