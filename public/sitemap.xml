@@ -5,6 +5,10 @@
     <priority>1.00</priority>
   </url>
   <url>
+    <loc>https://gu-sakkyoku.github.io/TansanYohou/</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://gu-sakkyoku.github.io/Horoscope/</loc>
     <priority>0.8</priority>
   </url>
@@ -21,5 +25,10 @@
   <url><loc>https://gu-sakkyoku.github.io/Horoscope/tameiki/</loc></url>
   <url><loc>https://gu-sakkyoku.github.io/Horoscope/teza/</loc></url>
   <url><loc>https://gu-sakkyoku.github.io/Nijiiro/kumori/</loc></url>
+  <url><loc>https://gu-sakkyoku.github.io/TansanYohou/harukaze/</loc></url>
+  <url><loc>https://gu-sakkyoku.github.io/TansanYohou/nemuru-shirayuri/</loc></url>
+  <url><loc>https://gu-sakkyoku.github.io/TansanYohou/magicarhythm/</loc></url>
+  <url><loc>https://gu-sakkyoku.github.io/TansanYohou/hater/</loc></url>
+  <url><loc>https://gu-sakkyoku.github.io/TansanYohou/tarareba/</loc></url>
   <!-- /download/ はnoindexのため載せません。 -->
 </urlset>

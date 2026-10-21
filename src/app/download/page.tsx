@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import ClientWrapper from "../../component/ClientWrapper";
 import DownloadArchive from "../../component/DownloadArchive";
 import { albums } from "../../data/albums";
+import { albumMincho, albumRounded } from "../../lib/album2026-font";
 
 export const metadata: Metadata = {
   title: "Music Download | 群馬大学作曲部",
@@ -11,10 +12,11 @@ export const metadata: Metadata = {
 };
 
 export default function DownloadPage() {
-  // 背景色と本文色は既存ページと同じくglobals.cssへ任せます。
-  // /downloadだけ白背景を固定すると、ダーク表示の歌詞ページから浮いてしまいます。
+  // 新しいトップと同じ明るいテーマを、この導線だけに適用します。
+  // 2024・2025の個別作品／歌詞ページのテーマや、コード認証は変更しません。
   return (
-    <ClientWrapper className="mx-auto max-w-6xl pb-20">
+    <div className={`tansan-white-theme ${albumMincho.variable} ${albumRounded.variable}`}>
+    <ClientWrapper className="tansan-download mx-auto max-w-6xl pb-20">
         <header className="px-[10%] text-center">
           <h1 className="font-serif text-[30px] font-normal leading-snug sm:text-[34px]">
             アルバムダウンロード
@@ -40,5 +42,6 @@ export default function DownloadPage() {
           へご連絡ください。
         </p>
     </ClientWrapper>
+    </div>
   );
 }

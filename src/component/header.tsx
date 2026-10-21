@@ -7,6 +7,7 @@ import styled from "styled-components";
 
 // PCとスマートフォンで同じリンクを使います。メニュー項目を増やす場合もここだけ変更してください。
 const navigation = [
+  { href: "/TansanYohou/", label: "炭酸予報" },
   { href: "/Horoscope", label: "Horoscope" },
   { href: "/Nijiiro", label: "虹色memory" },
   { href: "/download", label: "ダウンロード" },

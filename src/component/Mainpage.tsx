@@ -7,109 +7,74 @@ import NewAlbumAnnouncement from "./NewAlbumAnnouncement";
 import { albums } from "../data/albums";
 import { site } from "../data/site";
 
-// 年度を追加すると新作告知も自動で切り替わります。作品情報をトップへ二重に書きません。
-const latestAlbum = [...albums].sort((a, b) => b.year - a.year)[0];
+// 新作・過去作品とも年度データから表示し、タイトルや作品URLの二重管理を避けます。
+const orderedAlbums = [...albums].sort((a, b) => b.year - a.year);
+const latestAlbum = orderedAlbums[0];
+const previousAlbums = orderedAlbums.slice(1);
 
 const MainPage = ({ announcementReady = true }: { announcementReady?: boolean }) => {
   return (
     <>
-      <h1 className="text-[30px] px-[10%] font-serif text-center">
-        群馬大学作曲部 公式サイト
-      </h1>
-      {/* 検索用の希望サイト名と、閲覧者が見える呼び名を一致させます。 */}
-      <p className="mt-2 text-center text-sm">{site.name}</p>
-      <br />
-      <hr className="w-[80%] mx-auto" />
-      <br />
-      <p className="w-[80%] mx-auto text-center">
-        群馬大学作曲部の公式サイトです。オリジナルアルバムの作品情報・歌詞と、ダウンロードカードの案内を掲載しています。ご連絡はメール(gusakkyoku[@]gmail.com)または公式X(
-        <a href="https://x.com/GUsakkyoku" className="site-text-link">
-          @GUsakkyoku
-        </a>
-        )のDMまでお願いします。
-      </p>
+      <div className="home-site-heading">
+        <p>{site.name}</p>
+        <h1>群馬大学作曲部 公式サイト</h1>
+      </div>
 
-      <p className="mt-6 text-center">
-        <Link href="/download" className="site-text-link font-semibold">
-          ダウンロードカードをお持ちの方はこちらから
-        </Link>
-      </p>
-
+      {/* トップの主役は新作。部の紹介より先に、M3・試聴・歌詞の入口を見せます。 */}
       {latestAlbum && <NewAlbumAnnouncement album={latestAlbum} motionReady={announcementReady} />}
 
-      <br />
-      <br />
-      <br />
-      <br /><br /><br />
-      <h1 className="text-[40px] px-[10%] font-serif text-center">作品一覧</h1>
-      <br /><br /><br />
-      <h1 className="text-[30px] px-[10%] font-serif text-center">作曲部オリジナルアルバム2作目「Horoscope」</h1>
-      <br /><br />
-
-      {/* 既存の斜めに重なる演出を再利用し、大きな画面でも画像の幅を一定以内に収めます。 */}
-      <AlbumJackets />
-
-      <br />
-      <br />
-      <div style={{ textAlign: "center" }}>
-        <Link href="/Horoscope">
-          <button
-            style={{
-              margin: "0 auto",
-              padding: "0.2rem 0.5rem",
-              cursor: "pointer",
-              boxSizing: "border-box",
-              border: "2px solid #ccc",
-              borderRadius: "80px",
-            }}
-          >
-            <p className="text-[30px] px-[10%] font-serif text-center">
-              「Horoscope」の歌詞ページはこちら!
-            </p>
-          </button>
+      <section aria-labelledby="about-club" className="home-about">
+        <p className="home-section-label">About us</p>
+        <h2 id="about-club">群馬大学作曲部について</h2>
+        <p className="mt-6 text-base leading-9">
+          群馬大学作曲部の公式サイトです。<br />
+          オリジナルアルバムの作品情報・歌詞と、<br className="hidden sm:block" />
+          ダウンロードカードの案内を掲載しています。
+        </p>
+        <p className="mt-5 text-base leading-8">
+          お問い合わせは
+          <a href="mailto:gusakkyoku@gmail.com" className="site-text-link rounded">gusakkyoku@gmail.com</a>
+          または公式X（<a href="https://x.com/GUsakkyoku" className="site-text-link rounded">@GUsakkyoku</a>）のDMまで。
+        </p>
+        <p className="mt-4 text-base leading-8">
+          公式YouTube：
+          <a href="https://www.youtube.com/@gusakkyoku" className="site-text-link rounded">群馬大学作曲部のYouTubeチャンネル</a>
+        </p>
+        <Link href="/download/" className="site-text-link home-album-link mt-6">
+          ダウンロードカードをお持ちの方はこちらから
         </Link>
-      </div>
-      <br /><br /><br /><br />
-      <hr className="w-[80%] mx-auto" />
-      <br /><br /><br /><br />
-      <h1 className="text-[30px] px-[10%] font-serif text-center">作曲部オリジナルアルバム1作目「虹色memory」</h1>
-      <br /><br />
-      <Image
-            src="/cover31.png"
-            alt="虹色memoryのアルバムジャケット"
-            width={2160}
-            height={2160}
-            style={{
-              width: "40%",
-              height: "auto",
-              borderRadius: "12px",
-              display: "block",
-              boxShadow: "0 8px 20px rgba(0, 0, 0, 0.3)",
-              margin: "0 auto"
-            }}
-          />
+      </section>
 
-          <br /><br /><br />
-
-      <div style={{ textAlign: "center" }}>
-        <Link href="/Nijiiro">
-          <button
-            style={{
-              margin: "0 auto",
-              padding: "0.2rem 0.5rem",
-              cursor: "pointer",
-              boxSizing: "border-box",
-              border: "2px solid #ccc",
-              borderRadius: "80px",
-            }}
-          >
-            <p className="text-[30px] px-[10%] font-serif text-center">
-              「虹色memory」の歌詞ページはこちら!
-            </p>
-          </button>
-        </Link>
-      </div>
-      <br /><br /><br />
+      <section aria-labelledby="past-albums" className="home-discography">
+        <p className="home-section-label">Discography</p>
+        <h2 id="past-albums">作品一覧</h2>
+        <div className="home-discography-grid">
+          {previousAlbums.map((album) => (
+            <article key={album.year} aria-labelledby={`archive-${album.year}`}>
+              <p className="home-section-label">{album.year}</p>
+              <h3 id={`archive-${album.year}`} className="mt-3 font-serif text-[30px]">{album.title}</h3>
+              {/* Horoscopeの斜めに重なる既存ジャケットと、その短い揺れ演出を継承します。 */}
+              {album.year === 2025 ? <AlbumJackets /> : album.artwork && (
+                <div className="home-archive-art">
+                  <Image
+                    src={album.artwork}
+                    alt={`${album.title}のアルバムジャケット`}
+                    width={700}
+                    height={700}
+                    sizes="(max-width: 640px) 60vw, 280px"
+                    className="aspect-square h-auto w-full rounded-xl shadow-[0_8px_20px_rgba(0,0,0,0.15)]"
+                  />
+                </div>
+              )}
+              {album.detailPath && (
+                <Link href={album.detailPath} className="site-text-link home-album-link">
+                  {album.title}の作品・歌詞を見る
+                </Link>
+              )}
+            </article>
+          ))}
+        </div>
+      </section>
     </>
   );
 };
