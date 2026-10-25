@@ -6,6 +6,7 @@ import AlbumJackets from "./AlbumJackets";
 import NewAlbumAnnouncement from "./NewAlbumAnnouncement";
 import { albums } from "../data/albums";
 import { site } from "../data/site";
+import SodaIcon from "./SodaIcon";
 
 // 新作・過去作品とも年度データから表示し、タイトルや作品URLの二重管理を避けます。
 const orderedAlbums = [...albums].sort((a, b) => b.year - a.year);
@@ -16,7 +17,7 @@ const MainPage = ({ announcementReady = true }: { announcementReady?: boolean })
   return (
     <>
       <div className="home-site-heading">
-        <p>{site.name}</p>
+        <p><SodaIcon name="sparkle" />{site.name}<SodaIcon name="sparkle" /></p>
         <h1>群馬大学作曲部 公式サイト</h1>
       </div>
 
@@ -24,25 +25,32 @@ const MainPage = ({ announcementReady = true }: { announcementReady?: boolean })
       {latestAlbum && <NewAlbumAnnouncement album={latestAlbum} motionReady={announcementReady} />}
 
       <section aria-labelledby="about-club" className="home-about">
-        <p className="home-section-label">About us</p>
-        <h2 id="about-club">群馬大学作曲部について</h2>
-        <p className="mt-6 text-base leading-9">
-          群馬大学作曲部の公式サイトです。<br />
-          オリジナルアルバムの作品情報・歌詞と、<br className="hidden sm:block" />
-          ダウンロードカードの案内を掲載しています。
-        </p>
-        <p className="mt-5 text-base leading-8">
-          お問い合わせは
-          <a href="mailto:gusakkyoku@gmail.com" className="site-text-link rounded">gusakkyoku@gmail.com</a>
-          または公式X（<a href="https://x.com/GUsakkyoku" className="site-text-link rounded">@GUsakkyoku</a>）のDMまで。
-        </p>
-        <p className="mt-4 text-base leading-8">
-          公式YouTube：
-          <a href="https://www.youtube.com/@gusakkyoku" className="site-text-link rounded">群馬大学作曲部のYouTubeチャンネル</a>
-        </p>
-        <Link href="/download/" className="site-text-link home-album-link mt-6">
-          ダウンロードカードをお持ちの方はこちらから
-        </Link>
+        <div className="home-about-intro">
+          <p className="home-section-label">About us</p>
+          <h2 id="about-club">群馬大学作曲部について</h2>
+          <p className="mt-6 text-base leading-9">
+            群馬大学作曲部の公式サイトです。<br />
+            オリジナルアルバムの作品情報・歌詞と、<br className="hidden sm:block" />
+            ダウンロードカードの案内を掲載しています。
+          </p>
+          <Link href="/download/" className="site-text-link home-album-link mt-6">
+            <SodaIcon name="download" />
+            ダウンロードカードをお持ちの方はこちらから
+          </Link>
+        </div>
+        <div className="home-contact-note">
+          <SodaIcon name="mail" className="home-contact-icon" />
+          <h3>作曲部とつながる</h3>
+          <p className="mt-5 text-base leading-8">
+            お問い合わせは
+            <a href="mailto:gusakkyoku@gmail.com" className="site-text-link rounded">gusakkyoku@gmail.com</a>
+            または公式X（<a href="https://x.com/GUsakkyoku" className="site-text-link rounded">@GUsakkyoku</a>）のDMまで。
+          </p>
+          <p className="mt-4 text-base leading-8">
+            公式YouTube：
+            <a href="https://www.youtube.com/@gusakkyoku" className="site-text-link rounded">群馬大学作曲部のYouTubeチャンネル</a>
+          </p>
+        </div>
       </section>
 
       <section aria-labelledby="past-albums" className="home-discography">
@@ -51,7 +59,7 @@ const MainPage = ({ announcementReady = true }: { announcementReady?: boolean })
         <div className="home-discography-grid">
           {previousAlbums.map((album) => (
             <article key={album.year} aria-labelledby={`archive-${album.year}`}>
-              <p className="home-section-label">{album.year}</p>
+              <p className="home-section-label home-album-year"><SodaIcon name="disc" />{album.year}</p>
               <h3 id={`archive-${album.year}`} className="mt-3 font-serif text-[30px]">{album.title}</h3>
               {/* Horoscopeの斜めに重なる既存ジャケットと、その短い揺れ演出を継承します。 */}
               {album.year === 2025 ? <AlbumJackets /> : album.artwork && (

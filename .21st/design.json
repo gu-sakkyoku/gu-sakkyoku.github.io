@@ -1,0 +1,98 @@
+{
+  "version": 1,
+  "project": {
+    "name": "gu-sakkyoku.github.io",
+    "productType": "Japanese university music club / album and lyrics site",
+    "stack": [
+      "nextjs",
+      "react",
+      "tailwind-v4"
+    ]
+  },
+  "sources": {
+    "tokens": [
+      "src/app/globals.css", "src/app/soda-pop.css"
+    ],
+    "components": ["src/component/NewAlbumAnnouncement.tsx", "src/component/SodaIcon.tsx", "src/component/DownloadArchive.tsx"],
+    "assets": ["public/cover2026-tansan-yohou.png", "public/site-logo-blue.png"],
+    "instructions": ["CONTRIBUTING.md"]
+  },
+  "design": {
+    "colorMode": "light-and-dark",
+    "colors": {
+      "--soda-ink": { "value": "#355971", "source": "src/app/soda-pop.css" },
+      "--soda-blue": { "value": "#e5f4fd", "source": "src/app/soda-pop.css" },
+      "--soda-pink": { "value": "#fceaf2", "source": "src/app/soda-pop.css" },
+      "--soda-lilac": { "value": "#eeeafb", "source": "src/app/soda-pop.css" },
+      "--background": {
+        "value": "#fff",
+        "source": "src/app/globals.css"
+      },
+      "--foreground": {
+        "value": "#171717",
+        "source": "src/app/globals.css"
+      },
+      "--color-background": {
+        "value": "var(--background)",
+        "source": "src/app/globals.css"
+      },
+      "--color-foreground": {
+        "value": "var(--foreground)",
+        "source": "src/app/globals.css"
+      }
+    },
+    "typography": {
+      "--font-sans": {
+        "value": "var(--font-geist-sans)",
+        "source": "src/app/globals.css"
+      },
+      "--font-mono": {
+        "value": "var(--font-geist-mono)",
+        "source": "src/app/globals.css"
+      }
+    },
+    "spacing": {
+      "--site-page-gap": {
+        "value": "clamp(2.5rem, 4vw, 4rem)",
+        "source": "src/app/globals.css"
+      }
+    },
+    "radius": {},
+    "shadows": {},
+    "motion": {},
+    "density": "unknown"
+  },
+  "components": {
+    "installed": [],
+    "preferredPrimitives": ["ClientWrapper", "NewAlbumAnnouncement", "AlbumEventNotice", "SodaIcon"],
+    "patterns": ["Static album metadata in src/data", "Theme-scoped pastel polish", "Accessible disclosure navigation"]
+  },
+  "constraints": {
+    "must": ["Preserve existing URLs and 2024/2025 album and lyrics pages", "Keep the compact 64px/72px header and 44px touch targets", "Honor prefers-reduced-motion", "Use the supplied album artwork and official transparent logo", "Keep download authorization and R2 storage unchanged"],
+    "avoid": ["New UI dependencies", "Infinite decorative animation", "Client-side secrets", "Changing the global legacy theme"]
+  },
+  "decisions": [],
+  "evidence": [
+    {
+      "fact": "design.colorMode:light-and-dark",
+      "source": "src/app/globals.css"
+    },
+    {
+      "fact": "design.tokens",
+      "source": "src/app/globals.css"
+    },
+    {
+      "fact": "project.stack:nextjs",
+      "source": "package.json"
+    },
+    {
+      "fact": "project.stack:react",
+      "source": "package.json"
+    },
+    {
+      "fact": "project.stack:tailwind-v4",
+      "source": "package.json"
+    }
+  ],
+  "generatedAt": "2026-10-24T13:02:14.060Z"
+}

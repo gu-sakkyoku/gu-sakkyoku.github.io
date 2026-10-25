@@ -3,6 +3,7 @@ import ClientWrapper from "../../component/ClientWrapper";
 import DownloadArchive from "../../component/DownloadArchive";
 import { albums } from "../../data/albums";
 import { albumMincho, albumRounded } from "../../lib/album2026-font";
+import SodaIcon from "../../component/SodaIcon";
 
 export const metadata: Metadata = {
   title: "Music Download | 群馬大学作曲部",
@@ -17,20 +18,28 @@ export default function DownloadPage() {
   return (
     <div className={`tansan-white-theme ${albumMincho.variable} ${albumRounded.variable}`}>
     <ClientWrapper className="tansan-download mx-auto max-w-6xl pb-20">
-        <header className="px-[10%] text-center">
+        <header className="download-page-intro px-[10%] text-center">
+          <span className="download-intro-icon"><SodaIcon name="download" width="28" height="28" /></span>
           <h1 className="font-serif text-[30px] font-normal leading-snug sm:text-[34px]">
             アルバムダウンロード
           </h1>
           <p className="mt-3 text-sm tracking-[0.14em] opacity-75">Music Download</p>
         </header>
-        <hr className="mx-auto my-8 w-[80%] border-current opacity-60" />
-        <p className="mx-auto w-[80%] text-center text-sm leading-7 sm:text-base">
-          カードに印刷された年のアルバムを選び、同じカードのダウンロードコードを入力してください。
+        <p className="download-page-help mx-auto w-[80%] text-center text-sm leading-7 sm:text-base">
+          カードに印刷された年度を選び、そのカードのダウンロードコードを入力してください。
         </p>
+        {/* 年度はデータから生成。翌年も情報を追加するだけで入口が増えます。 */}
+        <nav className="download-year-nav" aria-label="ダウンロードする年度を選ぶ">
+          {[...albums].sort((a, b) => b.year - a.year).map((album) => (
+            <a key={album.year} href={`#album-${album.year}`}>
+              <SodaIcon name="disc" /><span>{album.year}</span><SodaIcon name="arrow" />
+            </a>
+          ))}
+        </nav>
         <div className="mt-16 sm:mt-20">
           <DownloadArchive albums={albums} />
         </div>
-        <p className="mx-auto mt-14 w-[80%] max-w-2xl text-center text-sm leading-7">
+        <p className="download-support-note mx-auto mt-14 w-[80%] max-w-2xl text-center text-sm leading-7">
           ダウンロードできない場合は、時間をおいて再度お試しください。
           お困りの際は作曲部の
           <a

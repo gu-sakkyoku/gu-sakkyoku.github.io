@@ -6,7 +6,7 @@ import styled from "styled-components";
 
 function Cfooter() {
     return (
-        <Sfooter>
+        <Sfooter className="site-footer">
             <div className="copyright">
                 <Sp>Copyright © 2025 Gunma University Sakkyoku Club</Sp>
             </div>

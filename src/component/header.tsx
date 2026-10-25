@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import styled from "styled-components";
 import { site } from "../data/site";
+import SodaIcon from "./SodaIcon";
 
 // 常設ボタンとメニューで、行き先・表示名を二重管理しません。
 const downloadNavigation = { href: "/download", label: "ダウンロード" };
@@ -57,9 +58,9 @@ export default function Cheader() {
   }, [openMenu]);
 
   return (
-    <Sheader ref={header}>
+    <Sheader ref={header} className="site-header">
       <Sinner>
-        <Sbrand href="/" aria-label="群馬大学作曲部 トップページ">
+        <Sbrand href="/" aria-label="群馬大学作曲部 トップページ" className="site-brand">
           <Image
             src={site.logo}
             alt="群馬大学作曲部のロゴ"
@@ -72,7 +73,7 @@ export default function Cheader() {
           <span>群馬大学作曲部</span>
         </Sbrand>
 
-        <Snav aria-label="メインメニュー">
+        <Snav aria-label="メインメニュー" className="site-nav">
           <ul>
             {desktopNavigation.map(({ href, label }, index) => (
               <li key={href}>
@@ -86,6 +87,7 @@ export default function Cheader() {
         <Sactions>
           {/* ページ移動なのでbuttonではなくLink。メニューを開かず音源の入口へ進めます。 */}
           <SdownloadLink href={downloadNavigation.href} onClick={() => setOpenMenu(false)}>
+            <SodaIcon name="download" className="site-download-icon" />
             {downloadNavigation.label}
           </SdownloadLink>
           <Sbutton
@@ -96,6 +98,7 @@ export default function Cheader() {
             aria-expanded={openMenu}
             aria-controls="mobile-navigation"
             $open={openMenu}
+            className="site-menu-button"
           >
             <span aria-hidden="true" />
             <span aria-hidden="true" />
@@ -111,6 +114,7 @@ export default function Cheader() {
         aria-hidden={!openMenu}
         inert={!openMenu}
         $open={openMenu}
+        className="site-mobile-nav"
       >
         <ul>
           {navigation.map(({ href, label }) => (
@@ -222,6 +226,8 @@ const SdownloadLink = styled(Link)`
 
   &:hover { border-color: #315b77; }
   &:active { background: #e3f0fa; }
+  /* 320px幅ではラベルを優先し、アイコン追加でメニューを押し出さないようにします。 */
+  .site-download-icon { display: none; }
   @media (prefers-reduced-motion: reduce) { transition: none; }
 `;
 

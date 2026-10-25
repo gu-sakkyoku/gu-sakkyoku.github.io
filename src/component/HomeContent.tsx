@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import ClientWrapper from "./ClientWrapper";
 import Loading from "./Loading";
 import Mainpage from "./Mainpage";
-import { albumMincho } from "../lib/album2026-font";
+import { albumMincho, albumRounded } from "../lib/album2026-font";
 
 export default function HomeContent() {
   const [isLoading, setIsLoading] = useState(true);
@@ -17,7 +17,7 @@ export default function HomeContent() {
   }, []);
 
   return (
-    <div className={`tansan-white-theme ${albumMincho.variable}`}>
+    <div className={`tansan-white-theme ${albumMincho.variable} ${albumRounded.variable}`}>
       {/* 本文は最初から描画し、静的HTMLにも含めます。読み込み演出だけを上に重ねます。 */}
       {/* 告知の演出は読み込み画面が消え始めてから。本文の静的出力は維持します。 */}
       <ClientWrapper className="home-tansan"><Mainpage announcementReady={!isLoading} /></ClientWrapper>
