@@ -1,0 +1,602 @@
+/*
+ * 「炭酸予報」の空色を使った、ソーダポップ風の仕上げ。
+ * すべて .tansan-white-theme 配下に限定します。2024/2025の作品・歌詞は従来のままです。
+ * globals.cssの基本レイアウト・ヘッダー高・認証枠の予約領域は変更しません。
+ */
+.tansan-white-theme {
+  --soda-ink: #355971;
+  --soda-muted: #526b80;
+  --soda-blue: #e5f4fd;
+  --soda-pink: #fceaf2;
+  --soda-lilac: #eeeafb;
+  --soda-line: #c9dfea;
+  --soda-paper: #fff;
+  --soda-control-line: #6e92ac;
+  font-family: var(--font-album-rounded), Arial, sans-serif;
+}
+
+.tansan-white-theme ::selection {
+  color: #294e69;
+  background: #f4d8e8;
+}
+.tansan-white-theme svg {
+  flex-shrink: 0;
+}
+
+/* 既存の低いヘッダーを維持。メニュー動作は変更せず、色・線・押した感触だけを整えます。 */
+.tansan-white-theme .site-header {
+  color: var(--soda-ink);
+  border-bottom: 1px solid var(--soda-line);
+  box-shadow:
+    0 3px 0 #edf6fb,
+    0 6px 20px rgb(72 117 153 / 6%);
+}
+.tansan-white-theme .site-brand span {
+  color: var(--soda-ink);
+  font-size: 1.25rem;
+}
+.tansan-white-theme .site-nav a {
+  border-radius: 999px;
+  padding-inline: 0.5rem;
+  transition: background-color 180ms ease;
+}
+.tansan-white-theme .site-nav a:hover {
+  background: var(--soda-blue);
+  text-decoration: none;
+}
+.tansan-white-theme .site-nav li > span {
+  color: var(--soda-line);
+}
+.tansan-white-theme .site-menu-button {
+  border: 1px solid var(--soda-line);
+  border-radius: 50%;
+  background: #f5fbff;
+}
+.tansan-white-theme .site-menu-button span {
+  width: 22px;
+  background: var(--soda-ink);
+}
+.tansan-white-theme .site-mobile-nav {
+  border-radius: 0 0 1.5rem 1.5rem;
+  background: #f7fcff;
+  box-shadow: 0 12px 25px rgb(72 117 153 / 12%);
+}
+.tansan-white-theme .site-mobile-nav a {
+  border-radius: 0.9rem;
+}
+.tansan-white-theme .site-mobile-nav li + li {
+  margin-top: 0.25rem;
+}
+
+/* タイトルを小さな店名サインに。左右の星はSVGの装飾で、読み上げを増やしません。 */
+.tansan-white-theme .home-site-heading > p {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--soda-ink);
+  font-family: var(--font-album-rounded), sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+}
+.tansan-white-theme .home-site-heading > p svg {
+  width: 16px;
+  height: 16px;
+  color: #8e769a;
+}
+.tansan-white-theme .home-site-heading > h1 {
+  margin-top: 0.65rem;
+  color: var(--soda-muted);
+  font-size: 0.9rem;
+}
+
+/* 告知は泡柄のパッケージ。ステッカーの傾きは静的で、本文をずっと動かしません。 */
+.tansan-white-theme .release-feature {
+  border: 2px solid #fff;
+  border-radius: 2.75rem 2.75rem 3.5rem 1.5rem;
+  background:
+    radial-gradient(circle at 1px 1px, #b8d9ed70 1px, transparent 1.5px) 0 0 /
+      20px 20px,
+    linear-gradient(125deg, #f4fbff 8%, #e4f4ff 48%, #f5edfb 85%, #fff0f5);
+  box-shadow:
+    0 0 0 1px var(--soda-line),
+    0 22px 65px rgb(92 139 173 / 13%);
+}
+.tansan-white-theme .release-feature-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  border: 2px solid #fff;
+  border-radius: 0.8rem;
+  color: #6a4f6c;
+  background: #fae6f0;
+  box-shadow: 3px 4px 0 #e7dce9;
+  font-size: clamp(1.1rem, 2.2vw, 1.5rem);
+  rotate: -3deg;
+}
+.tansan-white-theme .release-feature-title {
+  line-height: 1.35;
+  margin-block: 1rem 0.5rem;
+}
+.tansan-white-theme .release-feature-copy > p:not(.release-feature-kicker) {
+  font-family: var(--font-album-rounded), sans-serif;
+}
+.tansan-white-theme .release-feature-sleeve {
+  border: 2px solid #fff;
+  border-radius: 1.5rem;
+  padding: 0.7rem;
+  box-shadow:
+    0 15px 30px rgb(72 117 153 / 18%),
+    5px 6px 0 #d8eaf5;
+}
+.tansan-white-theme .release-feature-sticker {
+  position: absolute;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  inset: 0.5rem 0.5rem auto auto;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  border: 1px dashed #8b7496;
+  background: radial-gradient(circle at 35% 25%, #fff, #f8ddec);
+  box-shadow: 0 0 0 4px #f8eaf3;
+  color: #7b5d88;
+  rotate: 12deg;
+  pointer-events: none;
+}
+.tansan-white-theme .release-feature-art-caption {
+  font-family: var(--font-album-rounded), sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+.tansan-white-theme .release-feature-primary,
+.tansan-white-theme .home-album-link,
+.tansan-white-theme .download-open-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  min-height: 3rem;
+  border: 1px solid var(--soda-control-line);
+  background: #e4f3ff;
+  color: var(--soda-ink);
+  font-family: var(--font-album-rounded), sans-serif;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow:
+    0 4px 0 #c5deee,
+    inset 0 2px 0 #fff;
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    background-color 180ms ease;
+}
+.tansan-white-theme .release-feature-primary:active,
+.tansan-white-theme .home-album-link:active,
+.tansan-white-theme .download-open-button:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #c5deee;
+}
+.tansan-white-theme .release-feature-primary svg {
+  width: 18px;
+}
+.tansan-white-theme .release-pop-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  border-style: dashed;
+  border-color: #a68bb1;
+  background: #fff6fb;
+  color: #705778;
+}
+.tansan-white-theme .release-pop-button svg {
+  width: 16px;
+  height: 16px;
+}
+.tansan-white-theme .release-feature .album-event-notice {
+  border: 1px solid #dae5ee;
+  border-right: 2px dashed #bdd5e4;
+  border-radius: 1rem;
+  background: #fffffff0;
+  box-shadow: 4px 5px 0 #d8e9f380;
+}
+.tansan-white-theme .release-feature .album-event-notice::before,
+.tansan-white-theme .release-feature .album-event-notice::after {
+  background: #e9f5ff;
+}
+.tansan-white-theme .release-feature .album-event-notice > :first-child {
+  background: #ede8fa;
+  color: #61527d;
+}
+.tansan-white-theme .release-feature-details > p {
+  font-family: var(--font-album-rounded), sans-serif;
+  font-size: 0.9rem;
+}
+.tansan-white-theme .release-feature-media {
+  border-top: 2px dotted #b7d5e8;
+}
+.tansan-white-theme .release-feature-media > p {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 0.4rem 1.2rem;
+  background: #ffffffd9;
+  font-family: var(--font-album-rounded), sans-serif;
+}
+
+/* 部紹介と連絡先は異なる形の紙にし、同じカードを延々と並べる見た目を避けます。 */
+.tansan-white-theme .home-about {
+  display: grid;
+  align-items: center;
+  gap: 2.5rem;
+  width: 90%;
+  padding: clamp(1.5rem, 4vw, 3rem);
+  border: 1px solid var(--soda-line);
+  border-radius: 2rem;
+  background: #fff;
+  text-align: left;
+}
+.tansan-white-theme .home-about::before {
+  content: none;
+}
+.tansan-white-theme .home-section-label {
+  font-family: var(--font-album-rounded), sans-serif;
+  font-weight: 700;
+  color: #7b5d88;
+  letter-spacing: 0.05em;
+}
+.tansan-white-theme .home-about-intro > p {
+  overflow-wrap: anywhere;
+}
+.tansan-white-theme .home-about-intro h2 {
+  font-size: clamp(1.3rem, 2.6vw, 1.85rem);
+}
+.tansan-white-theme .home-album-link {
+  max-width: 100%;
+  font-size: 0.95rem;
+  text-align: center;
+}
+.tansan-white-theme .home-contact-note {
+  position: relative;
+  min-width: 0;
+  padding: 1.75rem;
+  border: 1px dashed #d2bfd7;
+  border-radius: 0.75rem 1.75rem 1rem 1.5rem;
+  background: #fcf2f8;
+  overflow-wrap: anywhere;
+}
+.tansan-white-theme .home-contact-note::before {
+  content: "";
+  position: absolute;
+  width: 5.5rem;
+  height: 1.35rem;
+  top: -0.6rem;
+  left: calc(50% - 2.75rem);
+  background: repeating-linear-gradient(
+    45deg,
+    #d7ebf2c9 0 5px,
+    #e8f5f9c9 5px 10px
+  );
+  rotate: -4deg;
+}
+.tansan-white-theme .home-contact-note h3 {
+  color: #705778;
+  font-weight: 700;
+}
+.tansan-white-theme .home-contact-icon {
+  width: 25px;
+  height: 25px;
+  margin-bottom: 0.6rem;
+  color: #705778;
+}
+.tansan-white-theme .home-contact-note p {
+  font-size: 0.9rem;
+  line-height: 2;
+}
+.tansan-white-theme .home-discography {
+  width: 90%;
+}
+.tansan-white-theme .home-discography-grid {
+  gap: 2rem;
+}
+.tansan-white-theme .home-discography-grid article {
+  position: relative;
+  padding: 2rem 1rem;
+  border: 1px solid var(--soda-line);
+  border-radius: 1rem 2.5rem 1rem 2rem;
+  background: #f2f9ff;
+  box-shadow: 5px 6px 0 #dcecf6;
+}
+.tansan-white-theme .home-discography-grid article:nth-child(2) {
+  border-radius: 2rem 1rem 2.5rem 1rem;
+  background: #fff6fa;
+  box-shadow: 5px 6px 0 #f3e4ed;
+}
+.tansan-white-theme .home-album-year {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 1rem;
+  border: 1px dashed #b8ccdd;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--soda-ink);
+}
+.tansan-white-theme .site-footer {
+  margin-top: 2rem;
+  padding: 2rem 1rem;
+  border-top: 2px dotted #c2dce9;
+  background: #eaf5fc;
+  color: var(--soda-ink);
+  font-family: var(--font-album-rounded), sans-serif;
+}
+
+/* ダウンロードは静的な年度リンク＋既存フォーム。装飾のために認証処理を複製しません。 */
+.tansan-white-theme .download-page-intro h1 {
+  margin-top: 1.25rem;
+  color: var(--soda-ink);
+  text-wrap: balance;
+}
+.tansan-white-theme .download-intro-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 4rem;
+  height: 4rem;
+  border: 2px solid #fff;
+  border-radius: 1.5rem;
+  background: #e4f3ff;
+  color: var(--soda-ink);
+  box-shadow: 4px 4px 0 #d5e7f2;
+  rotate: -5deg;
+}
+.tansan-white-theme .download-page-help {
+  max-width: 36rem;
+  margin-top: 1.75rem;
+  color: var(--soda-muted);
+  text-wrap: pretty;
+}
+.tansan-white-theme .download-year-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin: 1.5rem 1rem 0;
+}
+.tansan-white-theme .download-year-nav a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--soda-control-line);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--soda-ink);
+  font-weight: 700;
+  box-shadow: 0 3px 0 #dfedf5;
+}
+.tansan-white-theme .download-year-nav a:nth-child(2) {
+  background: #f5f1fd;
+}
+.tansan-white-theme .download-year-nav a:nth-child(3) {
+  background: #fff1f7;
+}
+.tansan-white-theme .download-year-nav a svg {
+  width: 16px;
+  height: 16px;
+}
+.tansan-white-theme .tansan-download article {
+  width: 90%;
+  padding: clamp(1.5rem, 4vw, 3rem);
+  border: 1px solid var(--soda-line);
+  border-radius: 2rem 2rem 2.75rem 1rem;
+  background: #ffffffed;
+  box-shadow:
+    6px 7px 0 #e1eff8,
+    0 18px 40px rgb(72 117 153 / 5%);
+}
+.tansan-white-theme .download-year {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.85rem;
+  border: 1px dashed #b4cadb;
+  border-radius: 999px;
+  background: #eaf5fc;
+  color: var(--soda-ink);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+.tansan-white-theme .tansan-download article h2 {
+  margin-top: 1rem;
+}
+.tansan-white-theme .download-album-layout {
+  display: grid;
+  align-items: start;
+  gap: 2rem;
+  margin-top: 1.75rem;
+}
+.tansan-white-theme .download-album-art,
+.tansan-white-theme .download-album-info {
+  min-width: 0;
+}
+.tansan-white-theme .download-album-art img {
+  margin-top: 0;
+  padding: 0.5rem;
+  border: 1px solid #dce9f2;
+  border-radius: 1rem;
+  background: #fff;
+  box-shadow: 4px 5px 0 #dcecf6;
+}
+.tansan-white-theme .download-album-art a {
+  margin-top: 1.5rem;
+  min-height: 2.75rem;
+  border-width: 1px;
+  font-family: var(--font-album-rounded), sans-serif;
+  font-size: 0.9rem;
+}
+.tansan-white-theme .download-track-count {
+  color: var(--soda-muted);
+  font-size: 0.875rem;
+}
+.tansan-white-theme .download-tracks {
+  margin-top: 1rem;
+}
+.tansan-white-theme .download-tracks details {
+  border-color: #d7e6f0;
+  text-align: left;
+}
+.tansan-white-theme .download-tracks summary {
+  min-height: 2.75rem;
+  padding-block: 0.5rem;
+  color: var(--soda-ink);
+  font-family: var(--font-album-rounded), sans-serif;
+  font-size: 1rem;
+}
+.tansan-white-theme .download-tracks details[open] summary {
+  font-weight: 700;
+}
+.tansan-white-theme .download-tracks ol {
+  overflow-wrap: anywhere;
+  color: var(--soda-ink);
+}
+.tansan-white-theme .download-open-button {
+  width: 100%;
+  padding-inline: 0.8rem;
+  font-size: 1rem;
+  cursor: pointer;
+}
+.tansan-white-theme .download-open-button svg {
+  width: 18px;
+  height: 18px;
+}
+.tansan-white-theme .download-open-button span {
+  min-width: 0;
+  text-wrap: balance;
+}
+.tansan-white-theme .tansan-download form {
+  border-color: #d1dfea;
+  color: var(--soda-ink);
+}
+.tansan-white-theme .tansan-download form input {
+  border-color: var(--soda-control-line);
+  border-radius: 0.85rem;
+  background: #f8fcff;
+}
+.tansan-white-theme .tansan-download form button {
+  min-height: 3rem;
+  border-width: 1px;
+  font-family: var(--font-album-rounded), sans-serif;
+  font-size: 1rem;
+}
+.tansan-white-theme .download-support-note {
+  border: 1px dashed #cfbfd9;
+  border-radius: 1.5rem;
+  padding: 1.5rem;
+  background: #fcf4fa;
+  overflow-wrap: anywhere;
+}
+.tansan-white-theme .download-year-nav a:focus-visible {
+  outline: 2px solid var(--soda-ink);
+  outline-offset: 4px;
+}
+
+@media (min-width: 48rem) {
+  .tansan-white-theme .home-about {
+    grid-template-columns: 1.15fr 1fr;
+  }
+  .tansan-white-theme .download-album-layout {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+    gap: 2.5rem;
+  }
+}
+@media (min-width: 40rem) {
+  .tansan-white-theme .site-header .site-download-icon {
+    display: block;
+    margin-right: 0.5rem;
+  }
+}
+@media (max-width: 24rem) {
+  .tansan-white-theme .release-feature {
+    width: 92%;
+    padding: 1.25rem;
+    border-radius: 2rem 2rem 2.5rem 1rem;
+  }
+  .tansan-white-theme .release-feature-title {
+    font-size: 2.65rem;
+  }
+  .tansan-white-theme .release-feature-art {
+    width: calc(100% - 1.5rem);
+  }
+  .tansan-white-theme .release-feature-art-caption {
+    font-size: 0.65rem;
+    letter-spacing: 0.04em;
+    gap: 0.5rem;
+  }
+  .tansan-white-theme .release-feature-sticker {
+    width: 2rem;
+    height: 2rem;
+  }
+  .tansan-white-theme .home-contact-note {
+    padding: 1.5rem 1.1rem;
+  }
+  .tansan-white-theme .download-year-nav {
+    gap: 0.5rem;
+  }
+  .tansan-white-theme .download-year-nav a {
+    padding-inline: 0.8rem;
+  }
+  .tansan-white-theme .tansan-download article {
+    padding: 1.25rem;
+  }
+}
+@media (hover: hover) and (pointer: fine) {
+  .tansan-white-theme .home-album-link:hover,
+  .tansan-white-theme .download-open-button:hover {
+    transform: translateY(-2px);
+    background: #d7edfc;
+    box-shadow: 0 6px 0 #c5deee;
+  }
+  .tansan-white-theme .download-year-nav a:hover {
+    border-color: #779fb9;
+    background: #eaf5fc;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  /* 新しい押し込み・hover演出も停止。既存の泡アニメーションの設定と揃えます。 */
+  /* :isで通常時と同じ詳細度を確保し、hover側のtransformにも確実に優先させます。 */
+  .tansan-white-theme
+    :is(
+      .site-nav a,
+      .release-feature-primary,
+      .home-album-link,
+      .download-open-button
+    ) {
+    transition: none;
+  }
+  .tansan-white-theme
+    :is(.release-feature-primary, .home-album-link, .download-open-button):is(
+      :hover,
+      :active
+    ) {
+    transform: none;
+  }
+}
+@media (forced-colors: active) {
+  .tansan-white-theme
+    :where(
+      .release-feature-primary,
+      .home-album-link,
+      .download-open-button,
+      .download-year-nav a,
+      .site-menu-button
+    ) {
+    border-color: ButtonText;
+    color: ButtonText;
+    box-shadow: none;
+  }
+}

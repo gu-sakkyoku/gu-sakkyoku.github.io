@@ -8,6 +8,7 @@ import type { Album } from "../data/albums";
 import AlbumEventNotice from "./AlbumEventNotice";
 import CrossfadeVideo from "./CrossfadeVideo";
 import { albumMincho, albumRounded } from "../lib/album2026-font";
+import SodaIcon from "./SodaIcon";
 
 // ランダム生成せず、SSRとブラウザで同じ装飾を描きます。すべて読み上げ対象外です。
 const bubbles = [
@@ -92,6 +93,7 @@ export default function NewAlbumAnnouncement({
             transition={{ duration: animateAnnouncement ? 0.8 : 0, delay: animateAnnouncement ? 0.2 : 0, ease: "easeInOut" }}
             className={featured ? "release-feature-kicker" : "font-serif text-[32px] font-semibold leading-snug text-blue-900 dark:text-blue-300 sm:text-[40px]"}
           >
+            {featured && <SodaIcon name="music" />}
             New Album!!!
           </motion.p>
           <p className="mt-3 text-sm leading-6 sm:text-base">{album.year}年 オリジナルアルバム</p>
@@ -108,6 +110,7 @@ export default function NewAlbumAnnouncement({
             {album.detailPath && (
               <Link href={context === "album" ? "#track-list" : album.detailPath} className={featured ? "release-feature-primary" : "site-text-link inline-flex min-h-12 items-center rounded-full border-2 border-zinc-400 px-6 py-3 font-serif text-lg"}>
                 {context === "album" ? "曲リスト・歌詞を見る" : "アルバム詳細・歌詞はこちら"}
+                {featured && <SodaIcon name="arrow" />}
               </Link>
             )}
             <Link href={`/download/#album-${album.year}`} className={featured ? "site-text-link inline-flex min-h-12 items-center rounded font-serif" : "site-text-link inline-flex min-h-12 items-center rounded font-serif text-lg"}>
@@ -163,6 +166,7 @@ export default function NewAlbumAnnouncement({
               />
             )}
             </div>
+            {featured && <span className="release-feature-sticker" aria-hidden="true"><SodaIcon name="music" /></span>}
             {featured && (
               <p className="release-feature-art-caption">
                 <span>{album.year}</span>
@@ -192,7 +196,7 @@ export default function NewAlbumAnnouncement({
                 aria-label="ジャケットの周りに泡をはじかせる"
                 onClick={() => setBurst(++burstSequence.current)}
               >
-                泡をはじく <span aria-hidden="true">✧</span>
+                泡をはじく <SodaIcon name="sparkle" />
               </button>
             )}
           </motion.div>

@@ -5,7 +5,7 @@ import LyricLink from "../../component/LyricLink";
 import NewAlbumAnnouncement from "../../component/NewAlbumAnnouncement";
 import { album2026 } from "../../data/album2026";
 import { albums } from "../../data/albums";
-import { albumMincho } from "../../lib/album2026-font";
+import { albumMincho, albumRounded } from "../../lib/album2026-font";
 
 const title = "炭酸予報 | 群馬大学作曲部 3rdアルバム";
 const description = "群馬大学作曲部の2026年アルバム「炭酸予報」。クロスフェード、全18曲の曲目・歌詞、M3-2026秋の出展情報を掲載しています。";
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 /** 静的に出力する作品ページです。既存の明朝体・中央揃え・青い歌詞リンクを継承します。 */
 export default function TansanYohouPage() {
   return (
-    <div className={`tansan-white-theme ${albumMincho.variable}`}>
+    <div className={`tansan-white-theme ${albumMincho.variable} ${albumRounded.variable}`}>
     <ClientWrapper>
       {/* ホームと同じ作品情報・告知を使用し、タイトルはこのページのh1になります。 */}
       <NewAlbumAnnouncement album={albums.find((album) => album.year === 2026)!} motionReady context="album" />
