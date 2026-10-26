@@ -1,13 +1,13 @@
 "use client";
 
 
-import ClientWrapper from "../../../component/ClientWrapper";
+import ClientWrapper from "../../../component/ArchiveLyricWrapper";
 
 
 
 const MainPage = () => {
   return (
-    <ClientWrapper>
+    <ClientWrapper year={2025}>
       <h1 className="text-[30px] px-[10%] font-serif text-center">
         can&apos;t ESCAPE!!! feat. 雨歌エル
       </h1>

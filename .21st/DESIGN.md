@@ -13,7 +13,7 @@ Generated from project sources at 2026-10-24T13:02:14.060Z.
 
 ## Sources
 
-- Tokens: src/app/globals.css, src/app/soda-pop.css
+- Tokens: src/app/globals.css, src/app/soda-pop.css, src/app/album-worlds.css, src/app/album-motion.css, src/app/album-type.css
 - Components: src/component/NewAlbumAnnouncement.tsx, src/component/SodaIcon.tsx, src/component/DownloadArchive.tsx
 - Assets: public/cover2026-tansan-yohou.png, public/site-logo-blue.png
 - Instructions: CONTRIBUTING.md
@@ -45,14 +45,21 @@ Generated from project sources at 2026-10-24T13:02:14.060Z.
 
 ### Must
 
-- Preserve existing URLs and the individual 2024/2025 album and lyrics pages.
+- Preserve existing URLs, lyrics, credits and track order. The user authorized visual redesign of the individual 2024/2025 pages on 2026-10-26.
 - Keep the compact header, 44px touch targets, keyboard focus, and reduced-motion support.
 - Use the official transparent logo and supplied album artwork. Download authentication and R2 are out of scope for visual polish.
 
 ### Avoid
 
-- New UI dependencies, infinite decorative animation, client-side secrets, or changes to the legacy global theme.
+- New UI dependencies, infinite decorative animation, client-side secrets, theme leakage into other routes, invented catchphrases, uniform rounded cards and glow backgrounds.
 
 ## Decisions
 
-- None recorded
+- Horoscope: space, original blue/purple artwork extends into the background, dark record-sleeve composition, large plain typography and a thin orbit. A real two-artwork gallery supports keyboard operation.
+- Nijiiro memory: rainbow, paper background, seven-color arch and flat color bands, offset printed-color typography, artwork-led booklet layout. Different composition from Horoscope.
+- User rejected the catchphrases and generic AI appearance. Keep actual album information, clear navigation and original artwork as the main material.
+- Route layouts scope each theme. Lyrics retain the original text and line breaks; the surrounding sheet supplies the album identity and return/download links.
+- User requested more excitement without restoring generic controls or invented copy. Keep a short, one-time entrance and gallery transitions; reduced-motion disables both. Section headings have no decorative numbering.
+- Additional request: extend motion to 2026 and the home announcement. AlbumMotion supplies one-time scroll reveals and bounded artwork depth, with no scroll locking. Lyrics and download forms are outside its scope. The 2026 title enters by character, and its jacket starts only when visible.
+- Reference: https://eveofficial-underblue.com/ — artwork layering and scroll reveals. Reuse the project's existing Framer Motion and native APIs; do not import the site's scripts or artwork.
+- Typography refinement: Orbitron 600 for Horoscope; Mochiy Pop One and Fugaz One for Nijiiro; Mochiy Pop One for Tansan Yohou. Self-host only the title glyphs, include OFL licenses, and reuse existing full fonts for tracks, credits and lyrics. Sources and maintenance notes are in docs/album-typography.md.

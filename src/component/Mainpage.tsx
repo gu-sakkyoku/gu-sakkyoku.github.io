@@ -7,6 +7,7 @@ import NewAlbumAnnouncement from "./NewAlbumAnnouncement";
 import { albums } from "../data/albums";
 import { site } from "../data/site";
 import SodaIcon from "./SodaIcon";
+import AlbumMotion from "./AlbumMotion";
 
 // 新作・過去作品とも年度データから表示し、タイトルや作品URLの二重管理を避けます。
 const orderedAlbums = [...albums].sort((a, b) => b.year - a.year);
@@ -15,7 +16,7 @@ const previousAlbums = orderedAlbums.slice(1);
 
 const MainPage = ({ announcementReady = true }: { announcementReady?: boolean }) => {
   return (
-    <>
+    <AlbumMotion theme="soda">
       <div className="home-site-heading">
         <p><SodaIcon name="sparkle" />{site.name}<SodaIcon name="sparkle" /></p>
         <h1>群馬大学作曲部 公式サイト</h1>
@@ -83,7 +84,7 @@ const MainPage = ({ announcementReady = true }: { announcementReady?: boolean })
           ))}
         </div>
       </section>
-    </>
+    </AlbumMotion>
   );
 };
 

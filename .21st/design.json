@@ -11,7 +11,7 @@
   },
   "sources": {
     "tokens": [
-      "src/app/globals.css", "src/app/soda-pop.css"
+      "src/app/globals.css", "src/app/soda-pop.css", "src/app/album-worlds.css", "src/app/album-motion.css", "src/app/album-type.css"
     ],
     "components": ["src/component/NewAlbumAnnouncement.tsx", "src/component/SodaIcon.tsx", "src/component/DownloadArchive.tsx"],
     "assets": ["public/cover2026-tansan-yohou.png", "public/site-logo-blue.png"],
@@ -68,10 +68,18 @@
     "patterns": ["Static album metadata in src/data", "Theme-scoped pastel polish", "Accessible disclosure navigation"]
   },
   "constraints": {
-    "must": ["Preserve existing URLs and 2024/2025 album and lyrics pages", "Keep the compact 64px/72px header and 44px touch targets", "Honor prefers-reduced-motion", "Use the supplied album artwork and official transparent logo", "Keep download authorization and R2 storage unchanged"],
-    "avoid": ["New UI dependencies", "Infinite decorative animation", "Client-side secrets", "Changing the global legacy theme"]
+    "must": ["Preserve existing URLs and the contents of 2024/2025 album and lyrics pages; visual redesign is authorized", "Keep the compact 64px/72px header and 44px touch targets", "Honor prefers-reduced-motion", "Use the supplied album artwork and official transparent logo", "Keep download authorization and R2 storage unchanged"],
+    "avoid": ["New UI dependencies", "Infinite decorative animation", "Client-side secrets", "Leaking album themes into the home page, 2026, or downloads", "Invented promotional copy", "Uniform rounded cards, glow backgrounds, and decorative-only controls"]
   },
-  "decisions": [],
+  "decisions": [
+    "2026-10-26: User selected space for Horoscope and rainbow for Nijiiro memory.",
+    "2026-10-26: User rejected invented catchphrases and a generic AI appearance. Use record-sleeve / booklet compositions, original artwork, factual information, ruled navigation, and different layouts for the two albums.",
+    "2026-10-26: User requested more excitement and no decorative section numbers. Add a real two-artwork gallery, space artwork backdrop, seven-color arch and printed-color typography. Use only short, one-time entrance motion; honor reduced-motion.",
+    "2026-10-26: User requested more motion including 2026. Add progressive scroll reveals, bounded artwork/background depth, pointer-only jacket tilt and the existing 2026 title/CD/bubble choreography. Original lyrics and download forms remain outside the motion scope. All content is visible without JavaScript; reduced-motion cancels active motion.",
+    "Motion reference: https://eveofficial-underblue.com/ (artwork layering and scroll reveals). Implement locally with existing Framer Motion and native browser animation APIs; no copied vendor script or extra dependency.",
+    "2026-10-26: User requested more deliberate typography. Horoscope uses Orbitron 600, Nijiiro uses Mochiy Pop One plus Fugaz One, and Tansan Yohou uses Mochiy Pop One. Title-only font files are self-hosted (3964 bytes total) with OFL licenses; body/credits/lyrics reuse existing full fonts. See docs/album-typography.md.",
+    "Album themes are scoped by route layouts and src/app/album-worlds.css; original lyric text and line breaks are preserved."
+  ],
   "evidence": [
     {
       "fact": "design.colorMode:light-and-dark",

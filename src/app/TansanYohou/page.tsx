@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import ClientWrapper from "../../component/ClientWrapper";
 import LyricLink from "../../component/LyricLink";
+import AlbumMotion from "../../component/AlbumMotion";
 import NewAlbumAnnouncement from "../../component/NewAlbumAnnouncement";
 import { album2026 } from "../../data/album2026";
 import { albums } from "../../data/albums";
@@ -23,6 +24,7 @@ export default function TansanYohouPage() {
   return (
     <div className={`tansan-white-theme ${albumMincho.variable} ${albumRounded.variable}`}>
     <ClientWrapper>
+      <AlbumMotion theme="soda">
       {/* ホームと同じ作品情報・告知を使用し、タイトルはこのページのh1になります。 */}
       <NewAlbumAnnouncement album={albums.find((album) => album.year === 2026)!} motionReady context="album" />
       <article className="mx-auto w-[80%] max-w-4xl pb-16 text-center font-serif [overflow-wrap:anywhere]">
@@ -64,6 +66,7 @@ export default function TansanYohouPage() {
         <Link href="/download/#album-2026" className="site-text-link mt-4 inline-flex min-h-12 items-center justify-center rounded-full border-2 border-zinc-400 px-6 py-3 text-lg hover:bg-zinc-500/15">ダウンロードページへ</Link>
         <p className="mt-8"><Link href="/" className="site-text-link inline-flex min-h-11 items-center rounded">トップページへ戻る</Link></p>
       </article>
+      </AlbumMotion>
     </ClientWrapper>
     </div>
   );

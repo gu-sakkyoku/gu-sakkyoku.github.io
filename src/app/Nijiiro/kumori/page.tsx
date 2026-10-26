@@ -1,12 +1,12 @@
 "use client";
 
-import ClientWrapper from "../../../component/ClientWrapper";
+import ClientWrapper from "../../../component/ArchiveLyricWrapper";
 
 
 
 const MainPage = () => {
   return (
-    <ClientWrapper>
+    <ClientWrapper year={2024}>
       <h1 className="text-[30px] px-[10%] font-serif text-center">
         曇りのち晴れ feat. 音街ウナ
       </h1>

@@ -1,0 +1,29 @@
+[
+  {
+    "family": "Orbitron:wght@600",
+    "glyphs": "Horoscope",
+    "file": "album-orbitron-600.woff2",
+    "bytes": 1068,
+    "sha256": "35aec987a230612bb77088fd1e21abb59c1d4be8b955cd8643bbfd80cde903f2",
+    "source": "https://fonts.googleapis.com/css2?family=Orbitron%3Awght%40600&text=Horoscope&display=swap",
+    "license": "https://raw.githubusercontent.com/google/fonts/main/ofl/orbitron/OFL.txt"
+  },
+  {
+    "family": "Mochiy Pop One",
+    "glyphs": "虹色炭酸予報",
+    "file": "album-mochiypopone-400.woff2",
+    "bytes": 1856,
+    "sha256": "7256eb76c024f1e7d39151d48c29c019b283181bd27c9bd858e373e2eada338e",
+    "source": "https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&text=%E8%99%B9%E8%89%B2%E7%82%AD%E9%85%B8%E4%BA%88%E5%A0%B1&display=swap",
+    "license": "https://raw.githubusercontent.com/google/fonts/main/ofl/mochiypopone/OFL.txt"
+  },
+  {
+    "family": "Fugaz One",
+    "glyphs": "memory",
+    "file": "album-fugazone-400.woff2",
+    "bytes": 1040,
+    "sha256": "d95d9c6698cabcca4d464b8482cf4e3cd7c0c1980bff52ccda9d269f54d3ce83",
+    "source": "https://fonts.googleapis.com/css2?family=Fugaz+One&text=memory&display=swap",
+    "license": "https://raw.githubusercontent.com/google/fonts/main/ofl/fugazone/OFL.txt"
+  }
+]

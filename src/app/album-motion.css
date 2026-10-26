@@ -1,0 +1,92 @@
+/*
+ * アルバム用の動きだけを共通化。ページを包んだdata-album-motion内で有効です。
+ * opacity:0で待たせるCSSは使いません。JSなし・低速な端末でも本文を読めます。
+ * スクロール時はAlbumMotion.tsxがCSS変数を更新し、レイアウトを変えず絵だけを動かします。
+ */
+[data-album-motion] {
+  --album-scene-shift: 0px;
+  --album-art-shift: 0px;
+  --album-orbit-turn: 0deg;
+  --album-tilt-x: 0deg;
+  --album-tilt-y: 0deg;
+}
+[data-album-motion] .archive-hero-scene {
+  translate: 0 var(--album-scene-shift);
+}
+[data-album-motion] .archive-art-stage {
+  transform: perspective(1000px) rotateX(var(--album-tilt-x))
+    rotateY(var(--album-tilt-y));
+  transition: transform 240ms ease-out;
+}
+[data-album-motion] :is(.archive-cover, .archive-cover-reverse) {
+  translate: 0 var(--album-art-shift);
+}
+[data-album-motion="cosmos"] .archive-art-stage .archive-art-orbit::before {
+  rotate: calc(-16deg + var(--album-orbit-turn));
+}
+[data-album-motion="rainbow"] .archive-rainbow-arch {
+  translate: 0 var(--album-scene-shift);
+}
+[data-album-motion="soda"] .release-feature-mesh {
+  translate: 0 var(--album-scene-shift);
+}
+[data-album-motion="soda"] .release-feature-disc {
+  rotate: var(--album-orbit-turn);
+  transition: translate 650ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+[data-album-motion="soda"] .release-feature-bubble {
+  translate: 0 var(--album-art-shift);
+}
+[data-album-motion="soda"] .release-feature-title > span {
+  display: inline-block;
+  color: var(--soda-ink);
+}
+@media (forced-colors: active) {
+  [data-album-motion="soda"] .release-feature-title > span {
+    color: CanvasText;
+  }
+}
+@media (hover: hover) and (pointer: fine) {
+  [data-album-motion="soda"] .release-feature-art:hover .release-feature-disc {
+    translate: 12px -4px;
+  }
+  [data-album-motion] .archive-track-copy,
+  [data-album-motion] .archive-hero-actions svg,
+  [data-album-motion] .archive-lyric-link svg {
+    transition: translate 200ms ease-out;
+  }
+  [data-album-motion] .archive-track-list > li:hover .archive-track-copy {
+    translate: 4px 0;
+  }
+  [data-album-motion]
+    :is(.archive-hero-actions a, .archive-lyric-link):hover
+    svg {
+    translate: 3px 0;
+  }
+}
+/* JSで停止する前の描画にも対応。画像入れ替え自体は使え、移動だけが即時になります。 */
+@media (prefers-reduced-motion: reduce) {
+  [data-album-motion]
+    :is(
+      .archive-hero-scene,
+      .archive-cover,
+      .archive-cover-reverse,
+      .archive-rainbow-arch,
+      .release-feature-mesh,
+      .release-feature-bubble,
+      .release-feature-disc,
+      .archive-track-copy,
+      .archive-hero-actions svg,
+      .archive-lyric-link svg
+    ) {
+    translate: none !important;
+    transition: none !important;
+  }
+  [data-album-motion] .archive-art-stage {
+    transform: none;
+    transition: none;
+  }
+  [data-album-motion="soda"] .release-feature-disc {
+    rotate: 0deg;
+  }
+}
