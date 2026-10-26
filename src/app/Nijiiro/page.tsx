@@ -1,78 +1,31 @@
-"use client";
-
-import Image from "next/image";
+import type { Metadata } from "next";
 import ClientWrapper from "../../component/ClientWrapper";
-import LyricLink from "../../component/LyricLink";
+import ArchiveAlbumPage from "../../component/ArchiveAlbumPage";
+import AlbumMotion from "../../component/AlbumMotion";
+import { archiveAlbums } from "../../data/archiveAlbums";
 
+const album = archiveAlbums[2024];
+const title = "虹色memory | 群馬大学作曲部 1stアルバム";
+const description =
+  "群馬大学作曲部の2024年アルバム「虹色memory」。全11曲の曲目、歌詞、クロスフェード、ダウンロードカードの案内を掲載しています。";
 
-
-const MainPage = () => {
-  return (
-    <ClientWrapper>
-      <h1 className="text-[30px] px-[10%] font-serif text-center">
-        群馬大学作曲部オリジナルアルバム1作目「虹色memory」
-      </h1>
-      <div className="relative w-[80%] pb-[45%] mx-auto mt-10">
-  <iframe
-    className="absolute top-0 left-0 w-full h-full rounded-xl shadow-lg"
-    src="https://www.youtube.com/embed/arK-hOelO2M?si=qp--S5O4iyjLFHxU"
-    title="YouTube video player"
-    frameBorder="0"
-    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-    allowFullScreen
-  ></iframe>
-</div>
-
-      <br /><br /><br /><br />
-      <hr className="w-[80%] mx-auto" />
-      <br /><br /><br /><br />
-      <h1 className="text-[30px] px-[10%] font-serif text-center">「虹色memory」曲リスト</h1>
-      <br /><br />
-      <Image
-            src="/cover31.png"
-            alt="ジャケット画像"
-            width={2160}
-            height={2160}
-            style={{
-              width: "30%",
-              height: "auto",
-              borderRadius: "12px",
-              boxShadow: "0 8px 20px rgba(0, 0, 0, 0.3)",
-              display: "block",
-              margin: "0 auto"
-            }}
-          />
-
-          <br /><br />
-          <br />
-
-          <p className="text-[18px] px-[10%] font-serif text-center">1. 曇りのち晴れ feat. 音街ウナ</p>
-          <LyricLink href="/Nijiiro/kumori" />
-          <br />
-          <p className="text-[18px] px-[10%] font-serif text-center">2. 僕らの夏 feat. 可不</p>
-          <br />
-          <p className="text-[18px] px-[10%] font-serif text-center">3. Cloud Border</p>
-          <br />
-          <p className="text-[18px] px-[10%] font-serif text-center">4. ArcTech</p>
-          <br />
-          <p className="text-[18px] px-[10%] font-serif text-center">5. ギュっと！バーチャルどり～む！！ feat. 可不&花隈千冬</p>
-          <br />
-          <p className="text-[18px] px-[10%] font-serif text-center">6. School Addiction</p>
-          <br />
-          <p className="text-[18px] px-[10%] font-serif text-center">7. 青春MIXブレンディング feat. No.7&ナクモ</p>
-          <br />
-          <p className="text-[18px] px-[10%] font-serif text-center">8. Hopen Campus</p>
-          <br />
-          <p className="text-[18px] px-[10%] font-serif text-center">9. レッツゴー青春</p>
-          <br />
-          <p className="text-[18px] px-[10%] font-serif text-center">10. 水平線上の在処</p>
-          <br />
-          <p className="text-[18px] px-[10%] font-serif text-center">11. 軌跡</p>
-
-
-      <br /><br /><br />
-    </ClientWrapper>
-  );
+export const metadata: Metadata = {
+  title,
+  description,
+  alternates: { canonical: album.detailPath },
+  openGraph: {
+    title,
+    description,
+    url: album.detailPath,
+    images: [album.artwork],
+  },
+  twitter: { title, description, images: [album.artwork] },
 };
 
-export default MainPage;
+export default function NijiiroPage() {
+  return (
+    <ClientWrapper className="archive-album-main">
+      <AlbumMotion theme={album.theme}><ArchiveAlbumPage album={album} /></AlbumMotion>
+    </ClientWrapper>
+  );
+}

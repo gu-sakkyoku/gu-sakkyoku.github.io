@@ -1,0 +1,755 @@
+/*
+ * 作品ごとのスリーブ／ブックレット。layout.tsxが付ける.album-world内だけに適用します。
+ * 2025はジャケットの宇宙、2024は虹の七色。作品名・曲目以外の宣伝コピーは足しません。
+ * 色の調整は各テーマの変数へ。元の画像や歌詞本文を加工する必要はありません。
+ */
+.album-world {
+  display: flow-root;
+  min-height: 100svh;
+  background: var(--world-bg);
+  color: var(--world-ink);
+  font-family: var(--font-geist-sans), Arial, sans-serif;
+  overflow-wrap: anywhere;
+}
+.album-world--cosmos {
+  --world-bg: #111020;
+  --world-ink: #eeeaf7;
+  --world-muted: #b6b0c9;
+  --world-accent: #b9d8fa;
+  --world-line: #49435c;
+  --world-panel: #171526;
+  --site-link: #b9d8fa;
+  color-scheme: dark;
+}
+.album-world--rainbow {
+  --world-bg: #fffdf8;
+  --world-ink: #4e3b54;
+  --world-muted: #786778;
+  --world-accent: #704777;
+  --world-line: #d9cfd6;
+  --world-panel: #fffefb;
+  --site-link: #704777;
+  --rainbow-red: #e68b9d;
+  --rainbow-orange: #edb17a;
+  --rainbow-yellow: #e7ce77;
+  --rainbow-green: #95baa0;
+  --rainbow-blue: #8fb9d1;
+  --rainbow-indigo: #999fc7;
+  --rainbow-violet: #b797c1;
+  --rainbow-band: linear-gradient(
+    90deg,
+    var(--rainbow-red) 0% 14.28%,
+    var(--rainbow-orange) 14.28% 28.56%,
+    var(--rainbow-yellow) 28.56% 42.84%,
+    var(--rainbow-green) 42.84% 57.12%,
+    var(--rainbow-blue) 57.12% 71.4%,
+    var(--rainbow-indigo) 71.4% 85.68%,
+    var(--rainbow-violet) 85.68% 100%
+  );
+  color-scheme: light;
+}
+.album-world ::selection {
+  background: var(--world-ink);
+  color: var(--world-bg);
+}
+.album-world :is(a, button):focus-visible {
+  outline: 2px solid var(--world-accent);
+  outline-offset: 5px;
+}
+.album-world a {
+  text-underline-offset: 0.25em;
+}
+.album-world svg {
+  flex-shrink: 0;
+}
+.album-world .font-serif {
+  font-family: var(--font-album-mincho), ui-serif, serif;
+}
+
+/* 共通ヘッダーは高さと操作を保ち、各アルバムの色だけ継承します。 */
+.album-world .site-header {
+  background: var(--world-bg);
+  color: var(--world-ink);
+  border-bottom: 1px solid var(--world-line);
+  box-shadow: none;
+}
+.album-world .site-header :where(a, button):focus-visible {
+  outline-color: var(--world-accent);
+}
+.album-world .site-brand span {
+  color: var(--world-ink);
+}
+.album-world .site-nav li > span {
+  color: var(--world-line);
+}
+.album-world .site-nav a {
+  font-size: 0.9rem;
+}
+.album-world .site-header .site-download-link {
+  background: transparent;
+  color: var(--world-ink);
+  border-color: var(--world-line);
+}
+.album-world .site-menu-button span {
+  background: var(--world-ink);
+}
+.album-world .site-mobile-nav {
+  background: var(--world-panel);
+  border-color: var(--world-line);
+}
+.album-world .site-mobile-nav a:hover {
+  background: var(--world-bg);
+}
+.album-world .site-footer {
+  background: var(--world-bg);
+  color: var(--world-muted);
+  border-top: 1px solid var(--world-line);
+  padding: 1.75rem 1rem;
+}
+
+.album-world .archive-album-main {
+  padding-bottom: 4rem;
+}
+.album-world .archive-hero {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  gap: 2rem;
+  width: 90%;
+  max-width: 78rem;
+  margin-inline: auto;
+}
+.album-world .archive-edition {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--world-line);
+  color: var(--world-muted);
+  font-size: 0.8rem;
+  font-family: var(--font-geist-mono), monospace;
+}
+.album-world .archive-hero-copy {
+  min-width: 0;
+}
+.album-world .archive-artist {
+  font-size: 0.85rem;
+  letter-spacing: 0.16em;
+}
+.album-world .archive-title {
+  font-family: var(--font-geist-sans), Arial, sans-serif;
+  font-size: clamp(3rem, 12.5vw, 11rem);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -0.065em;
+  overflow-wrap: normal;
+  margin-top: 0.8rem;
+}
+/* 英字はジャケットの幾何学的な文字に合わせます。宇宙の題字以外には適用しません。 */
+.album-world--cosmos .archive-title {
+  font-family: "Orbitron", var(--font-geist-sans), sans-serif;
+  font-size: clamp(2rem, 9.5vw, 8.25rem);
+  font-weight: 600;
+  font-synthesis: none;
+  letter-spacing: -0.035em;
+  line-height: 1.15;
+}
+.album-world .archive-art-stage {
+  position: relative;
+  isolation: isolate;
+  min-width: 0;
+  margin: 0;
+}
+.album-world .archive-cover {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.album-world .archive-hero-actions {
+  display: grid;
+  align-content: end;
+}
+.album-world .archive-hero-actions a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 3.5rem;
+  gap: 1rem;
+  padding-block: 0.7rem;
+  border-bottom: 1px solid var(--world-line);
+  color: var(--world-ink);
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+.album-world .archive-hero-actions svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Horoscope: 既存の宇宙の絵を背景にも使い、実物のスリーブを手に取るように絵を入れ替えます。 */
+.album-world .archive-hero-scene {
+  position: absolute;
+  z-index: -2;
+  inset: 2.5rem 0 0;
+  pointer-events: none;
+}
+.album-world--cosmos .archive-hero-scene {
+  background: url("/cover2.png") 100% 40% / 72% auto no-repeat;
+  opacity: 0.22;
+  mask-image: linear-gradient(
+    90deg,
+    transparent 15%,
+    #000 65%,
+    #000 95%,
+    transparent
+  );
+}
+.album-world--cosmos .archive-hero::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 17% 31%, #e7dcff 0 1px, transparent 1.5px),
+    radial-gradient(circle at 43% 58%, #e7dcff 0 1px, transparent 1.5px),
+    radial-gradient(circle at 87% 23%, #a9cfff 0 1.5px, transparent 2px),
+    radial-gradient(circle at 61% 12%, #e7dcff 0 1px, transparent 1.5px),
+    radial-gradient(circle at 8% 65%, #a9cfff 0 1px, transparent 1.5px);
+}
+.album-world--cosmos .archive-art-stage {
+  padding: 0 26% 3.75rem 0;
+}
+.album-world--cosmos .archive-cover {
+  z-index: 2;
+  width: 100%;
+  transition: transform 650ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.album-world--cosmos .archive-cover-reverse {
+  position: absolute;
+  right: 0;
+  bottom: 3.75rem;
+  z-index: 1;
+  width: 48%;
+  height: auto;
+  border: 8px solid var(--world-bg);
+  transition: transform 650ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.album-world--cosmos .archive-art-stage[data-back="true"] .archive-cover {
+  transform: translate(38%, 12%) scale(0.72) rotate(3deg);
+  z-index: 1;
+}
+.album-world--cosmos
+  .archive-art-stage[data-back="true"]
+  .archive-cover-reverse {
+  transform: translate(-65%, -10%) scale(1.48) rotate(-2deg);
+  z-index: 3;
+}
+.album-world .archive-jacket-toggle {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  z-index: 4;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 2.75rem;
+  max-width: calc(100% - 0.5rem);
+  padding: 0 0.5rem 0 0;
+  font-size: 0.8rem;
+  color: var(--world-accent);
+  background: var(--world-bg);
+  text-decoration: underline;
+  text-underline-offset: 0.3em;
+  cursor: pointer;
+}
+.album-world--cosmos .archive-art-orbit {
+  position: absolute;
+  z-index: -1;
+  inset: -5% 2% 5% 0;
+  overflow: clip;
+  pointer-events: none;
+}
+.album-world--cosmos .archive-art-orbit::before {
+  content: "";
+  position: absolute;
+  inset: 5% 2% 10%;
+  border: 1px solid #77708b;
+  border-radius: 50%;
+  rotate: -16deg;
+}
+/* 装飾の中だけを囲い、ボタンのフォーカス枠は切り取らないようにします。 */
+
+/* 虹色memory: 紙の色、縦組み風の題字、七色の見出し線。宇宙側と同じ構図にはしません。 */
+.album-world--rainbow .archive-edition {
+  border-bottom: 7px solid transparent;
+  border-image: var(--rainbow-band) 1;
+}
+.album-world--rainbow .archive-title {
+  font-family: "Mochiy Pop One", var(--font-album-rounded), sans-serif;
+  font-size: clamp(4rem, 9vw, 8rem);
+  font-weight: 400;
+  font-synthesis: none;
+  line-height: 1.1;
+  letter-spacing: 0.025em;
+  text-shadow:
+    2px 2px 0 var(--rainbow-red),
+    4px 4px 0 var(--rainbow-blue);
+}
+.album-world--rainbow .archive-title > span {
+  display: block;
+}
+.album-world--rainbow .archive-title-memory {
+  font-family: "Fugaz One", var(--font-album-rounded), sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  letter-spacing: -0.035em;
+  font-size: 0.85em;
+}
+.album-world--rainbow .archive-art-stage {
+  --sleeve-top: clamp(5rem, 12vw, 11rem);
+  padding: var(--sleeve-top) 0 1.25rem 1.25rem;
+}
+.album-world--rainbow .archive-art-stage::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: calc(var(--sleeve-top) + 1.25rem) 1.25rem 0 0;
+  background: var(--rainbow-band);
+}
+.album-world--rainbow .archive-cover {
+  border: 1px solid var(--world-line);
+}
+.album-world .archive-rainbow-arch {
+  position: absolute;
+  z-index: -2;
+  top: -8%;
+  left: -4%;
+  width: 108%;
+  height: auto;
+  pointer-events: none;
+}
+.album-world .archive-rainbow-arch path {
+  fill: none;
+  stroke-width: 14;
+  stroke-dasharray: 900;
+  stroke-dashoffset: 0;
+  animation: archive-rainbow-draw 900ms ease-out 1;
+}
+.album-world .archive-art-stage {
+  animation: archive-sleeve-enter 700ms ease-out 1;
+}
+@keyframes archive-sleeve-enter {
+  from {
+    transform: translateY(16px) rotate(-1deg);
+  }
+  to {
+    transform: translateY(0) rotate(0);
+  }
+}
+@keyframes archive-rainbow-draw {
+  from {
+    stroke-dashoffset: 900;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* 動画と曲リストの領域は共通。実データを読みやすい冊子の行として並べます。 */
+.album-world .archive-crossfade,
+.album-world .archive-tracks {
+  width: 90%;
+  max-width: 72rem;
+  margin: clamp(4rem, 8vw, 8rem) auto 0;
+}
+.album-world .archive-section-heading {
+  display: flex;
+  align-items: baseline;
+  gap: 1.25rem;
+  border-top: 1px solid var(--world-line);
+  padding-top: 1.25rem;
+}
+.album-world .archive-section-heading h2 {
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  font-weight: 500;
+}
+.album-world .archive-crossfade > div:last-child {
+  margin-top: 2rem;
+}
+.album-world .archive-crossfade .site-text-link {
+  color: var(--world-accent);
+}
+.album-world .archive-track-guide {
+  margin-top: 1rem;
+  font-size: 0.85rem;
+  line-height: 1.9;
+  color: var(--world-muted);
+}
+.album-world .archive-disc-nav {
+  display: flex;
+  gap: 2rem;
+  margin-top: 1.5rem;
+}
+.album-world .archive-disc-nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  color: var(--world-accent);
+  text-decoration: underline;
+}
+.album-world .archive-discs {
+  display: grid;
+  align-items: start;
+  gap: 3rem;
+  margin-top: 2.5rem;
+}
+.album-world .archive-disc {
+  min-width: 0;
+}
+.album-world .archive-disc-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-block: 0.8rem;
+  border-bottom: 1px solid var(--world-ink);
+}
+.album-world .archive-disc-heading h3 {
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+.album-world .archive-disc-heading > span {
+  color: var(--world-muted);
+  font-size: 0.75rem;
+}
+.album-world .archive-track-list {
+  list-style: none;
+  padding: 0;
+}
+.album-world .archive-track-list > li {
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr);
+  gap: 1rem;
+  padding-block: 1.4rem;
+  border-bottom: 1px solid var(--world-line);
+}
+.album-world .archive-track-number {
+  color: var(--world-muted);
+  font:
+    0.8rem/2 var(--font-geist-mono),
+    monospace;
+}
+.album-world .archive-track-copy {
+  min-width: 0;
+}
+.album-world .archive-track-copy h4 {
+  font-family: var(--font-album-rounded), sans-serif;
+  font-size: 1rem;
+  line-height: 1.85;
+  font-weight: 700;
+}
+.album-world .archive-track-credit {
+  font-family: var(--font-geist-sans), var(--font-album-rounded), sans-serif;
+  margin-top: 0.5rem;
+  color: var(--world-muted);
+  font-size: 0.85rem;
+  line-height: 1.8;
+}
+.album-world .archive-track-art {
+  width: 7rem;
+  height: auto;
+  margin-top: 1rem;
+}
+.album-world .archive-lyric-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  gap: 0.7rem;
+  color: var(--world-accent);
+  text-decoration: underline;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+}
+.album-world .archive-lyric-link svg {
+  width: 15px;
+  height: 15px;
+}
+.album-world--rainbow .archive-tracks {
+  max-width: 60rem;
+}
+.album-world--rainbow .archive-track-list > li {
+  --track-color: var(--rainbow-red);
+  position: relative;
+  padding-left: 1.25rem;
+}
+.album-world--rainbow .archive-track-list > li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 1.65rem;
+  width: 3px;
+  height: 1.1rem;
+  background: var(--track-color);
+}
+.album-world--rainbow .archive-track-list > li:nth-child(7n + 2) {
+  --track-color: var(--rainbow-orange);
+}
+.album-world--rainbow .archive-track-list > li:nth-child(7n + 3) {
+  --track-color: var(--rainbow-yellow);
+}
+.album-world--rainbow .archive-track-list > li:nth-child(7n + 4) {
+  --track-color: var(--rainbow-green);
+}
+.album-world--rainbow .archive-track-list > li:nth-child(7n + 5) {
+  --track-color: var(--rainbow-blue);
+}
+.album-world--rainbow .archive-track-list > li:nth-child(7n + 6) {
+  --track-color: var(--rainbow-indigo);
+}
+.album-world--rainbow .archive-track-list > li:nth-child(7n + 7) {
+  --track-color: var(--rainbow-violet);
+}
+.album-world .archive-download-note {
+  width: 90%;
+  max-width: 72rem;
+  margin: 4rem auto 0;
+  padding-top: 2rem;
+  border-top: 1px solid var(--world-line);
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem 2rem;
+}
+.album-world .archive-download-note > p {
+  flex-basis: 100%;
+  font-size: 0.85rem;
+  color: var(--world-muted);
+}
+.album-world .archive-primary-link,
+.album-world .archive-secondary-link,
+.album-world .archive-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 2.75rem;
+  color: var(--world-accent);
+  text-decoration: underline;
+  line-height: 1.8;
+}
+.album-world .archive-primary-link svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* 歌詞本文の文字・改行は元ページのまま。外側のbrだけを除き、読み幅を整えます。 */
+.album-world .archive-lyric-main {
+  width: 90%;
+  max-width: 54rem;
+  margin-inline: auto;
+  padding-bottom: 4rem;
+}
+.album-world .archive-lyric-breadcrumb {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  font-size: 0.8rem;
+  color: var(--world-muted);
+}
+.album-world .archive-lyric-breadcrumb a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 2.75rem;
+  color: var(--world-accent);
+  text-decoration: underline;
+}
+.album-world .archive-lyric-breadcrumb svg {
+  rotate: 180deg;
+  width: 16px;
+}
+.album-world .archive-lyric-breadcrumb > span {
+  flex-shrink: 0;
+  font-family: var(--font-geist-mono), monospace;
+}
+.album-world .archive-lyric-sheet {
+  padding: clamp(1.2rem, 4vw, 3rem);
+  border: 1px solid var(--world-line);
+  background: var(--world-panel);
+}
+.album-world .archive-lyric-sheet > br {
+  display: none;
+}
+.album-world .archive-lyric-sheet > h1 {
+  padding-inline: 0;
+  margin: 2rem 0 2.5rem;
+  font-family: var(--font-album-mincho), ui-serif, serif;
+  font-size: clamp(1.4rem, 3.5vw, 2.2rem);
+  font-weight: 500;
+  line-height: 1.7;
+  text-align: left;
+  color: var(--world-ink);
+}
+.album-world .archive-lyric-sheet > p {
+  width: 100%;
+  max-width: 40rem;
+  margin-inline: auto;
+  padding: 0;
+  color: var(--world-ink);
+  font-family: var(--font-album-mincho), ui-serif, serif;
+  font-size: clamp(1rem, 2.2vw, 1.125rem);
+  line-height: 2.4;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+.album-world .archive-lyric-sheet > img {
+  max-width: 17rem;
+  margin-bottom: 2rem !important;
+}
+.album-world .archive-lyric-masthead {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--world-line);
+}
+.album-world .archive-lyric-masthead img {
+  width: 3.5rem;
+  height: 3.5rem;
+  object-fit: cover;
+}
+.album-world .archive-lyric-masthead p {
+  font-size: 0.9rem;
+}
+.album-world .archive-lyric-masthead span {
+  display: block;
+  margin-top: 0.3rem;
+  color: var(--world-muted);
+  font-size: 0.75rem;
+}
+.album-world .archive-lyric-bottom {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+.album-world .archive-lyric-bottom svg {
+  width: 18px;
+}
+.album-world--rainbow .archive-lyric-sheet {
+  border-top: 7px solid transparent;
+  border-image: var(--rainbow-band) 1;
+}
+
+@media (min-width: 48rem) {
+  .album-world--cosmos .archive-hero {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 1.5rem;
+  }
+  .album-world--cosmos .archive-edition,
+  .album-world--cosmos .archive-hero-copy {
+    grid-column: 1 / -1;
+  }
+  .album-world--cosmos .archive-art-stage {
+    grid-column: 4 / -1;
+    grid-row: 3;
+  }
+  .album-world--cosmos .archive-hero-actions {
+    grid-column: 1 / 4;
+    grid-row: 3;
+    padding-right: 1rem;
+  }
+  .album-world--rainbow .archive-hero {
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    grid-template-areas: "edition edition" "art copy" "art nav";
+    gap: 2rem 5%;
+  }
+  .album-world--rainbow .archive-edition {
+    grid-area: edition;
+  }
+  .album-world--rainbow .archive-art-stage {
+    grid-area: art;
+    align-self: start;
+  }
+  .album-world--rainbow .archive-hero-copy {
+    grid-area: copy;
+    align-self: end;
+    padding-bottom: 1rem;
+  }
+  .album-world--rainbow .archive-hero-actions {
+    grid-area: nav;
+  }
+}
+@media (min-width: 64rem) {
+  .album-world--cosmos .archive-discs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 4rem;
+  }
+}
+@media (max-width: 47.99rem) {
+  .album-world .archive-hero {
+    gap: 1.5rem;
+  }
+  .album-world .archive-hero-actions a {
+    min-height: 3rem;
+  }
+  .album-world--rainbow .archive-title {
+    font-size: clamp(4rem, 16vw, 6rem);
+  }
+  .album-world--cosmos .archive-cover-reverse {
+    border-width: 5px;
+  }
+}
+@media (hover: hover) and (pointer: fine) {
+  .album-world
+    :is(
+      .archive-hero-actions a,
+      .archive-primary-link,
+      .archive-secondary-link,
+      .archive-back-link,
+      .archive-lyric-link
+    ):hover {
+    color: var(--world-accent);
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+  }
+}
+/* 入場演出は一度だけ。動きを減らす設定では入場もジャケットの移動も即座に切り替えます。 */
+@media (prefers-reduced-motion: reduce) {
+  .album-world .archive-art-stage,
+  .album-world .archive-rainbow-arch path {
+    animation: none;
+  }
+  .album-world--cosmos :is(.archive-cover, .archive-cover-reverse) {
+    transition: none;
+  }
+}
+@media (forced-colors: active) {
+  .album-world {
+    background: Canvas;
+    color: CanvasText;
+  }
+  .album-world
+    :is(.archive-title, .archive-track-number, .archive-track-credit) {
+    color: CanvasText;
+  }
+  .album-world .archive-art-orbit,
+  .album-world .archive-art-stage::before,
+  .album-world .archive-hero-scene,
+  .album-world .archive-hero::before,
+  .album-world .archive-rainbow-arch {
+    display: none;
+  }
+  .album-world--rainbow .archive-edition,
+  .album-world--rainbow .archive-lyric-sheet {
+    border-image: none;
+    border-color: CanvasText;
+  }
+}

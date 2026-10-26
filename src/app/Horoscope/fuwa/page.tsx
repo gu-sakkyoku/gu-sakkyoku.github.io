@@ -1,13 +1,13 @@
 "use client";
 
 import Image from "next/image";
-import ClientWrapper from "../../../component/ClientWrapper";
+import ClientWrapper from "../../../component/ArchiveLyricWrapper";
 
 
 
 const MainPage = () => {
   return (
-    <ClientWrapper>
+    <ClientWrapper year={2025}>
       <h1 className="text-[30px] px-[10%] font-serif text-center">
         フワっと！スペースえすけ～ぷ！！ feat. 知声, 花隈千冬
       </h1>

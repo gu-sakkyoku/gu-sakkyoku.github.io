@@ -1,0 +1,58 @@
+/*
+ * 題字だけのフォントです。Google Fontsが配布する必要文字版を、このサイトから直接配信します。
+ * 3ファイル合計3,964バイト。閲覧時に外部のフォントAPIへ接続する必要はありません。
+ * 曲名・作者名・歌詞には全文字を持つ既存フォントを使い、題字の限定文字版とは分けます。
+ * 入手元とハッシュ: public/fonts/album-display-sources.json / ライセンス: public/licenses/*-OFL.txt
+ */
+@font-face {
+  font-family: "Orbitron";
+  src: url("/fonts/album-orbitron-600.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  unicode-range: U+0048, U+0063, U+0065, U+006F-0070, U+0072-0073;
+}
+@font-face {
+  font-family: "Mochiy Pop One";
+  src: url("/fonts/album-mochiypopone-400.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  unicode-range: U+4E88, U+5831, U+70AD, U+8272, U+8679, U+9178;
+}
+@font-face {
+  font-family: "Fugaz One";
+  src: url("/fonts/album-fugazone-400.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  unicode-range: U+0065, U+006D, U+006F, U+0072, U+0079;
+}
+
+/* 2026は丸い題字、曲名は丸ゴシック、作者名は小さな欧文＋和文。歌詞は既存の明朝体です。 */
+.tansan-white-theme .release-feature .release-feature-title {
+  font-family: "Mochiy Pop One", var(--font-album-rounded), sans-serif;
+  font-size: clamp(2.6rem, 7vw, 6rem);
+  font-weight: 400;
+  font-synthesis: none;
+  line-height: 1.5;
+  letter-spacing: 0.035em;
+  white-space: nowrap;
+}
+.tansan-white-theme .release-track-list :is(h2, h3) {
+  font-family: var(--font-album-rounded), sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+.tansan-white-theme .release-track-list li > p:first-child {
+  font-family: var(--font-album-rounded), sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.025em;
+  line-height: 1.9;
+}
+.tansan-white-theme .release-track-list li > p:nth-child(2) {
+  margin-top: 0.35rem;
+  font-family: var(--font-geist-sans), var(--font-album-rounded), sans-serif;
+  font-size: 0.9rem;
+  color: var(--soda-muted);
+}

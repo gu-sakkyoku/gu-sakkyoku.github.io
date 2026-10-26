@@ -86,7 +86,7 @@ export default function Cheader() {
 
         <Sactions>
           {/* ページ移動なのでbuttonではなくLink。メニューを開かず音源の入口へ進めます。 */}
-          <SdownloadLink href={downloadNavigation.href} onClick={() => setOpenMenu(false)}>
+          <SdownloadLink href={downloadNavigation.href} onClick={() => setOpenMenu(false)} className="site-download-link">
             <SodaIcon name="download" className="site-download-icon" />
             {downloadNavigation.label}
           </SdownloadLink>

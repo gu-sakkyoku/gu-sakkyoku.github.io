@@ -40,7 +40,9 @@ export default function NewAlbumAnnouncement({
   context?: "home" | "album";
 }) {
   const sectionRef = useRef<HTMLElement>(null);
+  const artworkRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.15 });
+  const artworkInView = useInView(artworkRef, { once: true, amount: 0.25 });
   const reducedMotion = useReducedMotion();
   const pointerX = useMotionValue(0);
   const pointerY = useMotionValue(0);
@@ -51,6 +53,8 @@ export default function NewAlbumAnnouncement({
   // 読み込み画面の裏で再生を終えないよう、本文が見える段階から一度だけ告知します。
   // 設定が未確定のSSRでは静止表示。JSなしでも画像・説明・リンクは見えるままです。
   const animateAnnouncement = motionReady && isInView && reducedMotion === false;
+  // スマホでは題字と絵が別々の高さに来るため、絵が見えてからジャケットの演出を始めます。
+  const animateArtwork = motionReady && artworkInView && reducedMotion === false;
   // 2026だけを特別仕様にします。過去作品のページや、将来の別作品へ装飾を強制しません。
   const featured = album.year === 2026;
   const Heading = context === "album" ? "h1" : "h2";
@@ -75,8 +79,8 @@ export default function NewAlbumAnnouncement({
               className="release-feature-bubble"
               initial={false}
               style={{ left: bubble.left, top: bubble.top, width: bubble.size, height: bubble.size }}
-              animate={{ y: animateAnnouncement ? [0, -30, -8] : 0, opacity: animateAnnouncement ? [0.35, 0.8, 0.45] : 0.45 }}
-              transition={{ duration: animateAnnouncement ? 3 : 0, delay: animateAnnouncement ? index * 0.2 : 0, ease: "easeInOut" }}
+              animate={{ y: animateAnnouncement ? [0, -66, -22] : 0, opacity: animateAnnouncement ? [0.35, 0.8, 0.45] : 0.45 }}
+              transition={{ duration: animateAnnouncement ? 3.8 : 0, delay: animateAnnouncement ? index * 0.15 : 0, ease: "easeInOut" }}
             />
           ))}
           <span className="release-feature-glint" />
@@ -97,8 +101,14 @@ export default function NewAlbumAnnouncement({
             New Album!!!
           </motion.p>
           <p className="mt-3 text-sm leading-6 sm:text-base">{album.year}年 オリジナルアルバム</p>
-          <Heading id="new-album-title" className={featured ? "release-feature-title font-serif" : "mt-2 font-serif text-[30px] leading-snug sm:text-[36px]"}>
-            {album.title}
+          <Heading id="new-album-title" aria-label={album.title} className={featured ? "release-feature-title font-serif" : "mt-2 font-serif text-[30px] leading-snug sm:text-[36px]"}>
+            {/* 読み上げは見出しのaria-labelで一語に保ち、文字ごとの演出を重複して読ませません。 */}
+            {featured ? [...album.title].map((character, index) => (
+              <motion.span key={`${character}-${index}`} aria-hidden="true" initial={false}
+                animate={animateAnnouncement ? { y: [22, -3, 0], rotate: [-4, 1, 0], opacity: [0.4, 1, 1] } : { y: 0, rotate: 0, opacity: 1 }}
+                transition={{ duration: animateAnnouncement ? 0.85 : 0, delay: animateAnnouncement ? index * 0.09 : 0, ease: "easeOut" }}
+              >{character}</motion.span>
+            )) : album.title}
           </Heading>
         </div>
 
@@ -128,6 +138,7 @@ export default function NewAlbumAnnouncement({
 
         {album.artwork && (
           <motion.div
+            ref={artworkRef}
             initial={false}
             style={featured ? { rotateX: tiltX, rotateY: tiltY, transformPerspective: 900 } : undefined}
             onPointerMove={(event) => {
@@ -140,10 +151,10 @@ export default function NewAlbumAnnouncement({
             onPointerLeave={() => { pointerX.set(0); pointerY.set(0); }}
             // 既存のジャケットの「ゆらゆら」に合わせた短い演出。無限ループ・点滅はしません。
             // 幅や高さは変えず、レイアウトを動かさないtransformだけで約2.6秒揺らします。
-            animate={animateAnnouncement
+            animate={animateArtwork
               ? { rotate: [0, -3, 2, -1, 0], y: [0, -8, 0, -3, 0] }
               : { rotate: 0, y: 0 }}
-            transition={{ duration: animateAnnouncement ? 2.6 : 0, delay: animateAnnouncement ? 0.2 : 0, ease: "easeInOut" }}
+            transition={{ duration: animateArtwork ? 2.6 : 0, delay: animateArtwork ? 0.2 : 0, ease: "easeInOut" }}
             className={featured ? "release-feature-art" : "mx-auto mt-7 w-full max-w-[340px] sm:max-w-[420px]"}
           >
             {featured && <span className="release-feature-disc" aria-hidden="true" />}
@@ -161,8 +172,8 @@ export default function NewAlbumAnnouncement({
                 aria-hidden="true"
                 className="release-feature-shine"
                 initial={false}
-                animate={{ x: animateAnnouncement ? ["-130%", "260%"] : "-130%", opacity: animateAnnouncement ? [0, 0.5, 0] : 0 }}
-                transition={{ duration: animateAnnouncement ? 2.4 : 0, delay: animateAnnouncement ? 0.9 : 0, ease: "easeInOut" }}
+                animate={{ x: animateArtwork ? ["-130%", "260%"] : "-130%", opacity: animateArtwork ? [0, 0.5, 0] : 0 }}
+                transition={{ duration: animateArtwork ? 2.4 : 0, delay: animateArtwork ? 0.9 : 0, ease: "easeInOut" }}
               />
             )}
             </div>
