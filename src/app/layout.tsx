@@ -1,8 +1,13 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+// レイヤー順の宣言は必ず最初に読み込みます（理由はlayers.cssに記載）。
+import "./layers.css";
+// Astryxの部品が正しく表示されるための基本CSS。どちらも専用のレイヤーに入るので、サイト独自のCSSが優先されます。
+import "@astryxdesign/core/reset.css";
+import "@astryxdesign/core/astryx.css";
 import "./globals.css";
-import StyledComponentsRegistry from "../lib/styled-components-registry";
 import { site } from "../data/site";
+import { siteFontVariables } from "../lib/site-fonts";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -58,9 +63,10 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        // 書体のCSS変数はここで一度だけ定義し、どの作品のテーマからも参照できるようにします。
+        className={`${geistSans.variable} ${geistMono.variable} ${siteFontVariables} antialiased`}
       >
-        <StyledComponentsRegistry>{children}</StyledComponentsRegistry>
+        {children}
       </body>
     </html>
   );

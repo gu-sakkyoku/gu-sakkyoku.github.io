@@ -12,6 +12,9 @@ export const site = {
   // 画像を差し替える際はlogoSizeも確認し、検索用アイコンを再生成してください。
   logo: "/site-logo-blue.png",
   logoSize: 2084,
+  // 暗い背景（Horoscope）のヘッダー用に支給された白色版。形は同じで、色だけが違います。
+  logoOnDark: "/site-logo-white.png",
+  logoOnDarkSize: 4167,
   icon: "/site-icon.png",
   appleIcon: "/apple-touch-icon.png",
 };

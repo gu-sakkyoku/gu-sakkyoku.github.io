@@ -1,0 +1,215 @@
+/*
+ * 「虹色memory」の世界の飾りです（2024年の作品・歌詞）。
+ * ジャケットの絵を根拠にしています：絵を囲む青紫の枠、薄い緑と桃色の色面、
+ * 虹色のグラデーションの題字と白いふち、紫と桃色の髪。
+ * 影はぼかさず、色をずらして重ねます（版がずれた印刷のように）。
+ * 基本の色・書体は src/themes/nijiiro/nijiiroTheme.ts、ここは絵と題字と動きだけです。
+ * すべて .site-world--nijiiro の中に限定します。
+ */
+.site-world--nijiiro {
+  --niji-periwinkle: #a9b1ff;
+  --niji-ink: #2f2438;
+  --rainbow-red: #ff8fa3;
+  --rainbow-orange: #ffb56b;
+  --rainbow-yellow: #ffd95e;
+  --rainbow-green: #7fd9a8;
+  --rainbow-blue: #6fb7ff;
+  --rainbow-indigo: #8f8cff;
+  --rainbow-violet: #c48cff;
+  --rainbow-band: linear-gradient(
+    90deg,
+    var(--rainbow-red) 0% 14.28%,
+    var(--rainbow-orange) 14.28% 28.56%,
+    var(--rainbow-yellow) 28.56% 42.84%,
+    var(--rainbow-green) 42.84% 57.12%,
+    var(--rainbow-blue) 57.12% 71.4%,
+    var(--rainbow-indigo) 71.4% 85.68%,
+    var(--rainbow-violet) 85.68% 100%
+  );
+}
+
+/* ヘッダーの下に七色の帯を1本通し、この作品の入口だと分かるようにします。 */
+.site-world--nijiiro .site-header {
+  border-bottom: 0;
+  box-shadow: 0 5px 0 0 transparent;
+}
+
+.site-world--nijiiro .site-header::after {
+  content: "";
+  position: absolute;
+  inset: 100% 0 auto;
+  height: 5px;
+  background: var(--rainbow-band);
+}
+
+/* ヒーロー：ジャケットと同じ青紫の地に、薄い緑と桃色の色面を重ねます。 */
+.site-world--nijiiro .archive-hero-scene {
+  background:
+    linear-gradient(115deg, transparent 0 58%, #dffbe0 58% 100%),
+    linear-gradient(200deg, #ffc9dd 0 34%, transparent 34% 100%),
+    var(--niji-periwinkle);
+  border-bottom: 3px solid var(--niji-ink);
+}
+
+.site-world--nijiiro .archive-edition {
+  padding: 0.25rem 0.75rem;
+  border: 2px solid var(--niji-ink);
+  background: #fff;
+  color: var(--niji-ink);
+  box-shadow: 3px 3px 0 var(--niji-ink);
+}
+
+.site-world--nijiiro .archive-artist {
+  color: var(--niji-ink);
+}
+
+/*
+ * 題字：ジャケットと同じ虹色のグラデーション。白いふちを付け、濃い紫をずらして重ねます。
+ * 「虹色」は丸く太い和文、「memory」は斜体の欧文で、実物の題字と同じ組み合わせです。
+ */
+.site-world--nijiiro .archive-title {
+  font-size: clamp(3.5rem, 17vw, 7.5rem);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+}
+
+.site-world--nijiiro .archive-title > span {
+  display: block;
+  width: fit-content;
+  background: linear-gradient(95deg, #ff5fa2 0%, #12b3a0 22%, #8a4dff 45%, #2f8fff 64%, #ffa81f 84%, #ff5fa2 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  font-family: var(--font-display-pop), var(--font-family-heading);
+  filter:
+    drop-shadow(0.02em 0 0 #fff) drop-shadow(-0.02em 0 0 #fff)
+    drop-shadow(0 0.02em 0 #fff) drop-shadow(0 -0.02em 0 #fff)
+    drop-shadow(0.055em 0.055em 0 var(--niji-ink));
+  animation: niji-title-snap 700ms cubic-bezier(0.2, 0.8, 0.2, 1) 1 both;
+}
+
+.site-world--nijiiro .archive-title > .archive-title-memory {
+  font-family: var(--font-display-slant), var(--font-family-heading);
+  font-size: 0.82em;
+  letter-spacing: -0.03em;
+  animation-delay: 120ms;
+}
+
+/* 版がずれた状態から、ぴたっと重なる動きを一度だけ。途中で止まっても読めるよう、濃さは変えません。 */
+@keyframes niji-title-snap {
+  from { translate: -0.12em 0.1em; }
+  to { translate: 0 0; }
+}
+
+/* ジャケット：白いふちと濃い線で囲み、後ろに七色の帯と虹のアーチを置きます。 */
+.site-world--nijiiro .archive-art-stage {
+  padding: clamp(3rem, 9vw, 5.5rem) 0.75rem 0.75rem 0;
+  transform: perspective(1000px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+  transition: transform 240ms ease-out;
+}
+
+.site-world--nijiiro .archive-cover {
+  position: relative;
+  z-index: 1;
+  padding: 0.625rem;
+  border: 3px solid var(--niji-ink);
+  background: #fff;
+  box-shadow: 0.75rem 0.75rem 0 var(--niji-ink);
+  translate: 0 var(--depth-art, 0);
+}
+
+.site-world--nijiiro .archive-rainbow-arch {
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  left: -3%;
+  width: 106%;
+  height: auto;
+  pointer-events: none;
+  translate: 0 var(--depth-scene, 0);
+}
+
+.site-world--nijiiro .archive-rainbow-arch path {
+  fill: none;
+  stroke-width: 14;
+  stroke-dasharray: 900;
+  stroke-dashoffset: 0;
+  animation: niji-rainbow-draw 1000ms ease-out 1;
+}
+
+@keyframes niji-rainbow-draw {
+  from { stroke-dashoffset: 900; }
+  to { stroke-dashoffset: 0; }
+}
+
+/* 区切りの見出し：下に七色の帯を引きます。 */
+.site-world--nijiiro .section-heading::after {
+  content: "";
+  width: 7rem;
+  height: 6px;
+  background: var(--rainbow-band);
+}
+
+/* 曲リスト：1曲ごとに、虹の七色を順番に左の印として付けます。 */
+.site-world--nijiiro .track-number {
+  padding-left: 0.625rem;
+  border-left: 5px solid var(--rainbow-red);
+  color: var(--niji-ink);
+}
+
+.site-world--nijiiro .track-disc li:nth-child(7n + 2) .track-number { border-color: var(--rainbow-orange); }
+.site-world--nijiiro .track-disc li:nth-child(7n + 3) .track-number { border-color: var(--rainbow-yellow); }
+.site-world--nijiiro .track-disc li:nth-child(7n + 4) .track-number { border-color: var(--rainbow-green); }
+.site-world--nijiiro .track-disc li:nth-child(7n + 5) .track-number { border-color: var(--rainbow-blue); }
+.site-world--nijiiro .track-disc li:nth-child(7n + 6) .track-number { border-color: var(--rainbow-indigo); }
+.site-world--nijiiro .track-disc li:nth-child(7n + 7) .track-number { border-color: var(--rainbow-violet); }
+
+.site-world--nijiiro .track-disc-heading {
+  border-bottom: 3px solid var(--niji-ink);
+}
+
+/* カード類は濃い線で囲み、青紫をずらして重ねます。 */
+.site-world--nijiiro :where(.lyric-sheet, .album-download-note, .crossfade-video-frame) {
+  border: 2px solid var(--niji-ink);
+  box-shadow: 0.375rem 0.375rem 0 var(--niji-periwinkle);
+}
+
+.site-world--nijiiro .site-footer {
+  border-top: 3px solid var(--niji-ink);
+}
+
+@media (min-width: 64rem) {
+  /* Horoscopeと同じ構図にしないよう、こちらは絵を左、題字を右に置きます。 */
+  .site-world--nijiiro .archive-art-stage {
+    order: -1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-world--nijiiro .archive-title > span,
+  .site-world--nijiiro .archive-rainbow-arch path {
+    animation: none;
+  }
+
+  .site-world--nijiiro :where(.archive-cover, .archive-rainbow-arch) {
+    translate: none !important;
+  }
+
+  .site-world--nijiiro .archive-art-stage {
+    transform: none;
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .site-world--nijiiro .archive-title > span {
+    background: none;
+    color: CanvasText;
+    filter: none;
+  }
+
+  .site-world--nijiiro .archive-rainbow-arch,
+  .site-world--nijiiro .archive-hero-scene {
+    display: none;
+  }
+}

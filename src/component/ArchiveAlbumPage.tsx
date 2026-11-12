@@ -1,161 +1,98 @@
-import Image from "next/image";
-import Link from "next/link";
+import { Button } from "@astryxdesign/core/Button";
+import { HStack } from "@astryxdesign/core/HStack";
+import { Text } from "@astryxdesign/core/Text";
 import type { ArchiveAlbum } from "../data/archiveAlbums";
+import { albums } from "../data/albums";
+import { worldOfYear } from "../data/worlds";
 import ArchiveArtworkStage from "./ArchiveArtworkStage";
 import CrossfadeVideo from "./CrossfadeVideo";
-import SodaIcon from "./SodaIcon";
+import AlbumDownloadNote from "./ui/AlbumDownloadNote";
+import AlbumShelf from "./ui/AlbumShelf";
+import AppIcon from "./ui/AppIcon";
+import SectionHeading from "./ui/SectionHeading";
+import TrackList from "./ui/TrackList";
 
-/** 曲目・クレジットは静的HTML。ジャケットを入れ替える操作だけを小さなClient Componentへ分けます。 */
+/**
+ * 2024・2025年の作品ページ本体です。並び順は2026年と同じ「紹介 → 試聴 → 曲リスト → ダウンロード → ほかの作品」。
+ * 曲名・曲順・クレジット・歌詞の有無は作品データのまま表示し、ここで文字を足したり変えたりしません。
+ * 絵の飾りと題字は作品ごとのCSS（src/app/worlds/）、色と書体は作品ごとのテーマが受け持ちます。
+ */
 export default function ArchiveAlbumPage({ album }: { album: ArchiveAlbum }) {
-  const totalTracks = album.discs.reduce(
-    (total, disc) => total + disc.tracks.length,
-    0,
-  );
+  const world = worldOfYear(album.year);
+  const totalTracks = album.discs.reduce((total, disc) => total + disc.tracks.length, 0);
+  // ダウンロードの配信状態は、年度データ（albums.ts）の同じ年度から読みます。
+  const downloadAlbum = albums.find((item) => item.year === album.year);
   return (
     <>
-      <section className="archive-hero" aria-labelledby="archive-album-title">
+      <section className="archive-hero" aria-labelledby="archive-album-title" data-depth>
         <div className="archive-hero-scene" aria-hidden="true" />
-        <div className="archive-edition">
-          <p>
-            {album.year} / {album.ordinal === 1 ? "1st" : "2nd"} album
-          </p>
-          <p>
-            {album.discs.length}枚組・全{totalTracks}曲
-          </p>
+        <div className="archive-hero-inner site-container">
+          <div className="archive-hero-copy">
+            <p className="archive-edition">
+              <span>{album.year} / {album.ordinal === 1 ? "1st" : "2nd"} album</span>
+              <span>{album.discs.length}枚組・全{totalTracks}曲</span>
+            </p>
+            <Text as="p" type="supporting" className="archive-artist">群馬大学作曲部</Text>
+            {/* data-textは、題字の後ろに色をずらして重ねる飾り（CSS）が使います。読み上げには影響しません。 */}
+            <h1 id="archive-album-title" className="archive-title" data-text={album.title}>
+              {world === "nijiiro" ? (
+                <>
+                  <span>虹色</span>
+                  <span className="archive-title-memory">memory</span>
+                </>
+              ) : (
+                album.title
+              )}
+            </h1>
+            <HStack as="nav" aria-label="アルバムの案内" gap={3} wrap="wrap" className="archive-hero-actions">
+              <Button label="曲リスト・歌詞" href="#archive-tracks" variant="primary" size="lg" endContent={<AppIcon name="arrowRight" />} />
+              <Button label="クロスフェード" href="#archive-crossfade" variant="secondary" size="lg" icon={<AppIcon name="circlePlay" />} />
+              <Button label="ダウンロード" href={`/download/#album-${album.year}`} variant="secondary" size="lg" icon={<AppIcon name="download" />} />
+            </HStack>
+          </div>
+          <ArchiveArtworkStage title={album.title} artwork={album.artwork} world={world} />
         </div>
-        <div className="archive-hero-copy">
-          <p className="archive-artist">群馬大学作曲部</p>
-          <h1 id="archive-album-title" className="archive-title">
-            {album.theme === "rainbow" ? (
-              <>
-                <span>虹色</span>
-                <span className="archive-title-memory">memory</span>
-              </>
-            ) : (
-              album.title
-            )}
-          </h1>
-        </div>
-        <ArchiveArtworkStage
-          album={{
-            title: album.title,
-            theme: album.theme,
-            artwork: album.artwork,
-          }}
-        />
-        <nav className="archive-hero-actions" aria-label="アルバムの案内">
-          <a href="#archive-crossfade">
-            クロスフェード
-            <SodaIcon name="arrow" />
-          </a>
-          <a href="#archive-tracks">
-            曲リスト・歌詞
-            <SodaIcon name="arrow" />
-          </a>
-          <Link href={`/download/#album-${album.year}`}>
-            ダウンロード
-            <SodaIcon name="arrow" />
-          </Link>
-        </nav>
       </section>
 
-      <section
-        className="archive-crossfade"
-        aria-labelledby="archive-crossfade"
-      >
-        <div className="archive-section-heading">
-          <h2 id="archive-crossfade">クロスフェード</h2>
-        </div>
-        <CrossfadeVideo
-          videoId={album.crossfadeVideoId}
-          albumTitle={album.title}
-        />
+      <section className="site-container site-section" aria-labelledby="archive-crossfade">
+        <SectionHeading id="archive-crossfade">クロスフェード</SectionHeading>
+        <CrossfadeVideo videoId={album.crossfadeVideoId} albumTitle={album.title} />
       </section>
 
-      <section className="archive-tracks" aria-labelledby="archive-tracks">
-        <div className="archive-section-heading">
-          <h2 id="archive-tracks">曲リスト・歌詞</h2>
-        </div>
-        <p className="archive-track-guide">
-          歌詞のある曲は、リンクから歌詞ページへ進めます。
-        </p>
+      <section className="site-container site-section" aria-labelledby="archive-tracks">
+        <SectionHeading id="archive-tracks" note={`${album.discs.length}枚組・全${totalTracks}曲`}>曲リスト・歌詞</SectionHeading>
+        <Text as="p">歌詞のある曲は、リンクから歌詞ページへ進めます。</Text>
         {album.discs.length > 1 && (
-          <nav className="archive-disc-nav" aria-label="ディスクを選ぶ">
+          <HStack as="nav" aria-label="ディスクを選ぶ" gap={3} wrap="wrap" className="disc-nav">
             {album.discs.map((disc, index) => (
-              <a key={disc.name} href={`#archive-disc-${index + 1}`}>
-                {disc.name}
-              </a>
+              <Button key={disc.name} label={disc.name} href={`#archive-disc-${index + 1}`} variant="secondary" />
             ))}
-          </nav>
+          </HStack>
         )}
-        <div className="archive-discs">
-          {album.discs.map((disc, discIndex) => (
-            <section
-              className="archive-disc"
-              key={disc.name}
-              aria-labelledby={`archive-disc-${discIndex + 1}`}
-            >
-              <div className="archive-disc-heading">
-                <h3 id={`archive-disc-${discIndex + 1}`}>{disc.name}</h3>
-                <span>{disc.tracks.length}曲</span>
-              </div>
-              <ol className="archive-track-list">
-                {disc.tracks.map((track, index) => (
-                  <li key={track.title}>
-                    <span className="archive-track-number" aria-hidden="true">
-                      {String(index + 1).padStart(2, "0")}
-                    </span>
-                    <div className="archive-track-copy">
-                      <h4>{track.title}</h4>
-                      {track.artwork && (
-                        <Image
-                          className="archive-track-art"
-                          src={track.artwork}
-                          alt={`${track.title}のイメージ`}
-                          width={1280}
-                          height={1280}
-                          sizes="112px"
-                        />
-                      )}
-                      {track.credits?.map((credit) => (
-                        <p className="archive-track-credit" key={credit}>
-                          {credit}
-                        </p>
-                      ))}
-                      {track.lyricPath && (
-                        <Link
-                          className="archive-lyric-link"
-                          href={track.lyricPath}
-                        >
-                          歌詞はこちら
-                          <SodaIcon name="arrow" />
-                        </Link>
-                      )}
-                    </div>
-                  </li>
-                ))}
-              </ol>
-            </section>
-          ))}
-        </div>
+        <TrackList
+          idPrefix="archive-disc"
+          discs={album.discs.map((disc) => ({
+            name: disc.name,
+            tracks: disc.tracks.map((track) => ({
+              title: track.title,
+              credits: track.credits,
+              lyricHref: track.lyricPath,
+              artwork: track.artwork ? { src: track.artwork, alt: `${track.title}のイメージ` } : undefined,
+            })),
+          }))}
+        />
       </section>
 
-      <aside
-        className="archive-download-note"
-        aria-label="ダウンロードカードのご案内"
-      >
-        <p>ダウンロードカードをお持ちの方へ</p>
-        <Link
-          href={`/download/#album-${album.year}`}
-          className="archive-primary-link"
-        >
-          {album.year}年の音源を受け取る
-          <SodaIcon name="arrow" />
-        </Link>
-        <Link className="archive-back-link" href="/">
-          トップページへ戻る
-        </Link>
-      </aside>
+      {downloadAlbum && (
+        <div className="site-container site-section">
+          <AlbumDownloadNote album={downloadAlbum} />
+        </div>
+      )}
+
+      <section className="site-container site-section" aria-labelledby="other-albums">
+        <SectionHeading id="other-albums">作品一覧</SectionHeading>
+        <AlbumShelf exceptYear={album.year} />
+      </section>
     </>
   );
 }

@@ -1,0 +1,245 @@
+/*
+ * 「Horoscope」の世界の飾りです（2025年の作品・歌詞）。
+ * ジャケットの絵を根拠にしています：鮮やかな群青の宇宙、月の白と薄紫の光、細かな星、
+ * 白い題字の上下にずれて重なるシアン・マゼンタ・黄、走査線のような横縞。
+ * 基本の色・書体は src/themes/horoscope/horoscopeTheme.ts、ここは絵と題字と動きだけです。
+ * すべて .site-world--horoscope の中に限定します。
+ */
+.site-world--horoscope {
+  --cosmos-cyan: #5be0ff;
+  --cosmos-magenta: #ff5fd0;
+  --cosmos-yellow: #ffe95c;
+  --cosmos-ultramarine: #2b22c9;
+  /* ページ全体に、遠くの星を薄く散らします。静止画で、スクロールしても動きません。 */
+  background:
+    radial-gradient(circle at 12% 8%, #ffffff 0 1px, transparent 1.5px),
+    radial-gradient(circle at 78% 22%, #cfd4ff 0 1px, transparent 1.5px),
+    radial-gradient(circle at 34% 41%, #ffffff 0 0.75px, transparent 1.25px),
+    radial-gradient(circle at 91% 63%, #a9cfff 0 1px, transparent 1.5px),
+    radial-gradient(circle at 23% 77%, #ffffff 0 0.75px, transparent 1.25px),
+    radial-gradient(circle at 59% 92%, #cfd4ff 0 1px, transparent 1.5px),
+    var(--color-background-body);
+  background-size: 37rem 41rem, 43rem 47rem, 29rem 31rem, 53rem 59rem, 31rem 37rem, 47rem 43rem, auto;
+}
+
+/* ヒーロー：ジャケットの群青と月の光を、背景いっぱいに広げます。 */
+.site-world--horoscope .archive-hero-scene {
+  background:
+    radial-gradient(ellipse 60% 55% at 22% 18%, rgb(214 208 255 / 42%), transparent 70%),
+    radial-gradient(ellipse 70% 60% at 85% 80%, rgb(43 34 201 / 85%), transparent 72%),
+    radial-gradient(ellipse 50% 45% at 60% 30%, rgb(108 76 230 / 45%), transparent 70%),
+    linear-gradient(180deg, #171399 0%, #120e6e 45%, var(--color-background-body) 100%);
+  translate: 0 var(--depth-scene, 0);
+}
+
+.site-world--horoscope .archive-hero-scene::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle, #fff 0 1px, transparent 1.5px),
+    radial-gradient(circle, #dfe4ff 0 1.5px, transparent 2px),
+    radial-gradient(circle, #fff 0 0.75px, transparent 1.25px);
+  background-size: 127px 139px, 211px 193px, 71px 83px;
+  background-position: 20px 30px, 90px 10px, 5px 60px;
+  opacity: 0.7;
+}
+
+.site-world--horoscope .archive-edition {
+  color: var(--cosmos-cyan);
+}
+
+/*
+ * 題字：白い文字の上にシアン、下にマゼンタと黄をずらして重ねます（ジャケットと同じ並び）。
+ * 重ねた色には細い横縞を入れ、表示されたときに一度だけ、離れた位置から重なるように集まります。
+ */
+.site-world--horoscope .archive-title {
+  position: relative;
+  z-index: 0;
+  margin-block: 0.35em 0.45em;
+  color: #fff;
+  font-family: var(--font-display-orbit), var(--font-family-heading);
+  font-size: clamp(2.25rem, 11.5vw, 5.5rem);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  text-shadow: 0 0.42em 0 var(--cosmos-yellow);
+  animation: cosmos-title-yellow 900ms cubic-bezier(0.2, 0.8, 0.2, 1) 1 both;
+}
+
+.site-world--horoscope .archive-title::before,
+.site-world--horoscope .archive-title::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  mask-image: repeating-linear-gradient(180deg, #000 0 3px, transparent 3px 5px);
+}
+
+.site-world--horoscope .archive-title::before {
+  color: var(--cosmos-cyan);
+  translate: 0 -0.36em;
+  animation: cosmos-title-cyan 900ms cubic-bezier(0.2, 0.8, 0.2, 1) 1 both;
+}
+
+.site-world--horoscope .archive-title::after {
+  color: var(--cosmos-magenta);
+  translate: 0 0.2em;
+  animation: cosmos-title-magenta 900ms cubic-bezier(0.2, 0.8, 0.2, 1) 1 both;
+}
+
+@keyframes cosmos-title-cyan {
+  from { translate: -0.5em -1.1em; opacity: 0; }
+  to { translate: 0 -0.36em; opacity: 1; }
+}
+
+@keyframes cosmos-title-magenta {
+  from { translate: 0.6em 0.9em; opacity: 0; }
+  to { translate: 0 0.2em; opacity: 1; }
+}
+
+@keyframes cosmos-title-yellow {
+  from { text-shadow: 0 1.4em 0 transparent; }
+  to { text-shadow: 0 0.42em 0 var(--cosmos-yellow); }
+}
+
+/* ジャケット2枚：手前と奥に重ね、ボタンで入れ替えます。周りを軌道の輪が囲みます。 */
+.site-world--horoscope .archive-art-stage {
+  padding: 0 22% 0 0;
+  transform: perspective(1000px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+  transition: transform 240ms ease-out;
+}
+
+.site-world--horoscope .archive-cover {
+  position: relative;
+  z-index: 2;
+  border: 1px solid rgb(255 255 255 / 55%);
+  box-shadow: 0 24px 60px rgb(3 2 30 / 60%), 0 0 0 6px rgb(255 255 255 / 6%);
+  translate: 0 var(--depth-art, 0);
+  transition: transform 650ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.site-world--horoscope .archive-cover-reverse {
+  position: absolute;
+  right: 0;
+  bottom: 4.75rem;
+  z-index: 1;
+  width: 48%;
+  border: 1px solid rgb(255 255 255 / 55%);
+  box-shadow: 0 18px 40px rgb(3 2 30 / 60%);
+  transition: transform 650ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.site-world--horoscope .archive-art-stage[data-back="true"] .archive-cover {
+  transform: translate(36%, 10%) scale(0.72) rotate(3deg);
+  z-index: 1;
+}
+
+.site-world--horoscope .archive-art-stage[data-back="true"] .archive-cover-reverse {
+  transform: translate(-62%, -8%) scale(1.5) rotate(-2deg);
+  z-index: 3;
+}
+
+.site-world--horoscope .archive-art-orbit {
+  position: absolute;
+  inset: -8% -6% 6% -10%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.site-world--horoscope .archive-art-orbit::before,
+.site-world--horoscope .archive-art-orbit::after {
+  content: "";
+  position: absolute;
+  inset: 8% 0;
+  border: 1px solid rgb(255 255 255 / 45%);
+  border-radius: 50%;
+  rotate: calc(-18deg + var(--depth-turn, 0deg));
+}
+
+/* 軌道の上の小さな星（黄）。輪と一緒にゆっくり向きを変えます。 */
+.site-world--horoscope .archive-art-orbit::after {
+  inset: 8% 0 auto auto;
+  width: 0.625rem;
+  height: 0.625rem;
+  border: 0;
+  background: var(--cosmos-yellow);
+  box-shadow: 0 0 12px var(--cosmos-yellow);
+}
+
+/* 区切りの見出し：左にシアン・マゼンタ・黄の短い線を重ねます。 */
+.site-world--horoscope .section-heading::before {
+  content: "";
+  width: 3rem;
+  height: 0.75rem;
+  background:
+    linear-gradient(var(--cosmos-cyan), var(--cosmos-cyan)) 0 0 / 100% 2px no-repeat,
+    linear-gradient(var(--cosmos-magenta), var(--cosmos-magenta)) 0.5rem 50% / 100% 2px no-repeat,
+    linear-gradient(var(--cosmos-yellow), var(--cosmos-yellow)) 1rem 100% / 100% 2px no-repeat;
+}
+
+.site-world--horoscope .track-number {
+  color: var(--cosmos-cyan);
+  letter-spacing: 0.08em;
+}
+
+.site-world--horoscope .track-artwork {
+  border: 1px dotted var(--cosmos-yellow);
+}
+
+.site-world--horoscope .crossfade-video-frame {
+  border: 1px solid rgb(255 255 255 / 30%);
+}
+
+.site-world--horoscope .lyric-sheet,
+.site-world--horoscope .album-download-note {
+  border-color: rgb(255 255 255 / 22%);
+}
+
+@media (max-width: 47.99rem) {
+  .site-world--horoscope .archive-cover-reverse {
+    bottom: 4.25rem;
+  }
+}
+
+@media (min-width: 64rem) {
+  /* 2列になるPC幅では、題字が左の列からはみ出さない大きさにします。 */
+  .site-world--horoscope .archive-title {
+    font-size: min(5.25rem, 6.2vw);
+  }
+}
+
+/* 入場演出は一度だけ。動きを減らす設定では、最初から重なった状態で表示します。 */
+@media (prefers-reduced-motion: reduce) {
+  .site-world--horoscope .archive-title,
+  .site-world--horoscope .archive-title::before,
+  .site-world--horoscope .archive-title::after {
+    animation: none;
+  }
+
+  .site-world--horoscope :where(.archive-cover, .archive-cover-reverse, .archive-art-stage) {
+    transition: none;
+  }
+
+  .site-world--horoscope :where(.archive-hero-scene, .archive-cover) {
+    translate: none !important;
+  }
+
+  .site-world--horoscope .archive-art-stage {
+    transform: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .site-world--horoscope .archive-title::before,
+  .site-world--horoscope .archive-title::after,
+  .site-world--horoscope .archive-art-orbit,
+  .site-world--horoscope .archive-hero-scene {
+    display: none;
+  }
+
+  .site-world--horoscope .archive-title {
+    color: CanvasText;
+    text-shadow: none;
+  }
+}

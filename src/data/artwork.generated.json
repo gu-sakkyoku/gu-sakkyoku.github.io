@@ -1,0 +1,108 @@
+{
+  "/cover2026-tansan-yohou.png": {
+    "width": 2048,
+    "height": 2048,
+    "variants": [
+      {
+        "width": 160,
+        "src": "/art/cover2026-tansan-yohou-160.webp"
+      },
+      {
+        "width": 480,
+        "src": "/art/cover2026-tansan-yohou-480.webp"
+      },
+      {
+        "width": 960,
+        "src": "/art/cover2026-tansan-yohou-960.webp"
+      },
+      {
+        "width": 1500,
+        "src": "/art/cover2026-tansan-yohou-1500.webp"
+      }
+    ]
+  },
+  "/cover1.png": {
+    "width": 1500,
+    "height": 1500,
+    "variants": [
+      {
+        "width": 160,
+        "src": "/art/cover1-160.webp"
+      },
+      {
+        "width": 480,
+        "src": "/art/cover1-480.webp"
+      },
+      {
+        "width": 960,
+        "src": "/art/cover1-960.webp"
+      },
+      {
+        "width": 1500,
+        "src": "/art/cover1-1500.webp"
+      }
+    ]
+  },
+  "/cover2.png": {
+    "width": 1944,
+    "height": 1944,
+    "variants": [
+      {
+        "width": 160,
+        "src": "/art/cover2-160.webp"
+      },
+      {
+        "width": 480,
+        "src": "/art/cover2-480.webp"
+      },
+      {
+        "width": 960,
+        "src": "/art/cover2-960.webp"
+      },
+      {
+        "width": 1500,
+        "src": "/art/cover2-1500.webp"
+      }
+    ]
+  },
+  "/cover31.png": {
+    "width": 2160,
+    "height": 2160,
+    "variants": [
+      {
+        "width": 160,
+        "src": "/art/cover31-160.webp"
+      },
+      {
+        "width": 480,
+        "src": "/art/cover31-480.webp"
+      },
+      {
+        "width": 960,
+        "src": "/art/cover31-960.webp"
+      },
+      {
+        "width": 1500,
+        "src": "/art/cover31-1500.webp"
+      }
+    ]
+  },
+  "/gamoji.png": {
+    "width": 1280,
+    "height": 1280,
+    "variants": [
+      {
+        "width": 160,
+        "src": "/art/gamoji-160.webp"
+      },
+      {
+        "width": 480,
+        "src": "/art/gamoji-480.webp"
+      },
+      {
+        "width": 960,
+        "src": "/art/gamoji-960.webp"
+      }
+    ]
+  }
+}

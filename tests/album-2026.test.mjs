@@ -5,6 +5,9 @@ import test from "node:test";
 import { album2026 } from "../src/data/album2026.ts";
 import { albums } from "../src/data/albums.ts";
 import { lyrics2026 } from "../src/data/lyrics2026.ts";
+import { albumNavigation, contactNavigation } from "../src/data/navigation.ts";
+import { worldOfYear } from "../src/data/worlds.ts";
+import { lyricItemsOfYear } from "../src/lib/lyric-items.ts";
 
 const source = (path) => readFile(new URL(`../${path}`, import.meta.url), "utf8");
 const tracks = album2026.discs.flatMap((disc) => disc.tracks);
@@ -87,7 +90,8 @@ test("新しい歌詞URLをサイトマップに載せ、静的なルーティ�
   assert.match(page, /\{text\}/);
   assert.doesNotMatch(page, /dangerouslySetInnerHTML|"use client"/);
   assert.match(await source("src/component/NewAlbumAnnouncement.tsx"), /href=\{context === "album" \? "#track-list" : album.detailPath\}/);
-  assert.match(await source("src/component/header.tsx"), /href: "\/TansanYohou\/"/);
+  // メニューの作品リンクは年度データから作るので、2026年の作品ページも自動で含まれます。
+  assert.ok(albumNavigation.some((item) => item.href === album2026.detailPath && item.label === album2026.title));
 });
 
 test("動画は自動再生せず、遅延読み込みと代替リンクを用意する", async () => {
@@ -100,51 +104,73 @@ test("動画は自動再生せず、遅延読み込みと代替リンクを用�
   assert.doesNotMatch(video, /autoplay[=:;]|autoplay=1/);
 });
 
-test("2026だけの装飾は動きを減らす設定に対応し、フォントのライセンスを同梱する", async () => {
+test("ヒーローの演出は一度きりで、動きを減らす設定に対応し、フォントのライセンスを同梱する", async () => {
   const announcement = await source("src/component/NewAlbumAnnouncement.tsx");
-  assert.match(announcement, /featured = album.year === 2026/);
   assert.match(announcement, /reducedMotion === false/);
-  assert.match(announcement, /aria-label="ジャケットの周りに泡をはじかせる"/);
-  assert.match(announcement, /event.pointerType !== "mouse"/);
   assert.match(announcement, /current === burst \? 0 : current/);
   assert.doesNotMatch(announcement, /repeat: Infinity|Math.random/);
-  const css = await source("src/app/globals.css");
-  assert.match(css, /release-feature-shine \{ display: none; \}/);
-  assert.match(css, /transform: none !important/);
-  assert.match(await source("public/licenses/zen-old-mincho-OFL.txt"), /SIL OPEN FONT LICENSE Version 1.1/);
+  // 題字は動かしても薄くしない（途中で止まっても読めるようにする）。
+  assert.doesNotMatch(announcement.match(/<Title[\s\S]*?<\/Title>/)[0], /opacity/);
+  const css = await source("src/app/worlds/tansan.css");
+  assert.match(css, /prefers-reduced-motion: reduce\) \{[\s\S]*?\.tansan-shine \{\s*display: none;/);
+  assert.match(css, /forced-colors: active/);
+  assert.doesNotMatch(css, /animation:[^;]*infinite/);
+  for (const license of ["zen-old-mincho", "zen-maru-gothic", "mochiypopone", "orbitron", "fugazone"]) {
+    assert.match(await source(`public/licenses/${license}-OFL.txt`), /SIL OPEN FONT LICENSE Version 1.1/);
+  }
 });
 
-test("新しい導線をホワイトテーマに統一し、2024・2025の個別ページは維持する", async () => {
-  const page = await source("src/app/TansanYohou/page.tsx");
-  assert.match(page, /tansan-white-theme \$\{albumMincho.variable\}/);
-  assert.doesNotMatch(await source("src/app/layout.tsx"), /tansan-white-theme/);
-  assert.match(await source("src/component/HomeContent.tsx"), /tansan-white-theme/);
-  assert.match(await source("src/app/download/page.tsx"), /tansan-white-theme/);
-  assert.match(await source("src/app/TansanYohou/[song]/page.tsx"), /tansan-white-theme/);
-  assert.doesNotMatch(await source("src/app/Horoscope/page.tsx"), /tansan-white-theme/);
-  assert.doesNotMatch(await source("src/app/Nijiiro/page.tsx"), /tansan-white-theme/);
-  const css = await source("src/app/globals.css");
-  assert.match(css, /\.tansan-white-theme \{[^}]*color-scheme: light;/s);
+test("作品ごとの世界（テーマ）を年度で決め、明るさをOS設定に左右させない", async () => {
+  assert.equal(worldOfYear(2026), "tansan");
+  assert.equal(worldOfYear(2025), "horoscope");
+  assert.equal(worldOfYear(2024), "nijiiro");
+  assert.equal(worldOfYear(2099), "tansan");
+  const world = await source("src/component/World.tsx");
+  assert.match(world, /tansan: "light"/);
+  assert.match(world, /horoscope: "dark"/);
+  assert.match(world, /nijiiro: "light"/);
+  assert.match(world, /mode=\{worldMode\[name\]\}/);
+  for (const page of ["src/component/HomeContent.tsx", "src/app/TansanYohou/page.tsx", "src/app/TansanYohou/[song]/page.tsx", "src/app/download/page.tsx"]) {
+    assert.match(await source(page), /world="tansan"/, page);
+  }
+  for (const page of ["src/app/Horoscope/page.tsx", "src/app/Nijiiro/page.tsx", "src/component/ArchiveLyricWrapper.tsx"]) {
+    assert.match(await source(page), /worldOfYear\(/, page);
+  }
 });
 
-test("トップの導入表示を短縮し、作品への移動を妨げない", async () => {
+test("トップは待たせる演出を置かず、新作を部の紹介より先に見せる", async () => {
   const home = await source("src/component/HomeContent.tsx");
-  assert.match(home, /setIsLoading\(false\), 500/);
-  assert.match(home, /transition=\{\{ duration: 0.2 \}\}/);
-  assert.match(home, /pointer-events-none/);
+  assert.doesNotMatch(home, /setTimeout|isLoading|"use client"/);
   const content = await source("src/component/Mainpage.tsx");
   assert.ok(content.indexOf("<NewAlbumAnnouncement") < content.indexOf('id="about-club"'));
-  assert.doesNotMatch(content, /<button|<br\s*\/>\s*<br\s*\/>/);
+  assert.doesNotMatch(content, /<br\s*\/>\s*<br\s*\/>/);
+  assert.match(content, /音楽とは、命だ/);
 });
 
-test("トップの部紹介から公式YouTubeチャンネルへ移動できる", async () => {
-  const home = await source("src/component/Mainpage.tsx");
-  assert.match(home, /href="https:\/\/www\.youtube\.com\/@gusakkyoku"[^>]*>群馬大学作曲部のYouTubeチャンネル<\/a>/);
+test("連絡先は公開している3つだけで、公式YouTubeチャンネルへ移動できる", async () => {
+  assert.deepEqual(contactNavigation.map((item) => item.href), [
+    "mailto:gusakkyoku@gmail.com",
+    "https://x.com/GUsakkyoku",
+    "https://www.youtube.com/@gusakkyoku",
+  ]);
+  assert.equal(contactNavigation[2].label, "群馬大学作曲部のYouTubeチャンネル");
+  assert.match(await source("src/component/Mainpage.tsx"), /contactNavigation\.map/);
+  assert.match(await source("src/component/footer.tsx"), /contactNavigation\.map/);
 });
 
 test("ジャケット下の年度は途中で改行せず、枚数・曲数側で狭い幅に対応する", async () => {
-  const css = await source("src/app/globals.css");
-  assert.match(css, /\.release-feature-art-caption \{[^}]*align-items: baseline;/);
-  assert.match(css, /\.release-feature-art-caption > :first-child \{[^}]*flex-shrink: 0;[^}]*white-space: nowrap;/);
-  assert.match(css, /\.release-feature-art-caption > :last-child \{[^}]*min-width: 0;[^}]*text-align: right;/);
+  const css = await source("src/app/worlds/tansan.css");
+  assert.match(css, /\.tansan-polaroid-caption \{[^}]*align-items: baseline;/);
+  assert.match(css, /\.tansan-polaroid-caption > :first-child \{[^}]*flex-shrink: 0;[^}]*white-space: nowrap;/);
+  assert.match(css, /\.tansan-polaroid-caption > :last-child \{[^}]*min-width: 0;[^}]*text-align: right;/);
+});
+
+test("歌詞の前後移動は収録順で、歌詞のない曲や別の作品を混ぜない", () => {
+  const items2026 = lyricItemsOfYear(2026);
+  assert.deepEqual(items2026.map((item) => item.href), lyricSlugs.map((slug) => `${album2026.detailPath}${slug}/`));
+  assert.equal(items2026[0].position, "Disc 1・5曲目");
+  assert.equal(lyricItemsOfYear(2025).length, 8);
+  assert.ok(lyricItemsOfYear(2025).every((item) => item.href.startsWith("/Horoscope/")));
+  assert.deepEqual(lyricItemsOfYear(2024).map((item) => item.href), ["/Nijiiro/kumori/"]);
+  assert.deepEqual(lyricItemsOfYear(2030), []);
 });

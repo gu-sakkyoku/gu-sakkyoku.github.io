@@ -1,12 +1,13 @@
 import type { ReactNode } from "react";
-import Image from "next/image";
-import Link from "next/link";
 import ClientWrapper from "./ClientWrapper";
-import SodaIcon from "./SodaIcon";
+import LyricSheet from "./ui/LyricSheet";
 import { archiveAlbums } from "../data/archiveAlbums";
+import { worldOfYear } from "../data/worlds";
+import { lyricItemsOfYear } from "../lib/lyric-items";
 
 /**
- * 歌詞原稿には触れず、周りのブックレットと「作品へ戻る」導線だけを共通化します。
+ * 2024・2025年の歌詞ページの外枠です。歌詞原稿（各page.tsxの中身）には触れず、
+ * 周りの案内（現在位置・前後の歌詞・曲リストへ戻る）だけを全年度共通の部品で用意します。
  * URLは各page.tsxのまま。本文中の改行・空白・曲名・クレジットはそのまま渡します。
  */
 export default function ArchiveLyricWrapper({
@@ -18,45 +19,15 @@ export default function ArchiveLyricWrapper({
 }) {
   const album = archiveAlbums[year];
   return (
-    <ClientWrapper className="archive-lyric-main">
-      <nav className="archive-lyric-breadcrumb" aria-label="歌詞ページの案内">
-        <Link href={`${album.detailPath}#archive-tracks`}>
-          <SodaIcon name="arrow" />
-          {album.title}の曲リストへ
-        </Link>
-        <span>{album.year}</span>
-      </nav>
-      <article className="archive-lyric-sheet">
-        <div className="archive-lyric-masthead">
-          <Image
-            src={album.artwork}
-            alt=""
-            width={80}
-            height={80}
-            sizes="56px"
-          />
-          <p>
-            {album.title}
-            <span>歌詞</span>
-          </p>
-        </div>
-        {children}
-      </article>
-      <nav className="archive-lyric-bottom" aria-label="歌詞を読み終えた方へ">
-        <Link
-          className="archive-secondary-link"
-          href={`${album.detailPath}#archive-tracks`}
-        >
-          曲リストへ戻る
-        </Link>
-        <Link
-          className="archive-primary-link"
-          href={`/download/#album-${year}`}
-        >
-          <SodaIcon name="download" />
-          ダウンロードページへ
-        </Link>
-      </nav>
+    <ClientWrapper world={worldOfYear(year)}>
+      <LyricSheet
+        album={{ year: album.year, title: album.title, artwork: album.artwork }}
+        trackListHref={`${album.detailPath}#archive-tracks`}
+        items={lyricItemsOfYear(year)}
+        backLabel="曲リストへ戻る"
+      >
+        <div className="lyric-legacy">{children}</div>
+      </LyricSheet>
     </ClientWrapper>
   );
 }

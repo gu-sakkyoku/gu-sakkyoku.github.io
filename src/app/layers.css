@@ -1,0 +1,14 @@
+/*
+ * CSSの「レイヤー」の優先順位を、どのCSSよりも先に決めておくファイルです。
+ *
+ * Astryx Design Systemの公式手順（Tailwind v4と併用する場合）に合わせています。
+ * - reset・astryx-base・astryx-theme はAstryx用です。Astryxを使うページ（今は /astryx-sample/ だけ）で
+ *   CSSを読み込んだときにだけ中身が入り、ほかのページでは空のままです。
+ * - Tailwindの properties → theme → base → components → utilities の順番は変えていないため、既存ページの見た目は変わりません。
+ * - properties はTailwind v4が古いブラウザー向けに自動で作るレイヤーです。先頭に書かないと最も強い順位になり、
+ *   古いSafari・Firefoxで影や変形などのTailwindクラスが効かなくなるため、本番と同じく一番弱い位置に置きます。
+ *
+ * Next.jsはCSS内の@importを本文より前へ移動するため、globals.cssの先頭に書くと順番の宣言が間に合いません。
+ * そのため別ファイルにして、layout.tsxでglobals.cssより先に読み込みます。
+ */
+@layer properties, reset, theme, base, astryx-base, astryx-theme, components, utilities;

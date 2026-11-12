@@ -5,6 +5,10 @@
     <priority>1.00</priority>
   </url>
   <url>
+    <loc>https://gu-sakkyoku.github.io/aramakisai2026/</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://gu-sakkyoku.github.io/TansanYohou/</loc>
     <priority>0.8</priority>
   </url>
