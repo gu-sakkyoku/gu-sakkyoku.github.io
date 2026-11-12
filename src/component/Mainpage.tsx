@@ -1,91 +1,75 @@
-"use client";
-
-import Link from "next/link";
-import Image from "next/image";
-import AlbumJackets from "./AlbumJackets";
+import { Heading } from "@astryxdesign/core/Heading";
+import { Link } from "@astryxdesign/core/Link";
+import { List, ListItem } from "@astryxdesign/core/List";
+import { HStack } from "@astryxdesign/core/HStack";
+import { Text } from "@astryxdesign/core/Text";
+import { VStack } from "@astryxdesign/core/VStack";
+import CrossfadeVideo from "./CrossfadeVideo";
 import NewAlbumAnnouncement from "./NewAlbumAnnouncement";
+import FestivalNotice from "./aramaki/FestivalNotice";
+import AlbumShelf from "./ui/AlbumShelf";
+import AppIcon, { type AppIconName } from "./ui/AppIcon";
+import SectionHeading from "./ui/SectionHeading";
 import { albums } from "../data/albums";
-import { site } from "../data/site";
-import SodaIcon from "./SodaIcon";
-import AlbumMotion from "./AlbumMotion";
+import { contactNavigation, downloadNavigation } from "../data/navigation";
 
-// 新作・過去作品とも年度データから表示し、タイトルや作品URLの二重管理を避けます。
-const orderedAlbums = [...albums].sort((a, b) => b.year - a.year);
-const latestAlbum = orderedAlbums[0];
-const previousAlbums = orderedAlbums.slice(1);
+// 最新作は年度データから選びます。新しい年度を追加すると、トップの主役も自動で入れ替わります。
+const latestAlbum = [...albums].sort((a, b) => b.year - a.year)[0];
+const contactIcons: AppIconName[] = ["mail", "atSign", "circlePlay"];
 
-const MainPage = ({ announcementReady = true }: { announcementReady?: boolean }) => {
+/** トップページの本文です。順番は「最新作 → 試聴 → 作品一覧 → 作曲部について」。 */
+export default function MainPage() {
   return (
-    <AlbumMotion theme="soda">
-      <div className="home-site-heading">
-        <p><SodaIcon name="sparkle" />{site.name}<SodaIcon name="sparkle" /></p>
-        <h1>群馬大学作曲部 公式サイト</h1>
-      </div>
+    <>
+      {/* 学園祭など、期間限定の案内（src/data/aramaki2026.ts の showOnHome で出し入れします）。 */}
+      <FestivalNotice />
 
-      {/* トップの主役は新作。部の紹介より先に、M3・試聴・歌詞の入口を見せます。 */}
-      {latestAlbum && <NewAlbumAnnouncement album={latestAlbum} motionReady={announcementReady} />}
+      {/* トップの主役は新作。部の紹介より先に、試聴・歌詞の入口を見せます。 */}
+      {latestAlbum && <NewAlbumAnnouncement album={latestAlbum} />}
 
-      <section aria-labelledby="about-club" className="home-about">
-        <div className="home-about-intro">
-          <p className="home-section-label">About us</p>
-          <h2 id="about-club">群馬大学作曲部について</h2>
-          <p className="mt-6 text-base leading-9">
-            群馬大学作曲部の公式サイトです。<br />
-            オリジナルアルバムの作品情報・歌詞と、<br className="hidden sm:block" />
-            ダウンロードカードの案内を掲載しています。
-          </p>
-          <Link href="/download/" className="site-text-link home-album-link mt-6">
-            <SodaIcon name="download" />
-            ダウンロードカードをお持ちの方はこちらから
-          </Link>
-        </div>
-        <div className="home-contact-note">
-          <SodaIcon name="mail" className="home-contact-icon" />
-          <h3>作曲部とつながる</h3>
-          <p className="mt-5 text-base leading-8">
-            お問い合わせは
-            <a href="mailto:gusakkyoku@gmail.com" className="site-text-link rounded">gusakkyoku@gmail.com</a>
-            または公式X（<a href="https://x.com/GUsakkyoku" className="site-text-link rounded">@GUsakkyoku</a>）のDMまで。
-          </p>
-          <p className="mt-4 text-base leading-8">
-            公式YouTube：
-            <a href="https://www.youtube.com/@gusakkyoku" className="site-text-link rounded">群馬大学作曲部のYouTubeチャンネル</a>
-          </p>
-        </div>
+      {latestAlbum?.crossfadeVideoId && (
+        <section aria-labelledby="crossfade" className="site-container site-section">
+          <SectionHeading id="crossfade">Crossfade / クロスフェード</SectionHeading>
+          <CrossfadeVideo videoId={latestAlbum.crossfadeVideoId} albumTitle={latestAlbum.title} />
+        </section>
+      )}
+
+      <section aria-labelledby="past-albums" className="site-container site-section">
+        <SectionHeading id="past-albums">作品一覧</SectionHeading>
+        <AlbumShelf />
       </section>
 
-      <section aria-labelledby="past-albums" className="home-discography">
-        <p className="home-section-label">Discography</p>
-        <h2 id="past-albums">作品一覧</h2>
-        <div className="home-discography-grid">
-          {previousAlbums.map((album) => (
-            <article key={album.year} aria-labelledby={`archive-${album.year}`}>
-              <p className="home-section-label home-album-year"><SodaIcon name="disc" />{album.year}</p>
-              <h3 id={`archive-${album.year}`} className="mt-3 font-serif text-[30px]">{album.title}</h3>
-              {/* Horoscopeの斜めに重なる既存ジャケットと、その短い揺れ演出を継承します。 */}
-              {album.year === 2025 ? <AlbumJackets /> : album.artwork && (
-                <div className="home-archive-art">
-                  <Image
-                    src={album.artwork}
-                    alt={`${album.title}のアルバムジャケット`}
-                    width={700}
-                    height={700}
-                    sizes="(max-width: 640px) 60vw, 280px"
-                    className="aspect-square h-auto w-full rounded-xl shadow-[0_8px_20px_rgba(0,0,0,0.15)]"
-                  />
-                </div>
-              )}
-              {album.detailPath && (
-                <Link href={album.detailPath} className="site-text-link home-album-link">
-                  {album.title}の作品・歌詞を見る
-                </Link>
-              )}
-            </article>
-          ))}
-        </div>
+      <section aria-labelledby="about-club" className="site-container site-section home-about">
+        <VStack gap={5} hAlign="start" data-reveal>
+          <Heading level={2} id="about-club">群馬大学作曲部について</Heading>
+          {/* 以前トップの読み込み画面に出していた、部の言葉です。 */}
+          <p className="home-motto">音楽とは、命だ</p>
+          <Text as="p">
+            群馬大学作曲部の公式サイトです。オリジナルアルバムの作品情報・歌詞と、ダウンロードカードの案内を掲載しています。
+          </Text>
+          {/* 文が長いので、狭い画面でも途中で切れずに折り返せるリンクにしています。 */}
+          <HStack gap={2} vAlign="center" minHeight={44}>
+            <AppIcon name="download" color="accent" />
+            <Link href={downloadNavigation.href} isStandalone hasUnderline weight="bold">
+              ダウンロードカードをお持ちの方はこちらから
+            </Link>
+          </HStack>
+        </VStack>
+        <VStack gap={3} className="home-contact" data-reveal>
+          <Heading level={3}>作曲部とつながる</Heading>
+          <List hasDividers edge="flush" density="spacious">
+            {contactNavigation.map((item, index) => (
+              <ListItem
+                key={item.href}
+                href={item.href}
+                startContent={<AppIcon name={contactIcons[index]} color="accent" />}
+                label={item.label}
+                description={item.kind}
+              />
+            ))}
+          </List>
+        </VStack>
       </section>
-    </AlbumMotion>
+    </>
   );
-};
-
-export default MainPage;
+}

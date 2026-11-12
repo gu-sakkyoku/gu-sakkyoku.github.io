@@ -1,0 +1,448 @@
+/*
+ * 全作品共通の、ページ内の部品の並べ方です。色・書体・角の丸さはAstryxのテーマ（src/themes/）が決め、
+ * ここでは位置と大きさだけを決めます。作品ごとの飾りは同じフォルダの tansan.css などにあります。
+ */
+
+/* ページ内の区切り。上の区切りとの間隔を1か所で揃えます。 */
+.site-section {
+  margin-top: clamp(3.5rem, 9vw, 6.5rem);
+}
+
+
+/* クロスフェードの動画。枠の形は作品ごとに変わります。 */
+.section-heading {
+  margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
+}
+
+.crossfade-video {
+  max-width: 56rem;
+  margin-inline: auto;
+}
+
+.crossfade-video-frame {
+  overflow: hidden;
+  border-radius: var(--radius-container);
+  background: var(--color-background-card);
+  box-shadow: var(--shadow-med);
+}
+
+.crossfade-video-frame iframe {
+  display: block;
+}
+
+/* 曲リスト。2枚組以上のときは、PC幅で横に並べます。 */
+.track-discs {
+  display: grid;
+  gap: clamp(2.5rem, 6vw, 4rem);
+}
+
+.track-disc-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid var(--color-border-emphasized);
+}
+
+.track-number {
+  display: inline-block;
+  min-width: 2ch;
+  color: var(--color-text-accent);
+  font-family: var(--font-family-code);
+  font-size: var(--font-size-sm);
+  font-variant-numeric: tabular-nums;
+  line-height: var(--text-body-leading);
+}
+
+.track-title {
+  font-weight: 700;
+}
+
+.track-meta {
+  display: grid;
+  gap: 0.125rem;
+  margin-top: 0.125rem;
+}
+
+/* 歌詞ページへのリンクだと分かるよう、色・下線・矢印の3つで示します。 */
+.track-lyric-mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-top: 0.25rem;
+  color: var(--color-text-accent);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+}
+
+.track-artwork {
+  width: 4.5rem;
+  height: 4.5rem;
+  border-radius: var(--radius-element);
+  object-fit: cover;
+}
+
+@media (min-width: 64rem) {
+  .track-discs[data-discs="2"] {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+  }
+}
+
+/* 作品一覧。カードの中身は、その作品自身のテーマで塗られます。 */
+.album-shelf {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.album-shelf > li {
+  min-width: 0;
+}
+
+.album-shelf-card {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+  align-items: center;
+  gap: 1rem;
+}
+
+.album-shelf-art {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  border-radius: var(--radius-element);
+  object-fit: cover;
+}
+
+.album-shelf-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: var(--color-text-accent);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+}
+
+@media (min-width: 48rem) {
+  .album-shelf {
+    grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+    gap: 1.5rem;
+  }
+
+  .album-shelf-card {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+  }
+}
+
+/* トップの「作曲部について」。 */
+.home-about {
+  display: grid;
+  gap: clamp(2rem, 5vw, 4rem);
+}
+
+/* 長い文のリンクも、狭い画面では画面の中で折り返します（320px幅で横にはみ出さないように）。 */
+.home-about > *,
+.home-about a {
+  min-width: 0;
+}
+
+@media (min-width: 64rem) {
+  .home-about {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    align-items: start;
+  }
+}
+
+/* マウスで操作できる端末だけ、押せる絵を少し持ち上げます。 */
+@media (hover: hover) and (pointer: fine) {
+  .album-shelf-art {
+    transition: transform var(--duration-medium) var(--ease-move, ease);
+  }
+
+  .album-shelf > li:hover .album-shelf-art {
+    transform: translateY(-4px) rotate(-1.5deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .album-shelf-art {
+    transition: none;
+    transform: none !important;
+  }
+}
+
+/* ディスクを選ぶボタンの列。 */
+.disc-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.track-discs {
+  margin-top: 2rem;
+}
+
+/* 歌詞ページ。本文の幅は読みやすい長さに抑え、歌詞そのものは動かしません。 */
+.lyric-page {
+  max-width: 46rem;
+}
+
+.lyric-masthead-art {
+  flex-shrink: 0;
+  width: 4.5rem;
+  height: 4.5rem;
+  border-radius: var(--radius-element);
+  object-fit: cover;
+  box-shadow: var(--shadow-low);
+}
+
+.lyric-masthead-copy {
+  flex: 1 1 12rem;
+  min-width: 0;
+}
+
+.lyric-masthead-copy h1 {
+  font-size: clamp(1.375rem, 4.5vw, 2rem);
+  line-height: 1.35;
+}
+
+.lyric-sheet {
+  --lyric-size: 1.125rem;
+  padding: clamp(1.5rem, 5vw, 3rem) clamp(1rem, 4vw, 2.5rem);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-page);
+  background: var(--color-background-card);
+  box-shadow: var(--shadow-low);
+}
+
+.lyric-sheet[data-lyric-size="small"] {
+  --lyric-size: 1rem;
+}
+
+.lyric-sheet[data-lyric-size="large"] {
+  --lyric-size: 1.3125rem;
+}
+
+/* 歌詞本文は落ち着いた明朝体。行間を広く取り、日本語の途中で不自然に折り返しにくくします。 */
+.lyric-body {
+  font-family: var(--font-album-mincho), "Hiragino Mincho ProN", "Yu Mincho", serif;
+  font-size: var(--lyric-size);
+  line-height: 2;
+  text-align: center;
+  line-break: strict;
+}
+
+.lyric-pager {
+  display: grid;
+  gap: 0.75rem;
+}
+
+@media (min-width: 40rem) {
+  .lyric-pager {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* PC幅では「前」を左、「次」を右に置きます。読み上げ順（次→前）は変えません。 */
+  .lyric-pager > :first-child:not(:only-child) {
+    order: 2;
+  }
+}
+
+
+/* ダウンロードページ。入力欄・認証チェック・ボタンは動かさず、1画面に収まる幅にします。 */
+.download-page {
+  max-width: 34rem;
+}
+
+.download-panel {
+  position: relative;
+}
+
+/* 以前の年度別リンクの着地点。見た目には現れません。 */
+.download-anchor {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.download-album-art {
+  flex-shrink: 0;
+  width: clamp(6rem, 26vw, 9rem);
+  height: clamp(6rem, 26vw, 9rem);
+  border-radius: var(--radius-element);
+  object-fit: cover;
+  box-shadow: var(--shadow-low);
+}
+
+/* コードは等幅の文字で、打ち間違いを見つけやすくします。スマホで拡大されないよう16px以上にします。 */
+.download-code-control input {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 1.0625rem;
+  letter-spacing: 0.04em;
+}
+
+/* 認証チェック（コンパクト版は高さ140px）の場所を先に確保します。 */
+.download-turnstile {
+  display: flex;
+  justify-content: center;
+  min-height: 9rem;
+}
+
+.download-status {
+  min-height: 1.5rem;
+}
+
+
+/* 2024・2025年の作品ページ上部。絵と題字の飾りは作品ごとのCSSが足します。 */
+.site-main.archive-album-main {
+  padding-top: var(--site-header-height);
+}
+
+.archive-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  padding: clamp(2rem, 6vw, 4rem) 0 clamp(3rem, 8vw, 5rem);
+}
+
+.archive-hero-scene {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.archive-hero-inner {
+  display: grid;
+  gap: clamp(2rem, 6vw, 3.5rem);
+  align-items: center;
+}
+
+.archive-hero-copy {
+  display: grid;
+  justify-items: start;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.archive-edition {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.25rem;
+  font-family: var(--font-family-code);
+  font-size: var(--font-size-sm);
+  letter-spacing: 0.08em;
+}
+
+.archive-title {
+  margin: 0;
+  font-family: var(--font-family-heading);
+  font-synthesis: none;
+  line-height: 1.1;
+  /* 題字は途中で折り返しません。画面幅に合わせて文字の大きさの方を変えます。 */
+  white-space: nowrap;
+  overflow-wrap: normal;
+}
+
+.archive-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.archive-art-stage {
+  position: relative;
+  width: min(100%, 32rem);
+  margin-inline: auto;
+}
+
+.archive-cover img,
+.archive-cover-reverse img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.archive-jacket-toggle {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.25rem;
+}
+
+@media (min-width: 64rem) {
+  .archive-hero-inner {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: 4rem;
+  }
+}
+
+/*
+ * 2024・2025年の歌詞ページは、原稿のHTML（h1・改行・画像・本文）を一切書き換えずに表示します。
+ * 原稿に付いている文字サイズや余白の指定を、読みやすい値へ上書きするだけです。
+ */
+.lyric-legacy > br {
+  display: none;
+}
+
+.lyric-legacy > h1 {
+  margin: 0 0 1.75rem;
+  padding-inline: 0;
+  font-family: var(--font-family-heading);
+  font-size: clamp(1.375rem, 4.5vw, 2rem);
+  line-height: 1.4;
+}
+
+.lyric-legacy > img {
+  max-width: min(100%, 17rem);
+  margin: 0 auto 2rem !important;
+  border-radius: var(--radius-element);
+}
+
+.lyric-legacy > p {
+  padding-inline: 0;
+  font-family: var(--font-album-mincho), "Hiragino Mincho ProN", "Yu Mincho", serif;
+  font-size: var(--lyric-size);
+  line-height: 2;
+  line-break: strict;
+}
+
+/* トップの最上部に出す、学園祭など期間限定の案内（荒牧祭のポスターと同じ群青と黄色）。 */
+.festival-notice {
+  display: grid;
+  grid-template-columns: auto minmax(0, auto) auto;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  min-height: 3rem;
+  padding: 0.5rem var(--site-gutter);
+  background: #1d14d4;
+  color: #fff;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.festival-notice-label {
+  padding: 0 0.5rem;
+  background: #ffe600;
+  color: #0d0b2b;
+  font-family: var(--font-display-block), var(--font-family-heading);
+  font-weight: 400;
+}
+
+.festival-notice-text {
+  font-size: clamp(0.875rem, 3.6vw, 1rem);
+  line-height: 1.5;
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+}
+
+.festival-notice:focus-visible {
+  outline: 3px solid #ffe600;
+  outline-offset: -3px;
+}

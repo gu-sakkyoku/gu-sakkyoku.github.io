@@ -70,7 +70,7 @@ Search Consoleの「サイトマップ」画面に`sitemap-diagnostic.xml`を送
 
 トップページの「New Album!!!」は、`src/data/albums.ts`に登録した最も新しい年度の作品を表示します。新年度を追加すると、作品名・ジャケット・ダウンロード案内も同じデータから切り替わります。配信を停止したときは告知の案内も「一時停止」に変わるため、トップへ作品情報を重複して書く必要はありません。告知のリンクは`/download/#album-2026`のように該当年度へ移動しますが、印刷カードの共通QRは従来の`/download/`のままです。
 
-告知の動きは`src/component/NewAlbumAnnouncement.tsx`にあります。読み込み画面が消え、告知が画面に入ったときに見出しとジャケットを短く一度だけ動かし、リンクや文章は動かしません。端末で「視差効果を減らす」「アニメーションを減らす」などを設定した人には静止表示にします。既存の2025年ジャケット演出も同じ設定で止まります。新しい部員が年度を追加するために、アニメーションのコードを変更する必要はありません。
+告知の動きは`src/component/NewAlbumAnnouncement.tsx`にあります。告知が画面に入ったときに題字とジャケットを短く一度だけ動かし、リンクや文章は動かしません。端末で「視差効果を減らす」「アニメーションを減らす」などを設定した人には静止表示にします。新しい部員が年度を追加するために、アニメーションのコードを変更する必要はありません。
 
 **2026-10-09現在：2026年の修正版ZIPへ差し替え、配信を再開しました。** 公開後に収録内容の不備が見つかり、2026年だけページとWorkerの両方で一時停止していました。提供された修正版の破損チェックと、一時保存先・配信先からの全量SHA-256一致を確認してから再開しました。2024・2025年のZIPと3年度の既存コード・ハッシュは変更していません。正式な曲名・曲順の一覧は未登録なので、共同管理者が確認してから`src/data/albums.ts`へ追記してください。ZIP内のファイル名から推測してサイトに掲載しません。
 
@@ -117,9 +117,9 @@ ZIPを含むローカル総合試験の手順と本番Cloudflare設定は[`docs/
 - Next.js 15（App Router）
 - React 19
 - TypeScript
-- styled-components
-- Framer Motion
-- Tailwind CSS/PostCSS
+- [Astryx Design System](https://github.com/meta/astryx)（Meta公式、MITライセンス。ボタン・メニュー・入力欄などの部品と、作品ごとのテーマ）
+- Framer Motion（題字やジャケットの動き）
+- Tailwind CSS v4（Astryxのテーマと連動）
 - 静的エクスポート（`output: "export"`）
 
 サイト本体は、できる限り静的なHTML・CSS・JavaScriptとして生成します。コード認証や音源配信など、秘密情報を必要とする処理はブラウザへ実装せず、作曲部専用Cloudflare AccountのWorkerと非公開R2へ分離しています。
@@ -128,7 +128,14 @@ ZIPを含むローカル総合試験の手順と本番Cloudflare設定は[`docs/
 
 ### ページの見た目を調整する方へ
 
-ヘッダーがタイトルを隠さないよう、すべてのページの先頭余白を共通にしています。新しいページにも`ClientWrapper`を使い、余白を作るためだけの改行は追加しないでください。ロゴの大きさやスマートフォンのメニューを変更する手順と確認項目は[`docs/header-layout.md`](docs/header-layout.md)にまとめています。歌詞本文の改行は消さずに残してください。
+サイトの見た目は「作品ごとの世界」でできています。詳しくは[`docs/DESIGN.md`](docs/DESIGN.md)を見てください。
+
+- **色・書体・角の丸さ**：`src/themes/<作品>/<作品>Theme.ts`（Astryxのテーマ）。直したら`npx astryx theme build src/themes/<作品>/<作品>Theme.ts`を実行します。
+- **絵・題字・動きの飾り**：`src/app/worlds/<作品>.css`。
+- **全ページ共通の並べ方**：`src/app/globals.css`と`src/app/worlds/shared.css`。
+- **ボタン・メニュー・入力欄など**：Astryxの部品。使い方は`npx astryx component <部品名>`で確認できます。
+
+新しいページも`ClientWrapper`で囲み、`world`でどの作品の世界にするかを指定してください。ヘッダーの高さに合わせた先頭余白が自動で付きます。余白を作るためだけの改行は追加しないでください。歌詞本文の改行は消さずに残してください。
 
 ## ローカル開発
 
@@ -168,10 +175,12 @@ Pull Requestでも同じ検証をGitHub Actionsが自動実行します。
 
 ```text
 src/app/        App Routerのページと共通レイアウト
-src/component/  再利用するUIコンポーネント
-src/data/       ダウンロード一覧の年度データ
+src/app/worlds/ 作品ごとの飾り（絵・題字・動き）のCSS
+src/themes/     作品ごとのAstryxテーマ（色・書体・角の丸さ）
+src/component/  再利用するUIコンポーネント（ui/ は全ページ共通の部品）
+src/data/       年度データ・作品情報・メニューの行き先
 worker/         コード検証と非公開R2配信（Cloudflare Worker）
-scripts/        テストカード作成とローカル配信確認
+scripts/        テストカード作成、ローカル配信確認、ジャケットの軽量版作成
 public/         ジャケット、ロゴ、robots.txtなどの静的ファイル
 docs/           構成・運用上の判断を残す文書
 .github/        CI、CODEOWNERS、Pull Requestテンプレート

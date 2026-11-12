@@ -3,6 +3,7 @@ import ClientWrapper from "../../component/ClientWrapper";
 import ArchiveAlbumPage from "../../component/ArchiveAlbumPage";
 import AlbumMotion from "../../component/AlbumMotion";
 import { archiveAlbums } from "../../data/archiveAlbums";
+import { worldOfYear } from "../../data/worlds";
 
 const album = archiveAlbums[2024];
 const title = "虹色memory | 群馬大学作曲部 1stアルバム";
@@ -24,8 +25,10 @@ export const metadata: Metadata = {
 
 export default function NijiiroPage() {
   return (
-    <ClientWrapper className="archive-album-main">
-      <AlbumMotion theme={album.theme}><ArchiveAlbumPage album={album} /></AlbumMotion>
+    <ClientWrapper world={worldOfYear(album.year)} className="archive-album-main">
+      <AlbumMotion>
+        <ArchiveAlbumPage album={album} />
+      </AlbumMotion>
     </ClientWrapper>
   );
 }

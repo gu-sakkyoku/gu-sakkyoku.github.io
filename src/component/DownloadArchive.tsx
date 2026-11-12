@@ -1,11 +1,20 @@
 "use client";
 
-import Image from "next/image";
-import Link from "next/link";
 import Script from "next/script";
 import { useEffect, useRef, useState } from "react";
+import { Banner } from "@astryxdesign/core/Banner";
+import { Button } from "@astryxdesign/core/Button";
+import { Card } from "@astryxdesign/core/Card";
+import { Heading } from "@astryxdesign/core/Heading";
+import { HStack } from "@astryxdesign/core/HStack";
+import { Link } from "@astryxdesign/core/Link";
+import { SegmentedControl, SegmentedControlItem } from "@astryxdesign/core/SegmentedControl";
+import { Text } from "@astryxdesign/core/Text";
+import { TextInput } from "@astryxdesign/core/TextInput";
+import { VStack } from "@astryxdesign/core/VStack";
 import type { Album } from "../data/albums";
-import SodaIcon from "./SodaIcon";
+import AppIcon from "./ui/AppIcon";
+import Artwork from "./ui/Artwork";
 
 type TurnstileApi = {
   render: (
@@ -41,14 +50,25 @@ const workerUrl = (() => {
   }
 })();
 const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+const configured = Boolean(workerUrl && siteKey);
 
-function DownloadForm({ year, scriptReady }: { year: number; scriptReady: boolean }) {
+// カードのコードの形（年度と、4文字×4組）。Worker側の確認と同じ形だけを送り、
+// 打ち間違いで認証チェックをやり直す手間を減らします。合否そのものはWorkerだけが判定します。
+const codePattern = (year: number) => new RegExp(`^${year}(?:-[A-Z2-9]{4}){4}$`);
+const maxCodeLength = 32;
+
+type Status =
+  | { kind: "idle" }
+  | { kind: "info" | "warning" | "error" | "success"; title: string; description?: string };
+
+function DownloadForm({ year, scriptReady, scriptFailed }: { year: number; scriptReady: boolean; scriptFailed: boolean }) {
   const widgetContainer = useRef<HTMLDivElement>(null);
   const widgetId = useRef<string | null>(null);
   const [code, setCode] = useState("");
+  const [codeError, setCodeError] = useState("");
   const [turnstileToken, setTurnstileToken] = useState("");
   const [pending, setPending] = useState(false);
-  const [message, setMessage] = useState("");
+  const [status, setStatus] = useState<Status>({ kind: "idle" });
 
   useEffect(() => {
     if (!scriptReady || !siteKey || !widgetContainer.current || !window.turnstile) return;
@@ -63,7 +83,7 @@ function DownloadForm({ year, scriptReady }: { year: number; scriptReady: boolea
       "expired-callback": () => setTurnstileToken(""),
       "error-callback": () => {
         setTurnstileToken("");
-        setMessage("認証チェックを読み込めませんでした。時間をおいて再度お試しください。");
+        setStatus({ kind: "error", title: "認証チェックを読み込めませんでした。", description: "時間をおいて再度お試しください。" });
       },
     });
     return () => {
@@ -76,16 +96,21 @@ function DownloadForm({ year, scriptReady }: { year: number; scriptReady: boolea
     event.preventDefault();
     if (pending) return;
     if (!workerUrl || !siteKey) {
-      setMessage("ただいまダウンロードの受付準備中です。しばらくお待ちください。");
+      setStatus({ kind: "info", title: "ただいまダウンロードの受付準備中です。", description: "しばらくお待ちください。" });
+      return;
+    }
+    if (!codePattern(year).test(code.trim().toUpperCase())) {
+      setCodeError(`コードの形式をご確認ください（例：${year}-XXXX-XXXX-XXXX-XXXX）`);
       return;
     }
     if (!turnstileToken) {
-      setMessage("認証チェックを完了してから、もう一度お試しください。");
+      setStatus({ kind: "warning", title: "認証チェックを完了してから、もう一度お試しください。" });
       return;
     }
 
     setPending(true);
-    setMessage("");
+    setCodeError("");
+    setStatus({ kind: "idle" });
     const abort = new AbortController();
     const timeout = window.setTimeout(() => abort.abort(), 15000);
     try {
@@ -97,11 +122,11 @@ function DownloadForm({ year, scriptReady }: { year: number; scriptReady: boolea
         cache: "no-store",
       });
       if (!response.ok) {
-        setMessage(
-          response.status === 401 || response.status === 403
-            ? "コードまたは認証チェックを確認して、もう一度お試しください。"
-            : "ダウンロードに失敗しました。時間をおいて再度お試しください。",
-        );
+        if (response.status === 401 || response.status === 403) {
+          setCodeError("コードまたは認証チェックを確認して、もう一度お試しください。");
+        } else {
+          setStatus({ kind: "error", title: "ダウンロードに失敗しました。", description: "時間をおいて再度お試しください。" });
+        }
         return;
       }
       const result: unknown = await response.json();
@@ -116,9 +141,9 @@ function DownloadForm({ year, scriptReady }: { year: number; scriptReady: boolea
       document.body.appendChild(link);
       link.click();
       link.remove();
-      setMessage("ダウンロードを開始しました。開始しない場合は通信環境をご確認ください。");
+      setStatus({ kind: "success", title: "ダウンロードを開始しました。", description: "開始しない場合は通信環境をご確認ください。" });
     } catch {
-      setMessage("ダウンロードに失敗しました。時間をおいて再度お試しください。");
+      setStatus({ kind: "error", title: "ダウンロードに失敗しました。", description: "時間をおいて再度お試しください。" });
     } finally {
       window.clearTimeout(timeout);
       setPending(false);
@@ -128,36 +153,85 @@ function DownloadForm({ year, scriptReady }: { year: number; scriptReady: boolea
   }
 
   return (
-    <form id={`download-form-${year}`} onSubmit={handleSubmit} className="mx-auto mt-9 max-w-xl border-t border-zinc-500 pt-6 text-left">
-      <p className="mb-5 text-sm leading-6">{year}年のカードに印刷されたコードを入力してください。</p>
-      <label htmlFor={`download-code-${year}`} className="block text-sm font-semibold">ダウンロードコード</label>
-      <input
-        id={`download-code-${year}`}
-        name="download-code"
-        type="text"
-        value={code}
-        onChange={(event) => setCode(event.target.value)}
-        autoComplete="off"
-        autoCapitalize="characters"
-        spellCheck={false}
-        required
-        maxLength={32}
-        placeholder={`${year}-XXXX-XXXX-XXXX-XXXX`}
-        className="mt-2 w-full rounded-lg border border-zinc-500 bg-white px-4 py-3 font-mono text-base tracking-wide text-zinc-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
-      />
-      {/* 読み込み前からコンパクト版の高さを確保し、表示後にボタンが飛び跳ねないようにします。 */}
-      <div ref={widgetContainer} className="mt-4 flex min-h-36 justify-center" aria-label="認証チェック" />
-      <button type="submit" disabled={pending} className="mt-4 w-full rounded-full border-2 border-zinc-400 px-5 py-3 font-serif text-lg transition-colors hover:bg-zinc-500/15 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 disabled:cursor-wait disabled:opacity-70">
-        {pending ? "確認中…" : "コードを確認してダウンロード"}
-      </button>
-      <p role="status" aria-live="polite" className="mt-3 min-h-6 text-sm">{message}</p>
+    <form id={`download-form-${year}`} onSubmit={handleSubmit} noValidate>
+      <VStack gap={4}>
+        <TextInput
+          label="ダウンロードコード"
+          description={`${year}年のカードに印刷されたコードを入力してください。`}
+          placeholder={`${year}-XXXX-XXXX-XXXX-XXXX`}
+          value={code}
+          // 英字は大文字にそろえます（カードの表記と同じ）。長すぎる貼り付けは切り詰めます。
+          onChange={(value) => {
+            setCode(value.toUpperCase().slice(0, maxCodeLength));
+            setCodeError("");
+          }}
+          htmlName="download-code"
+          size="lg"
+          width="100%"
+          autoComplete="off"
+          autoCapitalize="characters"
+          hasAutoCorrect={false}
+          hasSpellCheck={false}
+          enterKeyHint="done"
+          isRequired
+          isReadOnly={pending}
+          isDisabled={!configured}
+          disabledMessage={configured ? undefined : "ただいまダウンロードの受付準備中です。"}
+          status={codeError ? { type: "error", message: codeError } : undefined}
+          statusVariant="detached"
+          controlClassName="download-code-control"
+        />
+        {/* 読み込み前からコンパクト版の高さを確保し、表示後にボタンが飛び跳ねないようにします。 */}
+        <div ref={widgetContainer} className="download-turnstile" aria-label="認証チェック" />
+        <Button
+          type="submit"
+          label={pending ? "確認中…" : "コードを確認してダウンロード"}
+          variant="primary"
+          size="lg"
+          width="100%"
+          isLoading={pending}
+          isDisabled={!configured}
+          icon={<AppIcon name="download" />}
+        />
+        <div role="status" aria-live="polite" className="download-status">
+          {scriptFailed && status.kind === "idle" ? (
+            <Banner status="error" title="認証チェックを読み込めませんでした。" description="時間をおいて再度お試しください。" collapsible={false} />
+          ) : status.kind !== "idle" ? (
+            <Banner status={status.kind} title={status.title} description={status.description} collapsible={false} />
+          ) : null}
+        </div>
+      </VStack>
     </form>
   );
 }
 
+/**
+ * ダウンロードカード用の受け取り画面です。年度を選び、コードを入れて、認証チェックを通すと、
+ * WorkerがZIPの配信を許可します。コードの確認・配信はすべてWorker側で行い、ここは入力と案内だけです。
+ * 年度の一覧・作品名・曲数・配信状態は、年度データ（albums.ts）から表示します。
+ */
 export default function DownloadArchive({ albums }: { albums: Album[] }) {
-  const [selectedYear, setSelectedYear] = useState<number | null>(null);
+  // 年度は新しい順に、いつも同じ位置へ並べます（配信状態で並べ替えません）。
+  const ordered = [...albums].sort((a, b) => b.year - a.year);
+  const defaultYear = (ordered.find((album) => album.downloadEnabled) ?? ordered[0])?.year;
+  const [selectedYear, setSelectedYear] = useState<number | undefined>(defaultYear);
   const [scriptReady, setScriptReady] = useState(false);
+  const [scriptFailed, setScriptFailed] = useState(false);
+
+  useEffect(() => {
+    // カードやほかのページからの /download/#album-2025 のようなリンクで、その年度を選んだ状態にします。
+    const selectFromHash = () => {
+      const year = Number(window.location.hash.replace("#album-", ""));
+      if (albums.some((album) => album.year === year)) setSelectedYear(year);
+    };
+    selectFromHash();
+    window.addEventListener("hashchange", selectFromHash);
+    return () => window.removeEventListener("hashchange", selectFromHash);
+  }, [albums]);
+
+  const album = ordered.find((item) => item.year === selectedYear);
+  if (!album) return null;
+  const trackCount = album.discs.reduce((total, disc) => total + disc.tracks.length, 0);
 
   return (
     <>
@@ -166,129 +240,72 @@ export default function DownloadArchive({ albums }: { albums: Album[] }) {
           src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"
           strategy="afterInteractive"
           onReady={() => setScriptReady(true)}
+          onError={() => setScriptFailed(true)}
         />
       )}
-      <div className="space-y-20 sm:space-y-24">
-        {/* スマホでは最初に受け取れる作品を見せ、準備中・一時停止中の年度は末尾へ置きます。 */}
-        {[...albums]
-          .sort(
-            (a, b) =>
-              Number(b.downloadEnabled) - Number(a.downloadEnabled) ||
-              b.year - a.year,
-          )
-          .map((album) => (
-            <article
-              key={album.year}
-              id={`album-${album.year}`}
-              aria-labelledby={`download-title-${album.year}`}
-              className="mx-auto w-[80%] max-w-4xl scroll-mt-32 border-t border-zinc-500 pt-12 text-center sm:scroll-mt-36"
-            >
-              {/* 一覧の見た目だけ変更。年度キー・コード検証・送信先はそのまま維持します。 */}
-              <p className="download-year">
-                <SodaIcon name="disc" />
-                {album.year}年
-              </p>
-              <h2
-                id={`download-title-${album.year}`}
-                className="mt-2 font-serif text-[30px] leading-snug"
-              >
-                {album.title}
-              </h2>
-              <div className="download-album-layout">
-                <div className="download-album-art">
-                  {album.artwork && (
-                    <Image
-                      src={album.artwork}
-                      alt={`${album.title}のアルバムジャケット`}
-                      width={700}
-                      height={700}
-                      className="mx-auto mt-8 aspect-square w-full max-w-[340px] rounded-xl object-cover shadow-[0_8px_20px_rgba(0,0,0,0.3)] sm:max-w-[420px]"
-                    />
-                  )}
-                  {album.detailPath && (
-                    <Link
-                      href={album.detailPath}
-                      className="mt-9 inline-block rounded-full border-2 border-zinc-400 px-5 py-3 font-serif text-lg text-blue-700 underline underline-offset-4 transition-colors hover:bg-zinc-500/15 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 dark:text-blue-300"
-                    >
-                      歌詞ページはこちらから
-                    </Link>
-                  )}
-                </div>
-                <div className="download-album-info">
-                  <p className="download-track-count">
-                    {album.discs.length}枚組・全
-                    {album.discs.reduce(
-                      (total, disc) => total + disc.tracks.length,
-                      0,
-                    )}
-                    曲
-                  </p>
-                  <div className="download-tracks mx-auto mt-8 max-w-xl">
-                    {album.discs.map((disc) => (
-                      <details
-                        key={disc.name}
-                        className="border-b border-zinc-500 py-4"
-                      >
-                        <summary className="cursor-pointer font-serif text-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
-                          {disc.name}（{disc.tracks.length}曲）
-                        </summary>
-                        <ol className="mt-4 list-decimal space-y-2 pl-7 text-left text-sm leading-6">
-                          {disc.tracks.map((track) => (
-                            <li key={track}>{track}</li>
-                          ))}
-                        </ol>
-                      </details>
-                    ))}
-                  </div>
-                  {album.downloadEnabled ? (
-                    <button
-                      type="button"
-                      aria-expanded={selectedYear === album.year}
-                      aria-controls={
-                        selectedYear === album.year
-                          ? `download-form-${album.year}`
-                          : undefined
-                      }
-                      onClick={() =>
-                        setSelectedYear(
-                          selectedYear === album.year ? null : album.year,
-                        )
-                      }
-                      className="download-open-button mt-9 w-full rounded-full border-2 border-zinc-400 px-5 py-3 text-center font-serif text-lg transition-colors hover:bg-zinc-500/15 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 sm:w-auto"
-                    >
-                      <SodaIcon name="download" />
-                      <span>
-                        {selectedYear === album.year
-                          ? "コード入力を閉じる"
-                          : "ダウンロードはこちらから"}
-                      </span>
-                    </button>
-                  ) : (
-                    <div className="mt-9">
-                      <p className="font-serif text-2xl">
-                        {album.unavailableReason === "paused"
-                          ? "一時停止中"
-                          : "Coming Soon"}
-                      </p>
-                      <p className="mt-2 text-sm opacity-75">
-                        {album.unavailableReason === "paused"
-                          ? "ZIPの修正版を準備しています。しばらくお待ちください。"
-                          : "ダウンロードは準備中です"}
-                      </p>
-                    </div>
-                  )}
-                  {album.downloadEnabled && selectedYear === album.year && (
-                    <DownloadForm
-                      key={album.year}
-                      year={album.year}
-                      scriptReady={scriptReady}
-                    />
-                  )}
-                </div>
-              </div>
-            </article>
+      <Card padding={5} elevation="med" className="download-panel">
+        <VStack gap={6}>
+          {/* 以前の年度別リンク（#album-2026 など）が、この受け取り画面の位置へ届くようにします。 */}
+          {ordered.map((item) => (
+            <span key={item.year} id={`album-${item.year}`} className="download-anchor" />
           ))}
-      </div>
+
+          <VStack gap={2}>
+            <Text as="p" weight="bold">カードに印刷された年度</Text>
+            <SegmentedControl
+              label="カードに印刷された年度"
+              size="lg"
+              layout="fill"
+              value={String(album.year)}
+              onChange={(value) => setSelectedYear(Number(value))}
+            >
+              {ordered.map((item) => (
+                <SegmentedControlItem key={item.year} value={String(item.year)} label={`${item.year}年`} />
+              ))}
+            </SegmentedControl>
+          </VStack>
+
+          {/* 年度を切り替えたとき、選ばれた作品名を読み上げで伝えます。 */}
+          <HStack gap={4} vAlign="center" aria-live="polite">
+            {album.artwork && (
+              <Artwork
+                src={album.artwork}
+                alt={`${album.title}のアルバムジャケット`}
+                sizes="(max-width: 640px) 96px, 160px"
+                className="download-album-art"
+              />
+            )}
+            <VStack gap={1} hAlign="start">
+              <Text type="supporting">{album.year}年・{album.discs.length}枚組・全{trackCount}曲</Text>
+              <Heading level={2}>{album.title}</Heading>
+              {album.detailPath && (
+                <Link href={album.detailPath} isStandalone hasUnderline>歌詞ページはこちらから</Link>
+              )}
+            </VStack>
+          </HStack>
+
+          {!album.downloadEnabled ? (
+            <Banner
+              status={album.unavailableReason === "paused" ? "warning" : "info"}
+              title={album.unavailableReason === "paused" ? "一時停止中" : "Coming Soon"}
+              description={
+                album.unavailableReason === "paused"
+                  ? "ZIPの修正版を準備しています。しばらくお待ちください。"
+                  : "ダウンロードは準備中です"
+              }
+              collapsible={false}
+            />
+          ) : (
+            <>
+              {!configured && (
+                <Banner status="info" title="ただいまダウンロードの受付準備中です。" description="しばらくお待ちください。" collapsible={false} />
+              )}
+              {/* 年度ごとに入力欄と認証チェックを作り直し、別の年度のコードが残らないようにします。 */}
+              <DownloadForm key={album.year} year={album.year} scriptReady={scriptReady} scriptFailed={scriptFailed} />
+            </>
+          )}
+        </VStack>
+      </Card>
     </>
   );
 }

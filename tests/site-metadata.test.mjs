@@ -48,8 +48,15 @@ test("正式な青色ロゴをヘッダーと共有画像で共用し、透過�
   assert.equal(data[3], 0, "左上の透明余白を白背景で塗りつぶさない");
   assert.equal(info.channels, 4);
   const header = await readFile(new URL("../src/component/header.tsx", import.meta.url), "utf8");
-  assert.match(header, /src=\{site.logo\}/);
-  assert.match(header, /width=\{site.logoSize\}/);
+  // 明るい世界では青色版、暗い世界（Horoscope）では支給された白色版を使います。
+  assert.match(header, /const logo = onDark \? site\.logoOnDark : site\.logo;/);
+  assert.match(header, /const logoSize = onDark \? site\.logoOnDarkSize : site\.logoSize;/);
+  assert.match(header, /width=\{logoSize\}/);
+  assert.equal(site.logoOnDark, "/site-logo-white.png");
+  const darkLogo = await sharp(await readFile(new URL(`../public${site.logoOnDark}`, import.meta.url))).metadata();
+  assert.equal(darkLogo.width, site.logoOnDarkSize);
+  assert.equal(darkLogo.height, site.logoOnDarkSize);
+  assert.equal(darkLogo.hasAlpha, true);
   const layout = await readFile(new URL("../src/app/layout.tsx", import.meta.url), "utf8");
   assert.match(layout, /width: site.logoSize/);
   assert.match(layout, /height: site.logoSize/);

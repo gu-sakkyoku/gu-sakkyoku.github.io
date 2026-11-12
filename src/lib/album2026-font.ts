@@ -14,7 +14,8 @@ export const albumMincho = Zen_Old_Mincho({
 
 // 丸ゴシックは告知や入力案内に使用。歌詞本文は落ち着いた明朝体のままにします。
 export const albumRounded = Zen_Maru_Gothic({
-  weight: ["400", "700"],
+  // 500は「少し太い」文字用。これがないと、少し太い指定がすべて一番太い700で表示されます。
+  weight: ["400", "500", "700"],
   subsets: ["latin"],
   display: "swap",
   preload: false,
