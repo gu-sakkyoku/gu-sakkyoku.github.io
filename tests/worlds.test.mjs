@@ -87,3 +87,13 @@ test("アイコンは文字ラベルと一緒に使う飾りで、名前の一�
   assert.match(tracks, /歌詞はこちら\s*<AppIcon name="arrowRight"/);
   assert.match(await source("src/app/worlds/shared.css"), /\.track-lyric-mark \{[^}]*text-decoration: underline;/);
 });
+
+test("傾く飾りは3D空間を共有させず、後ろの飾りが手前へ飛び出さない", async () => {
+  // preserve-3d を使うと、傾いた板どうしが奥行きで描かれ、z-index の前後が崩れます（2026年のディスクで発生）。
+  for (const world of worlds) {
+    assert.doesNotMatch(await source(`src/app/worlds/${world}.css`), /transform-style:\s*preserve-3d/, world);
+  }
+  const tansan = await source("src/app/worlds/tansan.css");
+  assert.match(tansan, /\.tansan-polaroid-frame \{[^}]*z-index: 1;[^}]*transform: perspective\(900px\)/);
+  assert.match(tansan, /\.tansan-disc \{[^}]*z-index: 0;/);
+});
