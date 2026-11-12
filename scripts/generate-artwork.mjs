@@ -3,18 +3,26 @@
 // public/art/ と src/data/artwork.generated.json を一緒にコミットしてください。
 import { mkdir, writeFile } from "node:fs/promises";
 import { createRequire } from "node:module";
+// URLの .pathname は日本語のフォルダ名を %E7… のように変換してしまうため、fileURLToPath で実際のパスにします。
+import { fileURLToPath } from "node:url";
 
 // sharpはNext.jsに同梱されているものを使い、依存関係を増やしません。
 const sharp = createRequire(import.meta.resolve("next"))("sharp");
 
 // 表示する大きさの候補（px）。元画像より大きい幅は作りません。
 const widths = [160, 480, 960, 1500];
+// ジャケットなど。public/ からの位置で書きます。
+// includeOriginal: 元画像の幅が候補の途中にあるとき、元の幅の版も作ります（拡大表示で粗くしないため）。
 const sources = [
-  "cover2026-tansan-yohou.png",
-  "cover1.png",
-  "cover2.png",
-  "cover31.png",
-  "gamoji.png",
+  { file: "cover2026-tansan-yohou.png" },
+  { file: "cover1.png" },
+  { file: "cover2.png" },
+  { file: "cover31.png" },
+  { file: "gamoji.png" },
+  // 2026年 荒牧祭のポスター（作曲部作成）。
+  { file: "aramaki2026/poster-stage.jpg", includeOriginal: true },
+  { file: "aramaki2026/poster-dj.png", includeOriginal: true },
+  { file: "aramaki2026/poster-merch.png", includeOriginal: true },
 ];
 
 const publicDir = new URL("../public/", import.meta.url);
@@ -22,18 +30,21 @@ const outDir = new URL("art/", publicDir);
 await mkdir(outDir, { recursive: true });
 
 const manifest = {};
-for (const file of sources) {
-  const input = sharp(new URL(file, publicDir).pathname);
+for (const { file, includeOriginal = false } of sources) {
+  const input = sharp(fileURLToPath(new URL(file, publicDir)));
   const { width, height } = await input.metadata();
-  const name = file.replace(/\.png$/, "");
+  // フォルダ名も含めて1つのファイル名にします（例：aramaki2026/poster-dj.png → aramaki2026-poster-dj）。
+  const name = file.replace(/\.(png|jpe?g)$/i, "").replaceAll("/", "-");
+  const targets = widths.filter((value) => value <= width);
+  if (includeOriginal && width < widths.at(-1) && !targets.includes(width)) targets.push(width);
   const variants = [];
-  for (const target of widths.filter((value) => value <= width)) {
+  for (const target of targets) {
     const output = `art/${name}-${target}.webp`;
     await input
       .clone()
       .resize({ width: target })
       .webp({ quality: target <= 160 ? 78 : 82 })
-      .toFile(new URL(output, publicDir).pathname);
+      .toFile(fileURLToPath(new URL(output, publicDir)));
     variants.push({ width: target, src: `/${output}` });
   }
   manifest[`/${file}`] = { width, height, variants };

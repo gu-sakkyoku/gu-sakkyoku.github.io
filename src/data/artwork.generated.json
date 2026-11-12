@@ -104,5 +104,67 @@
         "src": "/art/gamoji-960.webp"
       }
     ]
+  },
+  "/aramaki2026/poster-stage.jpg": {
+    "width": 874,
+    "height": 1240,
+    "variants": [
+      {
+        "width": 160,
+        "src": "/art/aramaki2026-poster-stage-160.webp"
+      },
+      {
+        "width": 480,
+        "src": "/art/aramaki2026-poster-stage-480.webp"
+      },
+      {
+        "width": 874,
+        "src": "/art/aramaki2026-poster-stage-874.webp"
+      }
+    ]
+  },
+  "/aramaki2026/poster-dj.png": {
+    "width": 2552,
+    "height": 3579,
+    "variants": [
+      {
+        "width": 160,
+        "src": "/art/aramaki2026-poster-dj-160.webp"
+      },
+      {
+        "width": 480,
+        "src": "/art/aramaki2026-poster-dj-480.webp"
+      },
+      {
+        "width": 960,
+        "src": "/art/aramaki2026-poster-dj-960.webp"
+      },
+      {
+        "width": 1500,
+        "src": "/art/aramaki2026-poster-dj-1500.webp"
+      }
+    ]
+  },
+  "/aramaki2026/poster-merch.png": {
+    "width": 2481,
+    "height": 3508,
+    "variants": [
+      {
+        "width": 160,
+        "src": "/art/aramaki2026-poster-merch-160.webp"
+      },
+      {
+        "width": 480,
+        "src": "/art/aramaki2026-poster-merch-480.webp"
+      },
+      {
+        "width": 960,
+        "src": "/art/aramaki2026-poster-merch-960.webp"
+      },
+      {
+        "width": 1500,
+        "src": "/art/aramaki2026-poster-merch-1500.webp"
+      }
+    ]
   }
 }

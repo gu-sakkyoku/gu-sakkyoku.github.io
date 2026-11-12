@@ -68,3 +68,19 @@ test("動きを減らす設定を尊重し、検索用サイト名をトップ�
   assert.match(await source("src/component/AlbumMotion.tsx"), /prefers-reduced-motion: reduce/);
   assert.match(await source("src/app/globals.css"), /prefers-reduced-motion: reduce/);
 });
+
+test("サイト内リンクは通常のページ移動にし、Next.jsの画面データ（index.txt）を取りに行かない", async () => {
+  // Next.js 15の静的書き出しでは、画面データの取得に失敗すると index.txt 自体へ移動して
+  // 文字の羅列が表示される不具合があります（2026-11-12に本番で発生）。Link・useRouterは使いません。
+  async function sources(directory = new URL("../src/", import.meta.url)) {
+    const files = [];
+    for (const entry of await readdir(directory, { withFileTypes: true })) {
+      if (entry.isDirectory()) files.push(...await sources(new URL(`${entry.name}/`, directory)));
+      else if (/\.tsx?$/.test(entry.name)) files.push([entry.name, await readFile(new URL(entry.name, directory), "utf8")]);
+    }
+    return files;
+  }
+  for (const [name, text] of await sources()) {
+    assert.doesNotMatch(text, /from "next\/link"|useRouter|LinkProvider/, name);
+  }
+});

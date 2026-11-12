@@ -6,6 +6,8 @@
  */
 
 export type DjSlot = { start: string; end: string; name: string };
+/** ポスター画像。src は public/ からの位置。credit はデザインした人の表記（分かっているものだけ）。 */
+export type Poster = { src: string; alt: string; credit?: string };
 export type DjDay = { label: string; date: string; dateLabel: string; start: string; end: string; slots: DjSlot[] };
 
 export const aramaki2026 = {
@@ -28,6 +30,10 @@ export const aramaki2026 = {
     dateLabel: "2026.11.14 sat",
     start: "14:20",
     end: "15:20",
+    poster: {
+      src: "/aramaki2026/poster-stage.jpg",
+      alt: "作曲部 荒牧祭 野外ステージのポスター（2026.11.14 14:20-15:20、出演順のタイムテーブル）",
+    } as Poster,
     acts: [
       { name: "弦楽隊", song: "弦楽四重奏第二番ロ短調 大学生活" },
       { name: "群馬を副首都にする会", song: "群馬を副首都にするソング" },
@@ -43,6 +49,11 @@ export const aramaki2026 = {
   djStage: {
     name: "DJステージ",
     room: "三号館二階 GC218",
+    poster: {
+      src: "/aramaki2026/poster-dj.png",
+      alt: "群馬大学作曲部 荒牧祭DJステージのポスター（11/14・15のタイムテーブル、音圧と光刺激の注意、会場）",
+      credit: "鯨の卵",
+    } as Poster,
     days: [
       {
         label: "DAY 1",
@@ -89,6 +100,11 @@ export const aramaki2026 = {
 
   /** 物販（ポスター「群馬大学作曲部 物販情報」より）。DJステージの会場で販売します。 */
   merch: {
+    poster: {
+      src: "/aramaki2026/poster-merch.png",
+      alt: "群馬大学作曲部 物販情報のポスター（3作品のアルバムCD・ダウンロードカードの価格とお得情報）",
+      credit: "鯨の卵",
+    } as Poster,
     albumYears: [2024, 2025, 2026],
     prices: [
       { item: "アルバムCD", price: "500円" },

@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import NextLink from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@astryxdesign/core/Button";
 import { HStack } from "@astryxdesign/core/HStack";
@@ -47,7 +46,7 @@ export default function Cheader({ world }: { world: WorldName }) {
       <TopNav
         label="メインメニュー"
         heading={
-          <NextLink href={homeNavigation.href} aria-label="群馬大学作曲部 トップページ" className="site-brand">
+          <a href={homeNavigation.href} aria-label="群馬大学作曲部 トップページ" className="site-brand">
             <Image
               src={logo}
               alt="群馬大学作曲部のロゴ"
@@ -58,7 +57,7 @@ export default function Cheader({ world }: { world: WorldName }) {
             />
             {/* ページのh1と区別するため、サイト名は見出しではなくspanにします。 */}
             <span>群馬大学作曲部</span>
-          </NextLink>
+          </a>
         }
         startContent={
           <HStack gap={1} vAlign="center" className="site-nav-desktop">

@@ -45,6 +45,10 @@
 - OSで「視差効果を減らす」「アニメーションを減らす」を選んだ人には、最初から止まった状態で表示します。
 - 動きの共通処理は`src/component/AlbumMotion.tsx`です。要素に`data-reveal`を付けると画面に入ったときに現れ、`data-depth`・`data-tilt`で奥行きと傾きの基準を指定します。
 
+## サイト内のリンク
+
+サイト内のリンクは、Next.jsの画面切り替え（`next/link`）を使わず、通常のページ移動にしています。Next.js 15の静的書き出しでは、裏で取りに行く画面データ（`index.txt`）の取得に失敗すると、そのデータファイル自体へ移動して文字の羅列が表示される不具合があるためです（2026-11-12に本番で発生）。`next/link`・`useRouter`・Astryxの`LinkProvider`は使わないでください（`tests/header-layout.test.mjs`で確認しています）。
+
 ## ジャケット画像
 
 元のPNG（1枚あたり0.8〜5.9MB）は残したまま、`scripts/generate-artwork.mjs`で画面幅に合った軽いWebP（`public/art/`）を作って表示しています。ジャケットを差し替えたら、次を実行して生成物も一緒にコミットしてください。

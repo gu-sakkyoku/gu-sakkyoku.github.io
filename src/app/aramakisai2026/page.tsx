@@ -11,6 +11,7 @@ import { VStack } from "@astryxdesign/core/VStack";
 import AlbumMotion from "../../component/AlbumMotion";
 import ClientWrapper from "../../component/ClientWrapper";
 import LiveMark from "../../component/aramaki/LiveMark";
+import PosterFigure from "../../component/aramaki/PosterFigure";
 import AppIcon from "../../component/ui/AppIcon";
 import Artwork from "../../component/ui/Artwork";
 import { albums } from "../../data/albums";
@@ -108,25 +109,28 @@ export default function AramakiPage() {
                 <LiveMark date={outdoorStage.date} start={outdoorStage.start} end={outdoorStage.end} />
               </HStack>
             </VStack>
-            <Card padding={6} elevation="none" className="aramaki-outdoor-card" data-reveal>
-              <VStack gap={4}>
-                <Text as="p" weight="bold">タイムテーブル（出演順）</Text>
-                <ol className="aramaki-acts">
-                  {outdoorStage.acts.map((act, index) => (
-                    <li key={act.name}>
-                      <span className="aramaki-act-number" aria-hidden="true">{index + 1}</span>
-                      <span className="aramaki-act-copy">
-                        <Text weight="bold" display="block" size="lg">{act.name}</Text>
-                        <Text display="block">『{act.song}』</Text>
-                        {act.lyricPath && (
-                          <Link href={act.lyricPath} hasUnderline weight="bold">「{act.song}」の歌詞はこちら</Link>
-                        )}
-                      </span>
-                    </li>
-                  ))}
-                </ol>
-              </VStack>
-            </Card>
+            <div className="aramaki-with-poster">
+              <Card padding={6} elevation="none" className="aramaki-outdoor-card" data-reveal>
+                <VStack gap={4}>
+                  <Text as="p" weight="bold">タイムテーブル（出演順）</Text>
+                  <ol className="aramaki-acts">
+                    {outdoorStage.acts.map((act, index) => (
+                      <li key={act.name}>
+                        <span className="aramaki-act-number" aria-hidden="true">{index + 1}</span>
+                        <span className="aramaki-act-copy">
+                          <Text weight="bold" display="block" size="lg">{act.name}</Text>
+                          <Text display="block">『{act.song}』</Text>
+                          {act.lyricPath && (
+                            <Link href={act.lyricPath} hasUnderline weight="bold">「{act.song}」の歌詞はこちら</Link>
+                          )}
+                        </span>
+                      </li>
+                    ))}
+                  </ol>
+                </VStack>
+              </Card>
+              <PosterFigure poster={outdoorStage.poster} />
+            </div>
           </div>
         </section>
 
@@ -163,11 +167,14 @@ export default function AramakiPage() {
             ))}
           </Grid>
 
-          <VStack gap={3} className="aramaki-cautions">
-            {djStage.cautions.map((caution) => (
-              <Banner key={caution.title} status="warning" title={caution.title} description={caution.text} collapsible={false} />
-            ))}
-          </VStack>
+          <div className="aramaki-with-poster aramaki-cautions">
+            <VStack gap={3}>
+              {djStage.cautions.map((caution) => (
+                <Banner key={caution.title} status="warning" title={caution.title} description={caution.text} collapsible={false} />
+              ))}
+            </VStack>
+            <PosterFigure poster={djStage.poster} />
+          </div>
         </section>
 
         <section aria-labelledby="merch" className="site-container site-section">
@@ -175,49 +182,52 @@ export default function AramakiPage() {
             <Heading level={2} id="merch">物販</Heading>
             <Text as="p">{djStage.name}の会場（{djStage.room}）で販売しています。</Text>
           </VStack>
-          <Card padding={6} elevation="med" className="aramaki-merch" data-reveal>
-            <VStack gap={6}>
-              <ul className="aramaki-merch-albums">
-                {merchAlbums.map((album) => (
-                  <li key={album.year}>
-                    {album.artwork && (
-                      <Artwork src={album.artwork} alt={`${album.title}のアルバムジャケット`} sizes="(max-width: 640px) 28vw, 180px" />
-                    )}
-                    <Text type="supporting" display="block">{album.year}年度</Text>
-                    {album.detailPath ? (
-                      <Link href={album.detailPath} hasUnderline weight="bold">{album.title}</Link>
-                    ) : (
-                      <Text weight="bold">{album.title}</Text>
-                    )}
-                  </li>
-                ))}
-              </ul>
-              <dl className="aramaki-prices">
-                {merch.prices.map((price) => (
-                  <div key={price.item}>
-                    <dt>{price.item}</dt>
-                    <dd>{price.price}</dd>
-                  </div>
-                ))}
-              </dl>
-              <div className="aramaki-deals">
-                <p className="aramaki-deals-label">お得情報</p>
-                <dl>
-                  {merch.deals.map((deal) => (
-                    <div key={deal.item}>
-                      <dt>{deal.item}</dt>
-                      <dd>{deal.price}</dd>
+          <div className="aramaki-with-poster aramaki-merch-area">
+            <Card padding={6} elevation="med" className="aramaki-merch" data-reveal>
+              <VStack gap={6}>
+                <ul className="aramaki-merch-albums">
+                  {merchAlbums.map((album) => (
+                    <li key={album.year}>
+                      {album.artwork && (
+                        <Artwork src={album.artwork} alt={`${album.title}のアルバムジャケット`} sizes="(max-width: 640px) 28vw, 180px" />
+                      )}
+                      <Text type="supporting" display="block">{album.year}年度</Text>
+                      {album.detailPath ? (
+                        <Link href={album.detailPath} hasUnderline weight="bold">{album.title}</Link>
+                      ) : (
+                        <Text weight="bold">{album.title}</Text>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+                <dl className="aramaki-prices">
+                  {merch.prices.map((price) => (
+                    <div key={price.item}>
+                      <dt>{price.item}</dt>
+                      <dd>{price.price}</dd>
                     </div>
                   ))}
                 </dl>
-              </div>
-              <Text as="p" type="supporting">
-                ダウンロードカードは、カードに印刷されたコードで
-                <Link href="/download/" hasUnderline>ダウンロードページ</Link>
-                から音源を受け取れます。
-              </Text>
-            </VStack>
-          </Card>
+                <div className="aramaki-deals">
+                  <p className="aramaki-deals-label">お得情報</p>
+                  <dl>
+                    {merch.deals.map((deal) => (
+                      <div key={deal.item}>
+                        <dt>{deal.item}</dt>
+                        <dd>{deal.price}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                </div>
+                <Text as="p" type="supporting">
+                  ダウンロードカードは、カードに印刷されたコードで
+                  <Link href="/download/" hasUnderline>ダウンロードページ</Link>
+                  から音源を受け取れます。
+                </Text>
+              </VStack>
+            </Card>
+            <PosterFigure poster={merch.poster} />
+          </div>
         </section>
 
         <section aria-labelledby="access" className="site-container site-section">

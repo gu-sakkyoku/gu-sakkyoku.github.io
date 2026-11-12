@@ -85,3 +85,22 @@ test("「いま」の印は日本時間で判定し、画面を動かさない",
     assert.match(await source(`public/licenses/${license}-OFL.txt`), /SIL OPEN FONT LICENSE Version 1.1/);
   }
 });
+
+test("ポスター3枚を各区切りに掲載し、デザインした人の表記はDJステージと物販だけに付ける", async () => {
+  const posters = [aramaki2026.outdoorStage.poster, aramaki2026.djStage.poster, aramaki2026.merch.poster];
+  assert.deepEqual(posters.map((poster) => poster.src), [
+    "/aramaki2026/poster-stage.jpg",
+    "/aramaki2026/poster-dj.png",
+    "/aramaki2026/poster-merch.png",
+  ]);
+  assert.deepEqual(posters.map((poster) => poster.credit), [undefined, "鯨の卵", "鯨の卵"]);
+  const manifest = JSON.parse(await source("src/data/artwork.generated.json"));
+  for (const poster of posters) {
+    await access(new URL(`../public${poster.src}`, import.meta.url));
+    assert.ok(manifest[poster.src], `${poster.src} の軽量版がありません`);
+    assert.ok(poster.alt.length > 10);
+  }
+  const page = await source("src/app/aramakisai2026/page.tsx");
+  assert.equal((page.match(/<PosterFigure /g) || []).length, 3);
+  assert.match(await source("src/component/aramaki/PosterFigure.tsx"), /designed by \{poster\.credit\}/);
+});

@@ -258,12 +258,16 @@
 .site-world--tansan .tansan-hero-art {
   width: min(100%, 26rem);
   margin-inline: auto;
-  perspective: 900px;
 }
 
+/*
+ * ジャケットとディスクは、ふつうの重なり順（z-index）で前後を決めます。
+ * 3D空間を共有（preserve-3d）させると、ジャケットが傾いたときにディスクの板とぶつかり、
+ * 斜めに切れて手前へ飛び出して見えます。傾きはジャケットの枠の中だけで完結させます。
+ */
 .site-world--tansan .tansan-polaroid {
   position: relative;
-  transform-style: preserve-3d;
+  isolation: isolate;
 }
 
 .site-world--tansan .tansan-polaroid-frame {
@@ -274,7 +278,7 @@
   border-radius: 0.5rem;
   background: #fff;
   box-shadow: var(--shadow-high);
-  transform: rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+  transform: perspective(900px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
   transition: transform 240ms ease-out;
 }
 
@@ -310,6 +314,7 @@
 
 .site-world--tansan .tansan-disc {
   position: absolute;
+  z-index: 0;
   top: 6%;
   right: -14%;
   width: 84%;
