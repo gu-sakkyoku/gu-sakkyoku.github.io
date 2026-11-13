@@ -30,3 +30,19 @@ export const websiteSchema = {
   alternateName: ["GU sakkyoku", "群大作曲部", "gu-sakkyoku.github.io"],
   url: site.url,
 };
+
+/*
+ * 作曲部（団体）の情報（トップにだけ載せます）。公式のX・YouTubeを sameAs で結び、
+ * 「この団体の公式サイトはここ」とGoogleへ伝えます。リンク先は連絡先と同じ src/data/navigation.ts の値です。
+ */
+export function organizationSchema(sameAs: readonly string[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: site.name,
+    alternateName: ["GU sakkyoku", "群大作曲部"],
+    url: site.url,
+    logo: new URL(site.logo, site.url).toString(),
+    sameAs: [...sameAs],
+  };
+}

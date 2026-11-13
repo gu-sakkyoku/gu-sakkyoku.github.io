@@ -2,7 +2,8 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { createRequire } from "node:module";
 import test from "node:test";
-import { site, websiteSchema } from "../src/data/site.ts";
+import { organizationSchema, site, websiteSchema } from "../src/data/site.ts";
+import { contactNavigation } from "../src/data/navigation.ts";
 
 const sharp = createRequire(import.meta.resolve("next"))("sharp");
 
@@ -79,4 +80,16 @@ test("検索・Apple・ICOの全画像は現在の正式ロゴから生成され
     const expected = await sharp(logo).resize(size, size, { fit: "contain" }).png().toBuffer();
     assert.deepEqual(ico.subarray(offset, offset + length), expected);
   }
+});
+
+test("トップに作曲部（団体）の構造化データを載せ、公式のX・YouTubeと結ぶ", async () => {
+  const accounts = contactNavigation.map((item) => item.href).filter((href) => href.startsWith("https://"));
+  const organization = organizationSchema(accounts);
+  assert.equal(organization["@type"], "Organization");
+  assert.equal(organization.name, site.name);
+  assert.equal(organization.url, site.url);
+  assert.equal(organization.logo, "https://gu-sakkyoku.github.io/site-logo-blue.png");
+  assert.deepEqual(organization.sameAs, ["https://x.com/GUsakkyoku", "https://www.youtube.com/@gusakkyoku"]);
+  const page = await readFile(new URL("../src/app/page.tsx", import.meta.url), "utf8");
+  assert.match(page, /organizationSchema\(officialAccounts\)/);
 });
