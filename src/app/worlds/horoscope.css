@@ -206,15 +206,14 @@
   rotate: calc(var(--depth-turn, 0deg) * 4);
 }
 
-/* 軌道の上の小さな星（黄）。 */
+/* 軌道の上の小さな星（黄）。ジャケットのきらめきと同じ、四方に伸びる星形です（ぼかした光は付けません）。 */
 .site-world--horoscope .archive-art-stage::after {
-  top: 6%;
-  right: 2%;
-  width: 0.625rem;
-  height: 0.625rem;
-  border-radius: 50%;
+  top: 5%;
+  right: 1%;
+  width: 1.25rem;
+  height: 1.25rem;
   background: var(--cosmos-yellow);
-  box-shadow: 0 0 14px var(--cosmos-yellow);
+  clip-path: polygon(50% 0, 60% 40%, 100% 50%, 60% 60%, 50% 100%, 40% 60%, 0 50%, 40% 40%);
 }
 
 .site-world--horoscope .archive-cover {
@@ -265,7 +264,7 @@
 
 /*
  * 曲リスト：星図のように、曲番号（星）を細い線でつなぎます。
- * 歌詞のある曲は、マゼンタの光を左に添えて見つけやすくします（文字の「歌詞はこちら」も必ず出ます）。
+ * 歌詞のある曲は、行の地をマゼンタに染め、番号を黄色い星にして見つけやすくします（文字の「歌詞はこちら」も必ず出ます）。
  */
 .site-world--horoscope .track-row {
   position: relative;
@@ -286,7 +285,10 @@
 
 .site-world--horoscope .track-row--lyric {
   background: linear-gradient(90deg, rgb(255 95 208 / 16%), transparent 60%);
-  box-shadow: inset 2px 0 0 var(--cosmos-magenta);
+}
+
+.site-world--horoscope .track-row--lyric .track-number {
+  color: var(--cosmos-yellow);
 }
 
 .site-world--horoscope .track-artwork {

@@ -1,6 +1,8 @@
-"use client";
 
 import ClientWrapper from "../../../component/ArchiveLyricWrapper";
+import { archiveLyricMetadata } from "../../../lib/archive-lyric-metadata";
+
+export const metadata = archiveLyricMetadata(2024, "/Nijiiro/kumori/");
 
 
 

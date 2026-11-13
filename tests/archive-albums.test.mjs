@@ -82,3 +82,24 @@ test("9曲の元の本文・改行・タイトル・画像の記述をデザイ�
     assert.equal(createHash("sha256").update(body).digest("hex"), hash, route);
   }
 });
+
+test("2024・2025年の歌詞ページは、曲ごとのページ名・説明・正規URLを持つ（ブラウザ専用の部品にしない）", async () => {
+  for (const year of [2024, 2025]) {
+    for (const disc of archiveAlbums[year].discs) {
+      for (const track of disc.tracks) {
+        if (!track.lyricPath) continue;
+        const page = await source(`src/app${track.lyricPath}page.tsx`);
+        // ページ全体をブラウザ専用（"use client"）にすると、ページ名を付けられず、歌詞の本文もJavaScriptで二重に送られます。
+        assert.doesNotMatch(page, /"use client"/, track.lyricPath);
+        assert.match(
+          page,
+          new RegExp(`export const metadata = archiveLyricMetadata\\(${year}, "${track.lyricPath.replaceAll("/", "\\/")}"\\);`),
+          track.lyricPath,
+        );
+      }
+    }
+  }
+  const helper = await source("src/lib/archive-lyric-metadata.ts");
+  assert.match(helper, /alternates: \{ canonical: path \}/);
+  assert.match(helper, /歌詞 \| \$\{album.title\} \| \$\{site.name\}/);
+});

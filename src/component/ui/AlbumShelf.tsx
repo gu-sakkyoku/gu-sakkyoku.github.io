@@ -7,6 +7,7 @@ import { worldOfYear } from "../../data/worlds";
 import World from "../World";
 import AppIcon from "./AppIcon";
 import Artwork from "./Artwork";
+import JacketHandoff from "./JacketHandoff";
 
 /**
  * 作品の一覧です。各カードは、その作品自身のテーマ（色・書体）で表示します。
@@ -19,6 +20,7 @@ export default function AlbumShelf({ exceptYear }: { exceptYear?: number }) {
     .filter((album) => album.detailPath && album.year !== exceptYear);
   return (
     <ul className="album-shelf" data-count={items.length}>
+      <JacketHandoff />
       {items.map((album) => {
         const tracks = album.discs.reduce((total, disc) => total + disc.tracks.length, 0);
         return (
@@ -37,6 +39,7 @@ export default function AlbumShelf({ exceptYear }: { exceptYear?: number }) {
                       alt={`${album.title}のアルバムジャケット`}
                       sizes="(max-width: 640px) 40vw, 240px"
                       className="album-shelf-art"
+                      jacketHref={album.detailPath}
                     />
                   )}
                   <VStack gap={2}>

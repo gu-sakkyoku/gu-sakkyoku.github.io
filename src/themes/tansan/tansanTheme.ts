@@ -107,7 +107,8 @@ export const tansanTheme = defineTheme({
       // 区切りの帯。空のいちばん濃い青。上に白い文字を置きます（MediaTheme dark と組み合わせます）。
       'variant:band': {
         backgroundColor: '#1568c0',
-        backgroundImage: 'linear-gradient(165deg, #0f5aad 0%, #1a73cf 50%, #3f98e6 100%)',
+        // 白い文字（動画の下のリンクなど）が下端でも 4.5:1 以上になるよう、明るい水色までは上げません。
+        backgroundImage: 'linear-gradient(165deg, #0f5aad 0%, #1568c0 55%, #1d6fc4 100%)',
         borderRadius: '0px',
       },
       // 曲リストなどをまとめる白い面。泡のように大きく丸めます。

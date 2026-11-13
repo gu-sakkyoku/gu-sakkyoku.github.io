@@ -1,0 +1,62 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "gradient-text",
+        "value": "*",
+        "files": [
+          "src/app/worlds/tansan.css"
+        ],
+        "createdAt": "2026-11-13T05:46:13.518Z",
+        "reason": "Claude: 炭酸予報の題字はジャケットの淡いグラデーションの文字を写したもの（DESIGN.mdの3つの世界）"
+      },
+      {
+        "rule": "gradient-text",
+        "value": "*",
+        "files": [
+          "src/themes/tansan/tansan.css"
+        ],
+        "createdAt": "2026-11-13T05:46:13.530Z",
+        "reason": "Claude: 炭酸予報のalbum-titleはジャケットの題字のグラデーション（DESIGN.md）"
+      },
+      {
+        "rule": "gradient-text",
+        "value": "*",
+        "files": [
+          "src/themes/nijiiro/nijiiro.css"
+        ],
+        "createdAt": "2026-11-13T05:46:13.541Z",
+        "reason": "user confirmed: 虹色memoryの虹色の題字はジャケット由来で、ユーザーが現状を高く評価（2026-11-13）"
+      },
+      {
+        "rule": "codex-grid-background",
+        "value": "*",
+        "files": [
+          "src/themes/nijiiro/nijiiro.css"
+        ],
+        "createdAt": "2026-11-13T05:46:13.552Z",
+        "reason": "user confirmed: 虹色memoryの方眼のノートの帯（ユーザーが現状維持を希望）"
+      },
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          "src/app/worlds/aramaki.css"
+        ],
+        "createdAt": "2026-11-13T05:46:13.562Z",
+        "reason": "Claude: DJタイムテーブルはDAWの画面を写しており、トラック名の左の色札はDAWのトラック色そのもの"
+      },
+      {
+        "rule": "bounce-easing",
+        "value": "cubic-bezier(0.3, 1.2, 0.5, 1)",
+        "files": [
+          "src/themes/tansan/*"
+        ],
+        "createdAt": "2026-11-13T05:46:13.572Z",
+        "reason": "Claude: 炭酸予報の世界の、泡がはじける弾み（ボタンの出入り）"
+      }
+    ]
+  }
+}

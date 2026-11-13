@@ -122,6 +122,15 @@
   font-size: clamp(1rem, 2.5vw, 1.25rem);
 }
 
+/* 題字の下の団体名：ポスターの「作曲部」と同じく、太い線の下に置きます。 */
+.site-world--aramaki .fest-org {
+  padding-top: 0.3rem;
+  border-top: 4px solid var(--aramaki-ink);
+  font-family: var(--font-display-block), var(--font-family-heading);
+  font-size: clamp(1.25rem, 3.5vw, 1.75rem);
+  line-height: 1.2;
+}
+
 /* 右の列：ポスターの右の群青の列と、巨大な警告の三角。その上に「日程と場所」の白い面を重ねます。 */
 .site-world--aramaki .fest-hero-side {
   position: relative;
@@ -404,6 +413,7 @@
 .site-world--aramaki .dj-track-head {
   justify-content: center;
   padding: 0.5rem 0.75rem;
+  /* 作曲ソフトのトラック名の左にある「トラックの色」です。飾りの縦線ではなく、DAWの画面の表記をそのまま写しています。 */
   border-left: 6px solid var(--aramaki-yellow);
   background: #2a2936;
 }
@@ -677,11 +687,18 @@
   line-height: 1;
 }
 
+/* お得情報：枠の中にもう一つ枠を作らず、濃い線で区切ってポスターと同じ黄色い札の見出しを置きます。 */
 .site-world--aramaki .fest-deals {
-  padding: 1rem 1.25rem;
-  border: 2px solid var(--aramaki-ink);
-  border-radius: 6px;
-  background: #fffbd1;
+  padding-top: 1.25rem;
+  border-top: 4px solid var(--aramaki-ink);
+}
+
+.site-world--aramaki .fest-deals-title {
+  align-self: flex-start;
+  padding: 0.05em 0.35em;
+  background: var(--aramaki-yellow);
+  color: var(--aramaki-ink);
+  font-size: clamp(1.125rem, 2.5vw, 1.375rem);
 }
 
 .site-world--aramaki .fest-price-value--deal {

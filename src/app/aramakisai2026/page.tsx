@@ -52,11 +52,12 @@ export default function AramakiPage() {
         <Section variant="stage" padding={0} role="region" aria-labelledby="aramaki-title" className="fest-hero" data-depth>
           <Grid columns={{ minWidth: 320, max: 2 }} gap={0} align="stretch" className="fest-hero-grid">
             <VStack gap={5} hAlign="start" className="fest-hero-copy">
-              <Text type="eyebrow">群馬大学作曲部</Text>
               <Heading level={1} type="festival-title" id="aramaki-title" className="fest-title" data-text={aramaki2026.name}>
                 {aramaki2026.name}
                 <Text type="time" className="fest-title-year">{aramaki2026.year}</Text>
               </Heading>
+              {/* ポスターと同じく、題字の下に線を引いて出演団体の名前を置きます。 */}
+              <Text weight="bold" className="fest-org">群馬大学作曲部</Text>
               <Text type="time" className="fest-dates">{aramaki2026.dateRangeLabel}</Text>
               <Text weight="bold" className="fest-campus">{campus.name}</Text>
               <HStack as="nav" aria-label="このページの案内" gap={3} wrap="wrap">
@@ -183,7 +184,7 @@ export default function AramakiPage() {
                     ))}
                   </VStack>
                   <VStack gap={3} className="fest-deals">
-                    <Text type="eyebrow">お得情報</Text>
+                    <Heading level={3} className="fest-deals-title">お得情報</Heading>
                     {merch.deals.map((deal) => (
                       <HStack key={deal.item} gap={3} hAlign="between" vAlign="end" className="fest-price">
                         <Text>{deal.item}</Text>

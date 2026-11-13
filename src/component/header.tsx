@@ -38,8 +38,8 @@ export default function Cheader({ world }: { world: WorldName }) {
 
   // 暗い世界（Horoscope）では、支給された白色版のロゴを使います。
   const onDark = world === "horoscope";
-  const logo = onDark ? site.logoOnDark : site.logo;
-  const logoSize = onDark ? site.logoOnDarkSize : site.logoSize;
+  const logo = onDark ? site.headerLogoOnDark : site.headerLogo;
+  const logoSize = site.headerLogoSize;
 
   return (
     <header className="site-header">

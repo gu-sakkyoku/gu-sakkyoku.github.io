@@ -1,7 +1,9 @@
-"use client";
 
 import Image from "next/image";
 import ClientWrapper from "../../../component/ArchiveLyricWrapper";
+import { archiveLyricMetadata } from "../../../lib/archive-lyric-metadata";
+
+export const metadata = archiveLyricMetadata(2025, "/Horoscope/fuwa/");
 
 
 

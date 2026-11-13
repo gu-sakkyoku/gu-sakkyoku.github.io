@@ -89,7 +89,7 @@ test("新しい歌詞URLをサイトマップに載せ、静的なルーティ�
   assert.match(page, /whitespace-pre-wrap/);
   assert.match(page, /\{text\}/);
   assert.doesNotMatch(page, /dangerouslySetInnerHTML|"use client"/);
-  assert.match(await source("src/component/NewAlbumAnnouncement.tsx"), /href=\{context === "album" \? "#track-list" : album.detailPath\}/);
+  assert.match(await source("src/component/NewAlbumAnnouncement.tsx"), /href=\{album.detailPath\}/);
   // メニューの作品リンクは年度データから作るので、2026年の作品ページも自動で含まれます。
   assert.ok(albumNavigation.some((item) => item.href === album2026.detailPath && item.label === album2026.title));
 });
@@ -106,12 +106,19 @@ test("動画は自動再生せず、遅延読み込みと代替リンクを用�
 
 test("ヒーローの演出は一度きりで、動きを減らす設定に対応し、フォントのライセンスを同梱する", async () => {
   const announcement = await source("src/component/NewAlbumAnnouncement.tsx");
-  assert.match(announcement, /reducedMotion === false/);
-  assert.match(announcement, /current === burst \? 0 : current/);
-  assert.doesNotMatch(announcement, /repeat: Infinity|Math.random/);
-  // 題字は動かしても薄くしない（途中で止まっても読めるようにする）。
-  assert.doesNotMatch(announcement.match(/<Title[\s\S]*?<\/Title>/)[0], /opacity/);
+  const burst = await source("src/component/TansanBurst.tsx");
+  const play = await source("src/component/ViewportPlay.tsx");
+  // 動きはCSSで、トップのJavaScriptを重くするアニメーション用のライブラリは使いません。
+  assert.doesNotMatch(announcement + burst, /framer-motion|"use client"[\s\S]*NewAlbumAnnouncement|Math.random/);
+  assert.doesNotMatch(announcement, /"use client"/);
+  assert.match(burst, /current === burst \? 0 : current/);
+  // 画面に入った合図は一度だけ。動きを減らす設定では合図を付けません。
+  assert.match(play, /prefers-reduced-motion: reduce/);
+  assert.match(play, /observer.disconnect\(\)/);
   const css = await source("src/app/worlds/tansan.css");
+  // 題字は動かしても薄くしない（途中で止まっても読めるようにする）。
+  assert.doesNotMatch(css.match(/@keyframes tansan-letter-hop \{[\s\S]*?\n\}/)[0], /opacity/);
+  assert.match(css, /prefers-reduced-motion: no-preference\) \{[\s\S]*?\[data-play\]/);
   assert.match(css, /prefers-reduced-motion: reduce\) \{[\s\S]*?\.tansan-shine \{\s*display: none;/);
   assert.match(css, /forced-colors: active/);
   assert.doesNotMatch(css, /animation:[^;]*infinite/);

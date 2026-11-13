@@ -439,7 +439,7 @@
     font-weight: 700;
     letter-spacing: 0.08em;
     font-variant-numeric: tabular-nums;
-    text-shadow: 0 0 12px rgb(142 230 255 / 0.65);
+    text-shadow: 0.09em 0.09em 0 rgb(255 95 208 / 0.8);
   }
 
   .astryx-item[data-selected="selected"] {
@@ -570,7 +570,7 @@
     border-style: solid;
     border-color: rgb(255 255 255 / 0.5);
     border-radius: 4px;
-    box-shadow: 0 0 0 6px rgb(255 255 255 / 0.05), 0 24px 60px rgb(3 2 30 / 0.6), 0 0 56px rgb(91 224 255 / 0.16);
+    box-shadow: 0 0 0 6px rgb(255 255 255 / 0.05), 0 24px 60px rgb(3 2 30 / 0.6);
     --_card-radius: 4px;
   }
 

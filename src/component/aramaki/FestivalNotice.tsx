@@ -32,7 +32,6 @@ export default function FestivalNotice() {
         <Grid columns={{ minWidth: 320, max: 2 }} gap={8} align="center" className="site-container home-festival-inner">
           <MediaTheme mode="dark">
             <VStack gap={4} hAlign="start" className="home-festival-head">
-              <Text type="eyebrow">群馬大学作曲部</Text>
               <Heading level={2} type="festival-title" id="home-festival-title" className="home-festival-title">
                 {aramaki2026.name}
                 <Text type="time" className="home-festival-year">{aramaki2026.year}</Text>

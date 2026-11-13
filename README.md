@@ -133,7 +133,7 @@ ZIPを含むローカル総合試験の手順と本番Cloudflare設定は[`docs/
 - React 19
 - TypeScript
 - [Astryx Design System](https://github.com/meta/astryx)（Meta公式、MITライセンス。ボタン・メニュー・入力欄などの部品と、作品ごとのテーマ）
-- Framer Motion（題字やジャケットの動き）
+- 動きはCSS（アニメーション用のライブラリは使っていません）
 - Tailwind CSS v4（Astryxのテーマと連動）
 - 静的エクスポート（`output: "export"`）
 

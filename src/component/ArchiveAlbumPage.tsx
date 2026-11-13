@@ -81,7 +81,6 @@ export default function ArchiveAlbumPage({ album }: { album: ArchiveAlbum }) {
           <Grid columns={{ minWidth: 340, max: 2 }} gap={10} align="start" className="site-container cosmos-layout">
             <StackItem className="cosmos-sleeve">
               <VStack gap={6}>
-                <Text type="eyebrow">群馬大学作曲部 {ordinal}</Text>
                 {/* data-textは、題字の後ろにシアンとマゼンタをずらして重ねる飾り（作品のCSS）が使います。 */}
                 <Heading level={1} type="album-title" id="archive-album-title" className="cosmos-title" data-text={album.title}>
                   {album.title}
@@ -89,6 +88,7 @@ export default function ArchiveAlbumPage({ album }: { album: ArchiveAlbum }) {
                 <ArchiveArtworkStage title={album.title} artwork={album.artwork} world="horoscope" />
                 {/* 星の観測記録のように、作品の基本情報を項目と値で並べます。 */}
                 <MetadataList label={{ position: "start", width: "4.5rem" }} className="cosmos-record">
+                  <MetadataListItem label="作品">群馬大学作曲部 {ordinal}</MetadataListItem>
                   <MetadataListItem label="年度">{album.year}年</MetadataListItem>
                   <MetadataListItem label="収録">{count}</MetadataListItem>
                 </MetadataList>
