@@ -97,3 +97,34 @@ test("傾く飾りは3D空間を共有させず、後ろの飾りが手前へ飛
   assert.match(tansan, /\.tansan-polaroid-frame \{[^}]*z-index: 1;[^}]*transform: perspective\(900px\)/);
   assert.match(tansan, /\.tansan-disc \{[^}]*z-index: 0;/);
 });
+
+test("作品ページの面・枠・題字は、3作品のテーマに同じ名前のvariantとして定義する", async () => {
+  for (const world of ["tansan", "horoscope", "nijiiro"]) {
+    const theme = await source(`src/themes/${world}/${world}Theme.ts`);
+    for (const key of ["'variant:stage'", "'variant:band'", "'variant:panel'", "'variant:jacket'", "'type:album-title'", "'type:eyebrow'", "'type:track-number'"]) {
+      assert.ok(theme.includes(key), `${world}: ${key}`);
+    }
+    // 生成済みのテーマにも反映されていること（theme build のし忘れを防ぎます）。
+    const built = await source(`src/themes/${world}/${world}.css`);
+    assert.match(built, /\.astryx-section\[data-variant="stage"\]/, world);
+    assert.match(built, /\.astryx-heading\[data-type="album-title"\]/, world);
+  }
+  const page = await source("src/component/ArchiveAlbumPage.tsx");
+  assert.match(page, /variant="stage"/);
+  assert.match(await source("src/app/TansanYohou/page.tsx"), /variant="stage"/);
+});
+
+test("見出しや段落ごとに現れる演出は付けず、動きは各ページの見せ場の一度きりにする", async () => {
+  const files = [
+    "src/app/TansanYohou/page.tsx",
+    "src/app/aramakisai2026/page.tsx",
+    "src/component/ArchiveAlbumPage.tsx",
+    "src/component/Mainpage.tsx",
+    "src/component/ui/TrackList.tsx",
+    "src/component/ui/SectionHeading.tsx",
+    "src/component/ui/AlbumShelf.tsx",
+    "src/component/CrossfadeVideo.tsx",
+  ];
+  for (const file of files) assert.doesNotMatch(await source(file), /data-reveal/, file);
+  assert.doesNotMatch(await source("src/component/AlbumMotion.tsx"), /IntersectionObserver/);
+});

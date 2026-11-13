@@ -1,392 +1,698 @@
 /*
  * 荒牧祭の世界の飾りです（2026年 荒牧祭の特設ページ）。
  * 作曲部のポスターを根拠にしています：
- * - DJステージ・物販：白い紙に鮮やかな群青、注意ラベルの黄色、群青の帯に白い縁取りの太字、方眼、四方に伸びる星。
- * - 野外ステージ：淡い水色の水彩、細い線で区切った出演順。
- * 基本の色・書体は src/themes/aramaki/aramakiTheme.ts、ここは絵と見出しと動きだけです。
- * すべて .site-world--aramaki の中に限定します。
+ * - DJステージ：白い紙に鮮やかな群青、注意ラベルの黄色、警告の三角、作曲ソフトの画面（ミキサーの赤いメーター）、
+ *   群青の帯に白い縁取りの太字、縦長の数字のタイムテーブル。
+ * - 物販：群青と星、白い紙のカード。 - 野外ステージ：淡い水色の水彩、細い線で区切った出演順。
+ * 面の色・題字・札の形は src/themes/aramaki/aramakiTheme.ts（stage・band・panel・sky・festival-title・poster-heading・eyebrow・time）。
+ * ここは、テーマでは描けない絵（三角・方眼・メーター・波形・再生ヘッド）と、タイムラインの並べ方だけです。
+ * すべて .site-world--aramaki の中に限定します。動きはページを開いたときに一度だけです。
  */
 .site-world--aramaki {
   --aramaki-blue: #1d14d4;
+  --aramaki-bright: #4e46ff;
   --aramaki-yellow: #ffe600;
   --aramaki-ink: #0d0b2b;
+  --aramaki-paper: #f4f4f6;
+  --aramaki-graphite: #1b1a24;
+  --aramaki-meter: #ff2d2d;
+  --dj-head: 8.5rem;
 }
 
 .site-world--aramaki .site-main.aramaki-main {
   padding-top: var(--site-header-height);
 }
 
-/* ヒーロー：群青の地に方眼と星。 */
-.site-world--aramaki .aramaki-hero {
+/* ===== 冒頭 ===== */
+.site-world--aramaki .fest-hero {
   position: relative;
   isolation: isolate;
   overflow: clip;
-  padding: clamp(2.5rem, 7vw, 5rem) 0 clamp(3rem, 8vw, 5.5rem);
-  background: var(--aramaki-blue);
-  color: #fff;
 }
 
-.site-world--aramaki .aramaki-hero-deco {
+/* 紙に刷った方眼。 */
+.site-world--aramaki .fest-hero::before {
+  content: "";
   position: absolute;
   inset: 0;
   z-index: -1;
+  background-image:
+    linear-gradient(rgb(29 20 212 / 9%) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(29 20 212 / 9%) 1px, transparent 1px);
+  background-size: 3rem 1.5rem;
+  translate: 0 calc(var(--depth-scene, 0px) * 0.5);
+}
+
+.site-world--aramaki .fest-hero-copy {
+  min-width: 0;
+  padding: clamp(2.5rem, 7vw, 5rem) var(--site-gutter) clamp(2rem, 5vw, 3rem);
+}
+
+/* 題字：テーマの festival-title に、開いた瞬間だけ黄色と群青の版が横にずれて走る「グリッチ」を重ねます。 */
+.site-world--aramaki .fest-title {
+  position: relative;
+  max-width: 100%;
+  font-size: clamp(4rem, 19vw, 9.5rem);
+  white-space: nowrap;
+}
+
+@media (min-width: 64rem) {
+  .site-world--aramaki .fest-title {
+    font-size: min(9.5rem, 10.5vw);
+  }
+}
+
+.site-world--aramaki .fest-title::before,
+.site-world--aramaki .fest-title::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0 auto auto 0.08em;
+  pointer-events: none;
+  -webkit-text-stroke: 0;
+  text-shadow: none;
+  opacity: 0;
+}
+
+.site-world--aramaki .fest-title::before {
+  -webkit-text-fill-color: var(--aramaki-yellow);
+  animation: fest-glitch-a 900ms steps(1, end) 200ms 1 both;
+}
+
+.site-world--aramaki .fest-title::after {
+  -webkit-text-fill-color: var(--aramaki-bright);
+  animation: fest-glitch-b 900ms steps(1, end) 200ms 1 both;
+}
+
+@keyframes fest-glitch-a {
+  0% { opacity: 1; clip-path: inset(10% 0 62% 0); translate: -0.08em 0; }
+  20% { clip-path: inset(55% 0 20% 0); translate: 0.1em 0; }
+  40% { clip-path: inset(30% 0 48% 0); translate: -0.14em 0; }
+  60% { clip-path: inset(72% 0 6% 0); translate: 0.06em 0; }
+  80% { clip-path: inset(0 0 80% 0); translate: -0.04em 0; }
+  100% { opacity: 0; }
+}
+
+@keyframes fest-glitch-b {
+  0% { opacity: 1; clip-path: inset(60% 0 12% 0); translate: 0.12em 0; }
+  25% { clip-path: inset(18% 0 58% 0); translate: -0.1em 0; }
+  50% { clip-path: inset(40% 0 34% 0); translate: 0.16em 0; }
+  75% { clip-path: inset(84% 0 0 0); translate: -0.06em 0; }
+  100% { opacity: 0; }
+}
+
+.site-world--aramaki .fest-title-year {
+  margin-inline-start: 0.2em;
+  color: var(--aramaki-yellow);
+  -webkit-text-fill-color: var(--aramaki-yellow);
+  -webkit-text-stroke: 0.02em var(--aramaki-ink);
+  font-size: 0.36em;
+  text-shadow: 0.06em 0.06em 0 var(--aramaki-ink);
+}
+
+/* 日付：ポスターと同じ、群青の帯に白抜きの縦長の数字。 */
+.site-world--aramaki .fest-dates {
+  padding: 0.05em 0.4em;
+  background: var(--aramaki-blue);
+  color: #fff;
+  font-size: clamp(1.75rem, 6vw, 3rem);
+  line-height: 1.25;
+}
+
+.site-world--aramaki .fest-campus {
+  font-size: clamp(1rem, 2.5vw, 1.25rem);
+}
+
+/* 右の列：ポスターの右の群青の列と、巨大な警告の三角。その上に「日程と場所」の白い面を重ねます。 */
+.site-world--aramaki .fest-hero-side {
+  position: relative;
+  isolation: isolate;
+  justify-content: flex-end;
+  min-width: 0;
+  padding: clamp(2rem, 5vw, 3rem) var(--site-gutter);
+  background: var(--aramaki-blue);
+}
+
+.site-world--aramaki .fest-hero-side::before,
+.site-world--aramaki .fest-hero-side::after {
+  content: "";
+  position: absolute;
+  top: clamp(-1rem, -2vw, 0rem);
+  right: -8%;
+  z-index: -1;
+  width: min(34rem, 110%);
+  aspect-ratio: 1.12;
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
   pointer-events: none;
 }
 
-.site-world--aramaki .aramaki-grid {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  width: min(60%, 34rem);
-  height: 70%;
-  background-image:
-    linear-gradient(rgb(255 255 255 / 35%) 1px, transparent 1px),
-    linear-gradient(90deg, rgb(255 255 255 / 35%) 1px, transparent 1px);
-  background-size: 3rem 1.5rem;
-  mask-image: linear-gradient(200deg, #000 30%, transparent 85%);
-  translate: 0 var(--depth-scene, 0);
-}
-
-/* ポスターと同じ、四方に細く伸びる星。 */
-.site-world--aramaki .aramaki-star {
-  position: absolute;
-  aspect-ratio: 1;
-  background: #fff;
-  clip-path: polygon(50% 0, 54% 46%, 100% 50%, 54% 54%, 50% 100%, 46% 54%, 0 50%, 46% 46%);
-  rotate: var(--depth-turn, 0deg);
-}
-
-.site-world--aramaki .aramaki-star--1 {
-  top: 8%;
-  right: 6%;
-  width: clamp(5rem, 14vw, 10rem);
-}
-
-.site-world--aramaki .aramaki-star--2 {
-  top: 58%;
-  right: 30%;
-  width: clamp(2.5rem, 6vw, 4.5rem);
+.site-world--aramaki .fest-hero-side::before {
   background: var(--aramaki-yellow);
+  animation: fest-triangle-in 700ms cubic-bezier(0.2, 0.8, 0.2, 1) 1 both;
 }
 
-.site-world--aramaki .aramaki-star--3 {
-  bottom: 6%;
-  left: 52%;
-  width: clamp(1.75rem, 4vw, 3rem);
-}
-
-.site-world--aramaki .aramaki-hero-inner {
-  display: grid;
-  justify-items: start;
-  gap: 0.75rem;
-}
-
-.site-world--aramaki .aramaki-kicker {
-  padding: 0.25rem 0.75rem;
-  background: var(--aramaki-yellow);
-  color: var(--aramaki-ink);
-  font-family: var(--font-family-heading);
-  font-size: clamp(1rem, 2.6vw, 1.375rem);
-  letter-spacing: 0.04em;
-}
-
-/* 見出し：白い縁取りの黒い太字を、群青より明るい青の帯へずらして重ねます（ポスターの題字と同じ作り）。 */
-.site-world--aramaki .aramaki-title {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0 0.3em;
-  margin: 0.25rem 0;
-  font-family: var(--font-family-heading);
-  font-size: clamp(3.75rem, 17vw, 9rem);
-  font-weight: 400;
-  line-height: 1.1;
-  white-space: nowrap;
-  overflow-wrap: normal;
-}
-
-.site-world--aramaki .aramaki-title > span:first-child {
-  padding: 0 0.08em;
-  background: linear-gradient(transparent 18%, #4e46ff 18% 82%, transparent 82%);
-  color: var(--aramaki-ink);
-  -webkit-text-stroke: 0.035em #fff;
-  paint-order: stroke fill;
-  text-shadow: 0.05em 0.05em 0 #fff;
-  animation: aramaki-title-in 700ms cubic-bezier(0.2, 0.8, 0.2, 1) 1 both;
-}
-
-.site-world--aramaki .aramaki-title-year {
-  color: var(--aramaki-yellow);
-  font-family: var(--font-display-condensed), var(--font-family-heading);
-  font-size: 0.42em;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-}
-
-@keyframes aramaki-title-in {
-  from { translate: -0.15em 0; clip-path: inset(0 100% 0 0); }
-  to { translate: 0 0; clip-path: inset(0 0 0 0); }
-}
-
-.site-world--aramaki .aramaki-dates {
-  font-family: var(--font-display-condensed), var(--font-family-body);
-  font-size: clamp(1.5rem, 5vw, 2.5rem);
-  font-weight: 700;
-  letter-spacing: 0.06em;
-}
-
-.site-world--aramaki .aramaki-campus {
-  font-weight: 700;
-}
-
-.site-world--aramaki .aramaki-hero-actions {
-  margin-top: 1rem;
-}
-
-/* 区切りの見出し：白い縁取りの太字＋群青の帯。 */
-.site-world--aramaki .site-section h2 {
-  width: fit-content;
-  padding: 0 0.15em;
-  background: linear-gradient(transparent 30%, #c9c7ff 30% 88%, transparent 88%);
-  font-size: clamp(1.75rem, 6vw, 2.75rem);
-}
-
-.site-world--aramaki .aramaki-label {
-  margin-bottom: 1.25rem;
-}
-
-.site-world--aramaki .aramaki-time {
-  font-family: var(--font-display-condensed), var(--font-family-body);
-  font-size: clamp(1.125rem, 3.5vw, 1.5rem);
-  font-weight: 500;
-  letter-spacing: 0.06em;
-}
-
-/* 野外ステージ：ポスターの水彩の空色を、この区切りだけに広げます。 */
-.site-world--aramaki .aramaki-outdoor {
-  padding: clamp(2.5rem, 7vw, 4.5rem) 0;
+/* 三角の内側を群青で抜き、黄色い「！」を描きます。 */
+.site-world--aramaki .fest-hero-side::after {
+  scale: 0.74;
+  translate: 0 8%;
   background:
-    radial-gradient(ellipse 45% 60% at 0% 20%, rgb(78 178 255 / 55%), transparent 70%),
-    radial-gradient(ellipse 40% 55% at 100% 70%, rgb(78 178 255 / 50%), transparent 70%),
-    radial-gradient(ellipse 50% 40% at 70% 0%, rgb(170 220 255 / 60%), transparent 70%),
-    #eef7ff;
+    radial-gradient(circle at 50% 80%, var(--aramaki-yellow) 0 5.5%, transparent 5.8%),
+    linear-gradient(var(--aramaki-yellow), var(--aramaki-yellow)) 50% 34% / 9% 34% no-repeat,
+    var(--aramaki-blue);
+  animation: fest-triangle-in 700ms cubic-bezier(0.2, 0.8, 0.2, 1) 120ms 1 both;
 }
 
-.site-world--aramaki .aramaki-outdoor h2 {
-  background: none;
-  color: var(--aramaki-ink);
-  -webkit-text-stroke: 0;
-  text-shadow: 0.06em 0.06em 0 #5ad8e6;
+@keyframes fest-triangle-in {
+  from { translate: 30% -20%; opacity: 0; }
 }
 
-.site-world--aramaki .aramaki-outdoor-heading {
-  margin-bottom: 1.5rem;
-}
-
-.site-world--aramaki .aramaki-outdoor-card {
-  background: rgb(255 255 255 / 82%);
-  border: 1px solid #b9dcf5;
-}
-
-.site-world--aramaki .aramaki-acts {
-  display: grid;
-}
-
-.site-world--aramaki .aramaki-acts > li {
-  display: grid;
-  grid-template-columns: 2.25rem minmax(0, 1fr);
-  gap: 0.75rem;
-  padding: 1rem 0;
-  border-top: 2px solid var(--aramaki-ink);
-}
-
-.site-world--aramaki .aramaki-act-number {
-  display: grid;
-  place-items: center;
-  width: 2rem;
-  height: 2rem;
-  border: 2px solid var(--aramaki-ink);
-  border-radius: 50%;
-  font-family: var(--font-display-condensed), var(--font-family-body);
-  font-weight: 700;
-}
-
-.site-world--aramaki .aramaki-act-copy {
-  display: grid;
-  gap: 0.25rem;
-  min-width: 0;
-}
-
-/* DJステージ：注意ラベル風の見出しと、縦長の数字で並べた時刻表。 */
-.site-world--aramaki .aramaki-dj-heading {
-  margin-bottom: 2rem;
-}
-
-.site-world--aramaki .aramaki-caution-strip {
-  width: fit-content;
-  padding: 0.25rem 0.75rem;
-  border: 2px solid var(--aramaki-ink);
+.site-world--aramaki .fest-side-heading {
+  align-self: flex-start;
+  padding: 0 0.4em;
   background: var(--aramaki-yellow);
   color: var(--aramaki-ink);
-  font-family: var(--font-display-condensed), var(--font-family-body);
-  font-weight: 700;
-  font-size: clamp(0.75rem, 3.2vw, 1rem);
-  letter-spacing: 0.14em;
-  max-width: 100%;
+  font-size: clamp(1.25rem, 3vw, 1.5rem);
 }
 
-.site-world--aramaki .aramaki-day {
-  min-width: 0;
+.site-world--aramaki .fest-summary-panel {
+  box-shadow: 8px 8px 0 var(--aramaki-yellow);
 }
 
-.site-world--aramaki .aramaki-day-heading {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0.25rem 1rem;
-  padding-bottom: 0.75rem;
-  border-bottom: 3px solid var(--aramaki-blue);
-}
-
-.site-world--aramaki .aramaki-day-heading h3 {
-  color: var(--aramaki-blue);
-  font-family: var(--font-display-condensed), var(--font-family-heading);
-  font-size: clamp(2.25rem, 8vw, 3.25rem);
-  font-weight: 500;
-  line-height: 1;
-}
-
-.site-world--aramaki .aramaki-slots > li {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.25rem 1rem;
-  min-height: 3.5rem;
-  padding: 0.5rem 0;
-  border-bottom: 1px solid var(--color-border);
-}
-
-.site-world--aramaki .aramaki-slot-time {
-  min-width: 7.5rem;
-  color: var(--color-text-secondary);
-  font-family: var(--font-display-condensed), var(--font-family-body);
-  font-size: 1.125rem;
-  font-weight: 500;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: 0.04em;
-}
-
-.site-world--aramaki .aramaki-slot-name {
-  min-width: 0;
-  font-family: var(--font-display-condensed), var(--font-family-body);
-  font-size: clamp(1.25rem, 4.5vw, 1.625rem);
-  font-weight: 700;
-}
-
-.site-world--aramaki .aramaki-cautions {
-  margin-top: 2.5rem;
-}
-
-/* 物販：ポスターと同じ、薄い灰色のカードにジャケット3枚と価格表。 */
-.site-world--aramaki .aramaki-merch {
-  margin-top: 1.5rem;
-  border: 2px solid var(--aramaki-ink);
-}
-
-.site-world--aramaki .aramaki-merch-albums {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: clamp(0.75rem, 3vw, 1.5rem);
-}
-
-.site-world--aramaki .aramaki-merch-albums > li {
-  display: grid;
-  gap: 0.25rem;
-  justify-items: center;
-  text-align: center;
-  min-width: 0;
-}
-
-.site-world--aramaki .aramaki-merch-albums img {
-  width: 100%;
-  max-width: 11rem;
-  height: auto;
-  aspect-ratio: 1;
-  padding: 0.375rem;
-  background: #fff;
-  object-fit: cover;
-  box-shadow: 0 2px 8px rgb(13 11 43 / 18%);
-}
-
-.site-world--aramaki .aramaki-prices,
-.site-world--aramaki .aramaki-deals dl {
-  display: grid;
-  gap: 0.25rem;
-}
-
-.site-world--aramaki .aramaki-prices > div,
-.site-world--aramaki .aramaki-deals dl > div {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 0 1rem;
-}
-
-.site-world--aramaki .aramaki-prices dt {
-  font-size: clamp(1.25rem, 4.5vw, 1.75rem);
-  letter-spacing: 0.08em;
-}
-
-.site-world--aramaki .aramaki-prices dd,
-.site-world--aramaki .aramaki-deals dd {
-  font-family: var(--font-display-condensed), var(--font-family-body);
-  font-size: clamp(1.75rem, 7vw, 2.75rem);
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-}
-
-.site-world--aramaki .aramaki-deals {
-  position: relative;
-  padding: 1.75rem clamp(1rem, 3vw, 1.5rem) 1rem;
-  border: 2px solid var(--aramaki-ink);
-  border-radius: var(--radius-page);
-}
-
-.site-world--aramaki .aramaki-deals-label {
-  position: absolute;
-  top: 0;
-  left: 1rem;
-  translate: 0 -55%;
-  padding: 0 0.5rem;
-  background: var(--aramaki-blue);
-  color: var(--aramaki-yellow);
-  font-family: var(--font-family-heading);
+.site-world--aramaki .festival-summary-time {
   font-size: 1.25rem;
 }
 
-.site-world--aramaki .aramaki-deals dd {
+@media (min-width: 64rem) {
+  .site-world--aramaki .fest-hero-grid {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    min-height: min(46rem, calc(100svh - var(--site-header-height) - 6rem));
+  }
+
+  .site-world--aramaki .fest-hero-copy {
+    justify-content: center;
+    padding-inline-start: max(var(--site-gutter), calc((100vw - var(--site-content-width)) / 2));
+  }
+
+  .site-world--aramaki .fest-hero-side {
+    padding-inline-end: max(var(--site-gutter), calc((100vw - var(--site-content-width)) / 2));
+  }
+}
+
+/* 音圧警告ラベル：ポスターの、角を斜めに落とした枠のラベル。冒頭の下の端を横切ります。 */
+.site-world--aramaki .caution-label {
+  position: relative;
+  padding: 0.75rem clamp(1rem, 3vw, 2rem);
+  border-block: 2px solid var(--aramaki-ink);
+  background: #fff;
+  color: var(--aramaki-ink);
+}
+
+.site-world--aramaki .caution-label-head {
+  font-size: clamp(0.75rem, 1.8vw, 0.9375rem);
+  letter-spacing: 0.32em;
+}
+
+.site-world--aramaki .caution-label-big {
+  font-family: var(--font-display-block), var(--font-family-heading);
+  font-size: clamp(1.75rem, 5vw, 2.75rem);
+  letter-spacing: 0.4em;
+  line-height: 1.2;
+}
+
+.site-world--aramaki .caution-label-sub {
+  font-size: 0.75rem;
+  letter-spacing: 0.28em;
+}
+
+.site-world--aramaki .caution-label-name {
+  font-size: clamp(1.125rem, 3vw, 1.5rem);
+  letter-spacing: 0.06em;
+}
+
+/* 右側の、ミキサーのつまみ代わりの目盛り。 */
+.site-world--aramaki .caution-label-meter {
+  flex: 1 1 14rem;
+  padding: 0.5rem 0 0.5rem 1rem;
+  border-left: 2px solid var(--aramaki-ink);
+  background:
+    repeating-linear-gradient(90deg, var(--aramaki-ink) 0 2px, transparent 2px 0.9rem) 1rem 0.35rem / calc(100% - 1rem) 0.4rem no-repeat;
+}
+
+/* ===== DJステージ ===== */
+.site-world--aramaki .fest-dj {
+  position: relative;
+  padding-bottom: clamp(3.5rem, 9vw, 7rem);
+  /* 帯の地色と巨大な文字を画面の端で切ります（clip はスクロール領域を作らないので、ポスターの固定表示は効いたままです）。 */
+  overflow-x: clip;
+}
+
+/* 見出しの帯：画面の横幅いっぱいの群青（内側の幅はほかの区切りとそろえたまま、地の色だけ左右に伸ばします）。 */
+.site-world--aramaki .fest-dj-head {
+  position: relative;
+  isolation: isolate;
+  padding-block: clamp(3rem, 8vw, 6rem) clamp(2rem, 5vw, 3.5rem);
+  background: var(--aramaki-blue);
+  box-shadow: 0 0 0 100vmax var(--aramaki-blue);
+  clip-path: inset(0 -100vmax);
+}
+
+/* 輪郭だけの巨大な「DJ STAGE」を、少し傾けて帯の背景に敷きます。 */
+.site-world--aramaki .fest-dj-head::before {
+  content: attr(data-word);
+  position: absolute;
+  top: 50%;
+  left: -6vw;
+  z-index: -1;
+  color: transparent;
+  font-family: var(--font-display-block), sans-serif;
+  font-size: clamp(5rem, 21vw, 19rem);
+  line-height: 0.9;
+  white-space: nowrap;
+  -webkit-text-stroke: 2px rgb(255 255 255 / 30%);
+  translate: 0 -50%;
+  rotate: -4deg;
+  pointer-events: none;
+}
+
+/* 右端の警告の三角（黄色地に群青の「！」）。帯の下の端で切れるように置きます。 */
+.site-world--aramaki .fest-dj-head::after {
+  content: "";
+  position: absolute;
+  right: max(-6rem, -8vw);
+  bottom: -1.5rem;
+  z-index: -1;
+  width: clamp(11rem, 30vw, 22rem);
+  aspect-ratio: 1.12;
+  background:
+    radial-gradient(circle at 50% 82%, var(--aramaki-blue) 0 4.5%, transparent 4.8%),
+    linear-gradient(var(--aramaki-blue), var(--aramaki-blue)) 50% 50% / 8% 34% no-repeat,
+    var(--aramaki-yellow);
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+  rotate: 8deg;
+  pointer-events: none;
+}
+
+/* 見出し：題字と同じ作りに、黄色と明るい群青の版を左右にずらして重ねます（静止）。 */
+.site-world--aramaki .fest-dj-title {
+  font-size: clamp(3rem, 11vw, 6.5rem);
+  text-shadow: -0.06em 0 0 var(--aramaki-yellow), 0.06em 0.04em 0 var(--aramaki-bright);
+}
+
+/*
+ * 会場の部屋番号を、黄色い輪郭の縦長の数字で大きく（読み上げは見出しの下の文で行います）。
+ * 文字の中は帯と同じ群青で塗ります。群青の帯の上では輪郭だけに見え、黄色い三角に重なった部分は群青の文字として読めます。
+ */
+.site-world--aramaki .fest-dj-room {
+  position: relative;
   color: var(--aramaki-blue);
-  text-decoration: underline;
-  text-decoration-thickness: 0.12em;
-  text-underline-offset: 0.12em;
+  font-size: clamp(3rem, 12vw, 8rem);
+  line-height: 0.9;
+  -webkit-text-stroke: 4px var(--aramaki-yellow);
+  paint-order: stroke fill;
 }
 
-.site-world--aramaki .aramaki-deals dt {
-  font-size: clamp(1.0625rem, 4vw, 1.375rem);
+/*
+ * タイムライン（DAWの編集画面）。
+ * PC幅：左にトラック名、右へ時間が流れます。スマホ：左に時刻、2日分のトラックが縦に並ぶ時間割です。
+ * クリップの位置と長さは、DjTimeline がデータから計算した --start・--span（30分単位）で決まります。
+ */
+.site-world--aramaki .dj-daw {
+  position: relative;
+  padding: clamp(0.75rem, 2vw, 1.25rem) clamp(0.75rem, 2vw, 1.25rem) clamp(1rem, 2vw, 1.5rem) clamp(0.75rem, 2vw, 1.25rem);
+  border: 2px solid var(--aramaki-ink);
+  border-radius: 6px;
+  background:
+    linear-gradient(rgb(255 255 255 / 4%), transparent 3rem),
+    var(--aramaki-graphite);
+  box-shadow: 10px 10px 0 var(--aramaki-yellow), 10px 10px 0 2px var(--aramaki-ink);
+  color: #f2f2f7;
 }
 
-/* ポスター：各区切りの内容の横（スマホでは下）に、実物のポスターを置きます。 */
-.site-world--aramaki .aramaki-with-poster {
+/* ミキサーの赤いメーター（ポスターの作曲ソフトの画面）。開いたときに一度だけ振り上がります。PC幅だけに出します。 */
+@media (min-width: 48rem) {
+  .site-world--aramaki .dj-daw {
+    padding-right: 3.25rem;
+  }
+
+  .site-world--aramaki .dj-daw::after {
+    content: "";
+    position: absolute;
+    top: 2.75rem;
+    right: 0.875rem;
+    bottom: 1.25rem;
+    width: 1.375rem;
+    border: 1px solid rgb(255 255 255 / 25%);
+    background:
+      repeating-linear-gradient(180deg, transparent 0 5px, var(--aramaki-graphite) 5px 7px),
+      linear-gradient(0deg, #2fd36b 0 58%, var(--aramaki-yellow) 58% 80%, var(--aramaki-meter) 80% 100%);
+    clip-path: inset(18% 0 0 0);
+    transform-origin: bottom;
+    animation: dj-meter-kick 1400ms cubic-bezier(0.2, 0.8, 0.2, 1) 300ms 1 both;
+    pointer-events: none;
+  }
+}
+
+@keyframes dj-meter-kick {
+  0% { clip-path: inset(100% 0 0 0); }
+  35% { clip-path: inset(2% 0 0 0); }
+  55% { clip-path: inset(40% 0 0 0); }
+  75% { clip-path: inset(12% 0 0 0); }
+  100% { clip-path: inset(18% 0 0 0); }
+}
+
+.site-world--aramaki .dj-ruler {
   display: grid;
-  gap: 2rem;
-  align-items: start;
+  grid-template-columns: repeat(var(--units), minmax(0, 1fr));
+  margin: 0 0 0.5rem var(--dj-head);
+  padding: 0 0 0.375rem;
+  border-bottom: 1px solid rgb(255 255 255 / 25%);
+  list-style: none;
+  color: #c9c8de;
+  font-family: var(--font-display-condensed), sans-serif;
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
 }
 
-.site-world--aramaki .aramaki-with-poster > * {
+.site-world--aramaki .dj-ruler > li {
+  grid-row: 1;
+  grid-column: calc(var(--at) + 1);
+  translate: -50% 0;
+}
+
+.site-world--aramaki .dj-ruler > li:first-child {
+  translate: 0 0;
+}
+
+.site-world--aramaki .dj-ruler > li[data-last] {
+  grid-column: var(--units);
+  justify-self: end;
+  translate: 0 0;
+}
+
+.site-world--aramaki .dj-track {
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--dj-head) minmax(0, 1fr);
+  align-items: stretch;
+}
+
+.site-world--aramaki .dj-track + .dj-track {
+  margin-top: 0.5rem;
+}
+
+.site-world--aramaki .dj-track-head {
+  justify-content: center;
+  padding: 0.5rem 0.75rem;
+  border-left: 6px solid var(--aramaki-yellow);
+  background: #2a2936;
+}
+
+.site-world--aramaki .dj-track[data-track="2"] .dj-track-head {
+  border-left-color: var(--aramaki-bright);
+}
+
+.site-world--aramaki .dj-track-name {
+  color: #fff;
+  font-family: var(--font-display-condensed), var(--font-family-heading);
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.site-world--aramaki .dj-track-date {
+  color: #c9c8de;
+  font-size: 0.8125rem;
+}
+
+/* レーン：30分ごとの細い線（拍の区切り）を引いた、少し明るい帯。 */
+.site-world--aramaki .dj-lane {
+  display: grid;
+  grid-template-columns: repeat(var(--units), minmax(0, 1fr));
+  min-height: 7.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background:
+    repeating-linear-gradient(90deg, rgb(255 255 255 / 12%) 0 1px, transparent 1px calc(100% / var(--units))),
+    #24232f;
+}
+
+/* クリップ：群青・黄・紙の3色を順番に。上に濃い帯、下に波形。 */
+.site-world--aramaki .dj-clip {
+  --clip-bg: var(--aramaki-blue);
+  --clip-ink: #fff;
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  grid-row: 1;
+  grid-column: calc(var(--start) + 1) / span var(--span);
   min-width: 0;
+  margin: 2px;
+  padding: 0.875rem 0.625rem 2.25rem;
+  overflow: hidden;
+  border: 1px solid rgb(0 0 0 / 45%);
+  border-radius: 3px;
+  background: var(--clip-bg);
+  color: var(--clip-ink);
 }
 
+.site-world--aramaki .dj-clip[data-tone="1"] {
+  --clip-bg: var(--aramaki-yellow);
+  --clip-ink: var(--aramaki-ink);
+}
+
+.site-world--aramaki .dj-clip[data-tone="2"] {
+  --clip-bg: var(--aramaki-paper);
+  --clip-ink: var(--aramaki-ink);
+}
+
+.site-world--aramaki .dj-clip::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 0.375rem;
+  background: rgb(0 0 0 / 28%);
+}
+
+.site-world--aramaki .dj-clip::after {
+  content: "";
+  position: absolute;
+  inset: auto 0.375rem 0.375rem;
+  z-index: -1;
+  height: 1.5rem;
+  background: repeating-linear-gradient(90deg, currentColor 0 2px, transparent 2px 4px);
+  opacity: 0.4;
+  mask-image:
+    radial-gradient(ellipse 12% 50% at 8% 50%, #000 60%, transparent 62%),
+    radial-gradient(ellipse 18% 46% at 30% 50%, #000 60%, transparent 62%),
+    radial-gradient(ellipse 10% 34% at 52% 50%, #000 60%, transparent 62%),
+    radial-gradient(ellipse 20% 50% at 74% 50%, #000 60%, transparent 62%),
+    radial-gradient(ellipse 9% 30% at 94% 50%, #000 60%, transparent 62%);
+}
+
+.site-world--aramaki .dj-clip-time {
+  color: inherit;
+  font-size: 0.875rem;
+  opacity: 0.85;
+}
+
+.site-world--aramaki .dj-clip-name {
+  color: inherit;
+  font-family: var(--font-display-block), var(--font-family-heading);
+  font-size: clamp(1rem, 1.6vw, 1.375rem);
+  font-weight: 400;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+/* 再生ヘッド：当日だけ、現在時刻に赤い線が立ちます。 */
+.site-world--aramaki .dj-playhead {
+  position: absolute;
+  top: -0.5rem;
+  bottom: 0;
+  left: calc(var(--dj-head) + var(--at) * (100% - var(--dj-head)));
+  z-index: 2;
+  width: 2px;
+  background: var(--aramaki-meter);
+  box-shadow: 0 0 10px var(--aramaki-meter);
+  pointer-events: none;
+}
+
+.site-world--aramaki .dj-playhead::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -0.4375rem;
+  width: 0.9375rem;
+  height: 0.75rem;
+  background: var(--aramaki-meter);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+}
+
+/* スマホ：時間を縦に。左に時刻、2日分のトラックを横に並べた時間割です。 */
+@media (max-width: 47.99rem) {
+  .site-world--aramaki .dj-daw {
+    --dj-head: 4.75rem;
+    display: grid;
+    grid-template-columns: 2.75rem;
+    grid-auto-columns: minmax(0, 1fr);
+    grid-auto-flow: column;
+    column-gap: 0.375rem;
+  }
+
+  .site-world--aramaki .dj-ruler {
+    grid-template-columns: none;
+    grid-template-rows: repeat(var(--units), 2.75rem);
+    margin: var(--dj-head) 0 0;
+    padding: 0;
+    border-bottom: 0;
+    font-size: 0.8125rem;
+  }
+
+  .site-world--aramaki .dj-ruler > li,
+  .site-world--aramaki .dj-ruler > li:first-child {
+    grid-column: 1;
+    grid-row: calc(var(--at) + 1);
+    translate: 0 -50%;
+  }
+
+  .site-world--aramaki .dj-ruler > li:first-child {
+    translate: 0 0;
+  }
+
+  .site-world--aramaki .dj-ruler > li[data-last] {
+    grid-column: 1;
+    grid-row: var(--units);
+    align-self: end;
+    translate: 0 50%;
+  }
+
+  .site-world--aramaki .dj-track {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: var(--dj-head) auto;
+  }
+
+  .site-world--aramaki .dj-track + .dj-track {
+    margin-top: 0;
+  }
+
+  .site-world--aramaki .dj-track-head {
+    border-left: 0;
+    border-top: 6px solid var(--aramaki-yellow);
+  }
+
+  .site-world--aramaki .dj-track[data-track="2"] .dj-track-head {
+    border-top-color: var(--aramaki-bright);
+  }
+
+  .site-world--aramaki .dj-track-name {
+    font-size: 1.5rem;
+  }
+
+  .site-world--aramaki .dj-lane {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: repeat(var(--units), 2.75rem);
+    min-height: 0;
+    background:
+      repeating-linear-gradient(180deg, rgb(255 255 255 / 12%) 0 1px, transparent 1px 2.75rem),
+      #24232f;
+  }
+
+  .site-world--aramaki .dj-clip {
+    grid-column: 1;
+    grid-row: calc(var(--start) + 1) / span var(--span);
+    padding: 0.75rem 0.5rem 0.5rem;
+  }
+
+  .site-world--aramaki .dj-clip::after {
+    inset: auto 0.25rem 0.25rem;
+    height: 1rem;
+  }
+
+  .site-world--aramaki .dj-playhead {
+    top: calc(var(--dj-head) + var(--at) * (100% - var(--dj-head)));
+    bottom: auto;
+    left: -0.25rem;
+    right: 0;
+    width: auto;
+    height: 2px;
+  }
+
+  .site-world--aramaki .dj-playhead::before {
+    top: -0.4375rem;
+    left: 0;
+    width: 0.75rem;
+    height: 0.9375rem;
+    clip-path: polygon(0 0, 100% 50%, 0 100%);
+  }
+}
+
+/* 注意書き：ポスターの右の列と同じ、群青の地に黄色い帯の見出し。 */
+.site-world--aramaki .fest-cautions {
+  border: 2px solid var(--aramaki-ink);
+  border-radius: 6px;
+  box-shadow: 8px 8px 0 var(--aramaki-yellow);
+}
+
+.site-world--aramaki .fest-caution-title {
+  padding: 0.05em 0.35em;
+  background: var(--aramaki-yellow);
+  color: var(--aramaki-ink);
+  font-size: clamp(1.375rem, 3vw, 1.75rem);
+}
+
+/* ===== 野外ステージ（水彩の空） ===== */
+.site-world--aramaki .fest-outdoor {
+  margin-top: 0;
+}
+
+.site-world--aramaki .fest-outdoor-time {
+  font-size: clamp(1.5rem, 4vw, 2.25rem);
+}
+
+.site-world--aramaki .fest-setlist {
+  border-top: 2px solid var(--aramaki-ink);
+}
+
+/* ===== 物販 ===== */
+.site-world--aramaki .fest-merch-art {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  border: 2px solid var(--aramaki-ink);
+  object-fit: cover;
+}
+
+.site-world--aramaki .fest-price {
+  padding-block: 0.5rem;
+  border-bottom: 2px dotted rgb(13 11 43 / 35%);
+}
+
+.site-world--aramaki .fest-price-value {
+  color: var(--aramaki-blue);
+  font-size: clamp(2.25rem, 7vw, 3.5rem);
+  line-height: 1;
+}
+
+.site-world--aramaki .fest-deals {
+  padding: 1rem 1.25rem;
+  border: 2px solid var(--aramaki-ink);
+  border-radius: 6px;
+  background: #fffbd1;
+}
+
+.site-world--aramaki .fest-price-value--deal {
+  color: var(--aramaki-ink);
+}
+
+.site-world--aramaki .fest-access {
+  margin-bottom: 0;
+}
+
+/* ===== ポスター（PosterFigure） ===== */
 .site-world--aramaki .aramaki-poster {
   display: grid;
   gap: 0.5rem;
@@ -419,14 +725,6 @@
   text-align: center;
 }
 
-.site-world--aramaki .aramaki-merch-area {
-  margin-top: 1.5rem;
-}
-
-.site-world--aramaki .aramaki-merch-area .aramaki-merch {
-  margin-top: 0;
-}
-
 @media (hover: hover) and (pointer: fine) {
   .site-world--aramaki .aramaki-poster-link:hover {
     transform: translate(-3px, -3px) rotate(-0.6deg);
@@ -435,42 +733,67 @@
 }
 
 @media (min-width: 64rem) {
-  .site-world--aramaki .aramaki-with-poster {
+  .site-world--aramaki :where(.fest-dj-notes, .fest-outdoor-grid, .fest-merch-grid) {
     grid-template-columns: minmax(0, 1fr) 20rem;
-    gap: 3rem;
   }
 
-  .site-world--aramaki .aramaki-poster {
-    margin: 0;
+  .site-world--aramaki :where(.fest-dj-notes, .fest-outdoor-grid, .fest-merch-grid) .aramaki-poster {
     position: sticky;
     top: calc(var(--site-header-height) + 1.5rem);
+    margin: 0;
   }
 }
 
+/* 動きは一度だけ。動きを減らす設定では、グリッチ・三角の登場・方眼の視差をすべて止めます。 */
 @media (prefers-reduced-motion: reduce) {
-  .site-world--aramaki .aramaki-poster-link {
-    transition: none;
-  }
-
-  .site-world--aramaki .aramaki-title > span:first-child {
+  .site-world--aramaki .fest-title::before,
+  .site-world--aramaki .fest-title::after,
+  .site-world--aramaki .fest-hero-side::before,
+  .site-world--aramaki .fest-hero-side::after {
     animation: none;
   }
 
-  .site-world--aramaki :where(.aramaki-grid, .aramaki-star) {
-    translate: none !important;
-    rotate: none !important;
+  .site-world--aramaki .fest-hero::before {
+    translate: none;
+  }
+
+  .site-world--aramaki .dj-daw::after {
+    animation: none;
+  }
+
+  .site-world--aramaki .aramaki-poster-link {
+    transition: none;
   }
 }
 
 @media (forced-colors: active) {
-  .site-world--aramaki .aramaki-hero-deco {
+  .site-world--aramaki .fest-hero::before,
+  .site-world--aramaki .fest-hero-side::before,
+  .site-world--aramaki .fest-hero-side::after,
+  .site-world--aramaki .fest-title::before,
+  .site-world--aramaki .fest-title::after,
+  .site-world--aramaki .fest-dj-head::before,
+  .site-world--aramaki .fest-dj-head::after,
+  .site-world--aramaki .dj-daw::after,
+  .site-world--aramaki .dj-clip::after,
+  .site-world--aramaki .caution-label-meter {
     display: none;
   }
 
-  .site-world--aramaki .aramaki-title > span:first-child {
+  .site-world--aramaki .fest-title,
+  .site-world--aramaki .fest-dj-title {
+    -webkit-text-fill-color: CanvasText;
+    -webkit-text-stroke: 0;
     background: none;
+    text-shadow: none;
+  }
+
+  .site-world--aramaki .fest-dj-room {
     color: CanvasText;
     -webkit-text-stroke: 0;
-    text-shadow: none;
+  }
+
+  .site-world--aramaki .dj-clip {
+    border: 1px solid CanvasText;
   }
 }

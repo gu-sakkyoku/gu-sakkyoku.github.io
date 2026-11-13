@@ -22,7 +22,7 @@ export default function AlbumShelf({ exceptYear }: { exceptYear?: number }) {
       {items.map((album) => {
         const tracks = album.discs.reduce((total, disc) => total + disc.tracks.length, 0);
         return (
-          <li key={album.year} data-reveal>
+          <li key={album.year}>
             <World name={worldOfYear(album.year)}>
               <ClickableCard
                 label={`${album.title}の作品・歌詞を見る`}

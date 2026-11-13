@@ -68,7 +68,98 @@ export const nijiiroTheme = defineTheme({
       },
     ],
   },
+  /*
+   * 作品ページの部品の見た目（このテーマの中だけで使える variant / type）。
+   * 名前は3作品で共通（stage・band・panel・jacket・album-title・eyebrow・track-number）で、見た目だけ作品ごとに変えます。
+   */
   components: {
+    section: {
+      // ページ最上部。ジャケットと同じ青紫の地に、薄い緑と桃色の色面を斜めに重ねます。
+      'variant:stage': {
+        backgroundColor: '#a9b1ff',
+        backgroundImage:
+          'linear-gradient(115deg, transparent 0 62%, #dffbe0 62% 100%), linear-gradient(200deg, #ffc9dd 0 30%, transparent 30% 100%)',
+        borderBottomWidth: '3px',
+        borderBottomStyle: 'solid',
+        borderBottomColor: '#2f2438',
+        borderRadius: '0px',
+      },
+      // 区切りの帯。青紫の地に細い方眼（ノートの紙）。
+      'variant:band': {
+        backgroundColor: '#eceaff',
+        backgroundImage:
+          'linear-gradient(rgb(143 140 255 / 0.18) 1px, transparent 1px), linear-gradient(90deg, rgb(143 140 255 / 0.18) 1px, transparent 1px)',
+        backgroundSize: '24px 24px',
+        borderBlockWidth: '3px',
+        borderBlockStyle: 'solid',
+        borderBlockColor: '#2f2438',
+        borderRadius: '0px',
+      },
+      // 曲リストの面。濃い線で囲み、青紫をずらして重ねます（版ずれした印刷）。
+      'variant:panel': {
+        backgroundColor: '#ffffff',
+        borderWidth: '3px',
+        borderStyle: 'solid',
+        borderColor: '#2f2438',
+        borderRadius: '14px',
+        boxShadow: '8px 8px 0 #a9b1ff',
+      },
+    },
+    card: {
+      // ジャケットと動画の枠。白いふちと濃い線、ぼかさない影。
+      'variant:jacket': {
+        backgroundColor: '#ffffff',
+        borderWidth: '3px',
+        borderStyle: 'solid',
+        borderColor: '#2f2438',
+        borderRadius: '4px',
+        boxShadow: '12px 12px 0 #2f2438',
+      },
+    },
+    heading: {
+      // 題字：ジャケットと同じ虹色のグラデーション。白いふちを付け、濃い紫をずらして重ねます。
+      'type:album-title': {
+        // 欧文（memory）は斜体の書体、和文（虹色）はその書体にない文字なので丸く太い書体で表示されます。
+        fontFamily: 'var(--font-display-slant), var(--font-display-pop)',
+        fontSize: 'clamp(4rem, 17vw, 10rem)',
+        lineHeight: '1.05',
+        letterSpacing: '0.02em',
+        backgroundImage: 'linear-gradient(95deg, #ff5fa2 0%, #12b3a0 22%, #8a4dff 45%, #2f8fff 64%, #ffa81f 84%, #ff5fa2 100%)',
+        backgroundClip: 'text',
+        WebkitBackgroundClip: 'text',
+        WebkitTextFillColor: 'transparent',
+        filter:
+          'drop-shadow(0.02em 0 0 #ffffff) drop-shadow(-0.02em 0 0 #ffffff) drop-shadow(0 0.02em 0 #ffffff) drop-shadow(0 -0.02em 0 #ffffff) drop-shadow(0.055em 0.055em 0 #2f2438)',
+      },
+    },
+    text: {
+      // 白い紙に濃い線で囲んだ、貼り付けたラベルのような小さな文字。
+      'type:eyebrow': {
+        display: 'inline-block',
+        paddingBlock: '0.25rem',
+        paddingInline: '0.75rem',
+        borderWidth: '2px',
+        borderStyle: 'solid',
+        borderColor: '#2f2438',
+        backgroundColor: '#ffffff',
+        color: '#2f2438',
+        boxShadow: '3px 3px 0 #2f2438',
+        fontFamily: 'var(--font-display-slant)',
+        fontSize: '0.875rem',
+        letterSpacing: '0.04em',
+      },
+      // 曲番号：「memory」と同じ斜体の数字。色は曲ごとに虹の七色を順番に（作品のCSSで指定）。
+      'type:track-number': {
+        display: 'inline-block',
+        minWidth: '2.25ch',
+        flexShrink: '0',
+        fontFamily: 'var(--font-display-slant)',
+        fontSize: '1.75rem',
+        lineHeight: '1',
+        fontVariantNumeric: 'tabular-nums',
+        color: '#2f2438',
+      },
+    },
     button: {
       // ボタンは濃い線で囲み、青紫をずらして重ねます（版ずれした印刷のように）。
       base: {

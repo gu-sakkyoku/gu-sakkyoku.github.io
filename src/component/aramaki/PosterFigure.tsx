@@ -9,7 +9,7 @@ import Artwork from "../ui/Artwork";
  */
 export default function PosterFigure({ poster }: { poster: Poster }) {
   return (
-    <figure className="aramaki-poster" data-reveal>
+    <figure className="aramaki-poster">
       {/* リンクの読み上げ名は画像の説明文＋「拡大」。同じ行き先のリンクを2つ並べないよう、リンクは1つだけです。 */}
       <a href={poster.src} className="aramaki-poster-link" aria-label={`${poster.alt}（拡大して見る）`}>
         <Artwork src={poster.src} alt="" sizes="(max-width: 1023px) min(90vw, 352px), 320px" />

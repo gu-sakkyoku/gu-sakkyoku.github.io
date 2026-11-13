@@ -3,7 +3,8 @@
  * ジャケットの絵を根拠にしています：絵を囲む青紫の枠、薄い緑と桃色の色面、
  * 虹色のグラデーションの題字と白いふち、紫と桃色の髪。
  * 影はぼかさず、色をずらして重ねます（版がずれた印刷のように）。
- * 基本の色・書体は src/themes/nijiiro/nijiiroTheme.ts、ここは絵と題字と動きだけです。
+ * 面の色・枠・題字は src/themes/nijiiro/nijiiroTheme.ts（stage・band・panel・jacket・album-title など）。
+ * ここは、テーマでは描けない虹の帯・アーチ・曲ごとの七色・画面への留め方だけです。
  * すべて .site-world--nijiiro の中に限定します。
  */
 .site-world--nijiiro {
@@ -42,57 +43,40 @@
   background: var(--rainbow-band);
 }
 
-/* ヒーロー：ジャケットと同じ青紫の地に、薄い緑と桃色の色面を重ねます。 */
-.site-world--nijiiro .archive-hero-scene {
-  background:
-    linear-gradient(115deg, transparent 0 58%, #dffbe0 58% 100%),
-    linear-gradient(200deg, #ffc9dd 0 34%, transparent 34% 100%),
-    var(--niji-periwinkle);
-  border-bottom: 3px solid var(--niji-ink);
-}
-
-.site-world--nijiiro .archive-edition {
-  padding: 0.25rem 0.75rem;
-  border: 2px solid var(--niji-ink);
-  background: #fff;
-  color: var(--niji-ink);
-  box-shadow: 3px 3px 0 var(--niji-ink);
-}
-
-.site-world--nijiiro .archive-artist {
-  color: var(--niji-ink);
-}
-
 /*
- * 題字：ジャケットと同じ虹色のグラデーション。白いふちを付け、濃い紫をずらして重ねます。
- * 「虹色」は丸く太い和文、「memory」は斜体の欧文で、実物の題字と同じ組み合わせです。
+ * ===== 作品ページ（/Nijiiro/）=====
+ * 青紫・桃色・薄い緑の色面（テーマの Section variant="stage"）に題字を大きく掲げ、
+ * その下でジャケットの隣に曲リストを並べます。曲リストは1曲ずつ虹の七色を順にたどります。
  */
-.site-world--nijiiro .archive-title {
-  font-size: clamp(3.5rem, 17vw, 7.5rem);
-  font-weight: 400;
-  letter-spacing: 0.02em;
+.site-world--nijiiro .niji-stage {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
 }
 
-.site-world--nijiiro .archive-title > span {
-  display: block;
-  width: fit-content;
-  background: linear-gradient(95deg, #ff5fa2 0%, #12b3a0 22%, #8a4dff 45%, #2f8fff 64%, #ffa81f 84%, #ff5fa2 100%);
-  background-clip: text;
-  -webkit-background-clip: text;
-  color: transparent;
-  font-family: var(--font-display-pop), var(--font-family-heading);
-  filter:
-    drop-shadow(0.02em 0 0 #fff) drop-shadow(-0.02em 0 0 #fff)
-    drop-shadow(0 0.02em 0 #fff) drop-shadow(0 -0.02em 0 #fff)
-    drop-shadow(0.055em 0.055em 0 var(--niji-ink));
+/* 色面の境目に沿って、七色の帯を斜めに1本通します。 */
+.site-world--nijiiro .niji-stage::before {
+  content: "";
+  position: absolute;
+  top: clamp(14rem, 34vw, 22rem);
+  left: -10%;
+  z-index: -1;
+  width: 120%;
+  height: clamp(1.25rem, 3vw, 2rem);
+  background: var(--rainbow-band);
+  rotate: -6deg;
+  box-shadow: 0 0.375rem 0 var(--niji-ink);
+  translate: 0 var(--depth-scene, 0);
+}
+
+.site-world--nijiiro .niji-stage-inner {
+  padding-block: clamp(2.5rem, 6vw, 4.5rem) clamp(3rem, 8vw, 6rem);
+}
+
+/* 題字：「虹色」は丸く太い和文、「memory」は斜体の欧文（テーマで、欧文の書体を先に指定しています）。 */
+.site-world--nijiiro .niji-title {
+  margin-block: 0.05em 0.1em;
   animation: niji-title-snap 700ms cubic-bezier(0.2, 0.8, 0.2, 1) 1 both;
-}
-
-.site-world--nijiiro .archive-title > .archive-title-memory {
-  font-family: var(--font-display-slant), var(--font-family-heading);
-  font-size: 0.82em;
-  letter-spacing: -0.03em;
-  animation-delay: 120ms;
 }
 
 /* 版がずれた状態から、ぴたっと重なる動きを一度だけ。途中で止まっても読めるよう、濃さは変えません。 */
@@ -101,8 +85,28 @@
   to { translate: 0 0; }
 }
 
-/* ジャケット：白いふちと濃い線で囲み、後ろに七色の帯と虹のアーチを置きます。 */
+@media (min-width: 64rem) {
+  .site-world--nijiiro .niji-spread {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  }
+
+  /* ジャケットを画面に留め、曲リストを読み進める間も見えるようにします。背の低い画面では留めません。 */
+  .site-world--nijiiro .niji-jacket {
+    position: sticky;
+    top: calc(var(--site-header-height) + 2rem);
+  }
+}
+
+@media (min-width: 64rem) and (max-height: 46rem) {
+  .site-world--nijiiro .niji-jacket {
+    position: static;
+  }
+}
+
+/* ジャケット：白いふちと濃い線（テーマの jacket）を少し傾け、後ろに虹のアーチを置きます。 */
 .site-world--nijiiro .archive-art-stage {
+  position: relative;
+  isolation: isolate;
   padding: clamp(3rem, 9vw, 5.5rem) 0.75rem 0.75rem 0;
   transform: perspective(1000px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
   transition: transform 240ms ease-out;
@@ -111,16 +115,29 @@
 .site-world--nijiiro .archive-cover {
   position: relative;
   z-index: 1;
-  padding: 0.625rem;
-  border: 3px solid var(--niji-ink);
-  background: #fff;
-  box-shadow: 0.75rem 0.75rem 0 var(--niji-ink);
+  width: 100%;
+  rotate: -2deg;
   translate: 0 var(--depth-art, 0);
+}
+
+/* 写真の角を留めるマスキングテープ。 */
+.site-world--nijiiro .archive-cover::before {
+  content: "";
+  position: absolute;
+  top: -0.875rem;
+  left: 50%;
+  z-index: 2;
+  width: 7.5rem;
+  height: 1.75rem;
+  background: repeating-linear-gradient(90deg, rgb(255 201 221 / 92%) 0 0.75rem, rgb(255 228 238 / 92%) 0.75rem 1.5rem);
+  translate: -50% 0;
+  rotate: 3deg;
+  box-shadow: 0 1px 0 rgb(47 36 56 / 18%);
 }
 
 .site-world--nijiiro .archive-rainbow-arch {
   position: absolute;
-  z-index: 0;
+  z-index: -1;
   top: 0;
   left: -3%;
   width: 106%;
@@ -150,26 +167,47 @@
   background: var(--rainbow-band);
 }
 
-/* 曲リスト：1曲ごとに、虹の七色を順番に左の印として付けます。 */
-.site-world--nijiiro .track-number {
-  padding-left: 0.625rem;
-  border-left: 5px solid var(--rainbow-red);
-  color: var(--niji-ink);
+/*
+ * 曲リスト：1曲ずつ、虹の七色を順番にたどります。
+ * 行の左に太い色の帯、番号もその色の濃い版に。歌詞のある曲は行全体に淡い色を敷きます。
+ */
+.site-world--nijiiro .track-row {
+  --row-color: var(--rainbow-red);
+  --row-ink: #b4314f;
+  box-shadow: inset 0.5rem 0 0 var(--row-color);
+  padding-inline-start: 1rem;
 }
 
-.site-world--nijiiro .track-disc li:nth-child(7n + 2) .track-number { border-color: var(--rainbow-orange); }
-.site-world--nijiiro .track-disc li:nth-child(7n + 3) .track-number { border-color: var(--rainbow-yellow); }
-.site-world--nijiiro .track-disc li:nth-child(7n + 4) .track-number { border-color: var(--rainbow-green); }
-.site-world--nijiiro .track-disc li:nth-child(7n + 5) .track-number { border-color: var(--rainbow-blue); }
-.site-world--nijiiro .track-disc li:nth-child(7n + 6) .track-number { border-color: var(--rainbow-indigo); }
-.site-world--nijiiro .track-disc li:nth-child(7n + 7) .track-number { border-color: var(--rainbow-violet); }
+.site-world--nijiiro .track-row:nth-child(7n + 2) { --row-color: var(--rainbow-orange); --row-ink: #a6520a; }
+.site-world--nijiiro .track-row:nth-child(7n + 3) { --row-color: var(--rainbow-yellow); --row-ink: #8a6a00; }
+.site-world--nijiiro .track-row:nth-child(7n + 4) { --row-color: var(--rainbow-green); --row-ink: #1f7a4c; }
+.site-world--nijiiro .track-row:nth-child(7n + 5) { --row-color: var(--rainbow-blue); --row-ink: #1c64b0; }
+.site-world--nijiiro .track-row:nth-child(7n + 6) { --row-color: var(--rainbow-indigo); --row-ink: #4a46c4; }
+.site-world--nijiiro .track-row:nth-child(7n + 7) { --row-color: var(--rainbow-violet); --row-ink: #7a3dbf; }
+
+.site-world--nijiiro .track-row [data-type="track-number"] {
+  color: var(--row-ink);
+}
+
+.site-world--nijiiro .track-row--lyric {
+  background: linear-gradient(90deg, color-mix(in srgb, var(--row-color) 28%, transparent), transparent 75%);
+}
 
 .site-world--nijiiro .track-disc-heading {
   border-bottom: 3px solid var(--niji-ink);
 }
 
-/* カード類は濃い線で囲み、青紫をずらして重ねます。 */
-.site-world--nijiiro :where(.lyric-sheet, .album-download-note, .crossfade-video-frame) {
+/* 動画の帯：方眼の紙（テーマの band）。動画の枠は写真と同じく少し傾けます。 */
+.site-world--nijiiro .niji-band .crossfade-video {
+  width: min(100%, 56rem);
+  margin-inline: auto;
+}
+
+.site-world--nijiiro .niji-band .crossfade-video-frame {
+  rotate: 0.75deg;
+}
+
+.site-world--nijiiro .lyric-sheet {
   border: 2px solid var(--niji-ink);
   box-shadow: 0.375rem 0.375rem 0 var(--niji-periwinkle);
 }
@@ -178,21 +216,18 @@
   border-top: 3px solid var(--niji-ink);
 }
 
-@media (min-width: 64rem) {
-  /* Horoscopeと同じ構図にしないよう、こちらは絵を左、題字を右に置きます。 */
-  .site-world--nijiiro .archive-art-stage {
-    order: -1;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .site-world--nijiiro .archive-title > span,
+  .site-world--nijiiro .niji-title,
   .site-world--nijiiro .archive-rainbow-arch path {
     animation: none;
   }
 
   .site-world--nijiiro :where(.archive-cover, .archive-rainbow-arch) {
     translate: none !important;
+  }
+
+  .site-world--nijiiro .niji-stage::before {
+    translate: none;
   }
 
   .site-world--nijiiro .archive-art-stage {
@@ -202,14 +237,15 @@
 }
 
 @media (forced-colors: active) {
-  .site-world--nijiiro .archive-title > span {
+  .site-world--nijiiro .niji-title {
+    -webkit-text-fill-color: CanvasText;
     background: none;
-    color: CanvasText;
     filter: none;
   }
 
   .site-world--nijiiro .archive-rainbow-arch,
-  .site-world--nijiiro .archive-hero-scene {
+  .site-world--nijiiro .niji-stage::before,
+  .site-world--nijiiro .archive-cover::before {
     display: none;
   }
 }

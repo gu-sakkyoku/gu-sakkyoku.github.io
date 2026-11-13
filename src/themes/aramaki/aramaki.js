@@ -280,6 +280,31 @@ export const aramakiTheme = {
         "fontFamily": "var(--font-family-heading)",
         "fontSize": "var(--text-display-3-size)",
         "lineHeight": "var(--text-display-3-leading)"
+      },
+      "type:festival-title": {
+        "display": "block",
+        "width": "fit-content",
+        "maxWidth": "100%",
+        "paddingInline": "0.08em",
+        "fontSize": "clamp(4.5rem, 21vw, 12rem)",
+        "lineHeight": "1.08",
+        "WebkitTextFillColor": "#0d0b2b",
+        "backgroundImage": "linear-gradient(transparent 16%, #4e46ff 16% 84%, transparent 84%)",
+        "WebkitTextStroke": "0.035em #ffffff",
+        "paintOrder": "stroke fill",
+        "textShadow": "0.05em 0.05em 0 #ffffff"
+      },
+      "type:poster-heading": {
+        "display": "block",
+        "width": "fit-content",
+        "maxWidth": "100%",
+        "paddingInline": "0.1em",
+        "fontSize": "clamp(2.25rem, 7vw, 3.75rem)",
+        "lineHeight": "1.15",
+        "WebkitTextFillColor": "#0d0b2b",
+        "backgroundImage": "linear-gradient(transparent 22%, #c9c7f2 22% 86%, transparent 86%)",
+        "WebkitTextStroke": "0.04em #ffffff",
+        "paintOrder": "stroke fill"
       }
     },
     "text": {
@@ -322,6 +347,32 @@ export const aramakiTheme = {
         "fontFamily": "var(--font-family-heading)",
         "fontSize": "var(--text-display-3-size)",
         "lineHeight": "var(--text-display-3-leading)"
+      },
+      "type:eyebrow": {
+        "display": "inline-block",
+        "paddingBlock": "0.2rem",
+        "paddingInline": "0.75rem",
+        "backgroundColor": "#ffe600",
+        "color": "#0d0b2b",
+        "fontFamily": "var(--font-display-block)",
+        "fontSize": "clamp(1rem, 2.4vw, 1.25rem)",
+        "letterSpacing": "0.04em"
+      },
+      "type:time": {
+        "fontFamily": "var(--font-display-condensed)",
+        "fontWeight": "700",
+        "letterSpacing": "0.04em",
+        "fontVariantNumeric": "tabular-nums"
+      },
+      "type:track-number": {
+        "display": "inline-block",
+        "minWidth": "1.5ch",
+        "flexShrink": "0",
+        "color": "#1d14d4",
+        "fontFamily": "var(--font-display-condensed)",
+        "fontSize": "2.5rem",
+        "fontWeight": "700",
+        "lineHeight": "1"
       }
     },
     "item": {
@@ -444,6 +495,27 @@ export const aramakiTheme = {
     "section": {
       "base": {
         "padding": "var(--spacing-3)"
+      },
+      "variant:stage": {
+        "backgroundColor": "#f4f4f6",
+        "borderRadius": "0px"
+      },
+      "variant:band": {
+        "backgroundColor": "#1d14d4",
+        "borderRadius": "0px"
+      },
+      "variant:panel": {
+        "backgroundColor": "#ffffff",
+        "borderWidth": "2px",
+        "borderStyle": "solid",
+        "borderColor": "#0d0b2b",
+        "borderRadius": "6px",
+        "boxShadow": "6px 6px 0 #1d14d4"
+      },
+      "variant:sky": {
+        "backgroundColor": "#e3f3fd",
+        "backgroundImage": "radial-gradient(ellipse 50% 40% at 15% 20%, rgb(159 211 243 / 0.75), transparent 70%), radial-gradient(ellipse 45% 50% at 85% 75%, rgb(120 190 238 / 0.55), transparent 72%), radial-gradient(ellipse 35% 30% at 60% 10%, rgb(255 255 255 / 0.8), transparent 70%)",
+        "borderRadius": "0px"
       }
     }
   },
@@ -452,7 +524,10 @@ export const aramakiTheme = {
       "color-scheme": "dark",
       "--color-text-primary": "var(--color-on-dark)",
       "--color-icon-primary": "var(--color-on-dark)",
-      "--color-accent": "var(--color-on-dark)"
+      "--color-accent": "#ffe600",
+      "--color-on-accent": "#0d0b2b",
+      "--color-text-accent": "#ffe600",
+      "--focus-outline-color": "#ffe600"
     }
   },
   __onLight: {

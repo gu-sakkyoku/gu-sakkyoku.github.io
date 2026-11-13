@@ -1,18 +1,21 @@
 import type { Metadata } from "next";
-import { Banner } from "@astryxdesign/core/Banner";
 import { Button } from "@astryxdesign/core/Button";
-import { Card } from "@astryxdesign/core/Card";
 import { Grid } from "@astryxdesign/core/Grid";
 import { Heading } from "@astryxdesign/core/Heading";
 import { HStack } from "@astryxdesign/core/HStack";
 import { Link } from "@astryxdesign/core/Link";
+import { List, ListItem } from "@astryxdesign/core/List";
+import { Section } from "@astryxdesign/core/Section";
 import { Text } from "@astryxdesign/core/Text";
+import { MediaTheme } from "@astryxdesign/core/theme";
 import { VStack } from "@astryxdesign/core/VStack";
 import AlbumMotion from "../../component/AlbumMotion";
 import ClientWrapper from "../../component/ClientWrapper";
+import CautionLabel from "../../component/aramaki/CautionLabel";
+import DjTimeline from "../../component/aramaki/DjTimeline";
+import FestivalSummary from "../../component/aramaki/FestivalSummary";
 import LiveMark from "../../component/aramaki/LiveMark";
 import PosterFigure from "../../component/aramaki/PosterFigure";
-import AppIcon from "../../component/ui/AppIcon";
 import Artwork from "../../component/ui/Artwork";
 import { albums } from "../../data/albums";
 import { aramaki2026 } from "../../data/aramaki2026";
@@ -35,210 +38,182 @@ const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURICompo
 
 /**
  * 荒牧祭（群馬大学の学園祭）の特設ページです。内容はすべて src/data/aramaki2026.ts から表示します。
- * 見た目は作曲部のポスターに合わせ、DJステージ・物販は群青と黄色、野外ステージは水彩の空色にしています。
+ * 部品はすべてAstryxで、見た目は荒牧祭のテーマ（src/themes/aramaki/ の stage・band・panel・sky・festival-title など）と、
+ * 作品のCSS（src/app/worlds/aramaki.css）が受け持ちます。どの飾りも作曲部のポスターの実物から取っています。
+ *
+ * 主役はDJステージです。タイムテーブルを作曲ソフト（DAW）の編集画面のように描き、ポスターの音圧警告ラベル・
+ * 警告の三角・音量メーターを画面いっぱいに使います。野外ステージは水彩の空、物販はポスターのカードの作りです。
  */
 export default function AramakiPage() {
   return (
     <ClientWrapper world="aramaki" className="aramaki-main">
       <AlbumMotion>
-        <section className="aramaki-hero" aria-labelledby="aramaki-title" data-depth>
-          <div className="aramaki-hero-deco" aria-hidden="true">
-            <span className="aramaki-star aramaki-star--1" />
-            <span className="aramaki-star aramaki-star--2" />
-            <span className="aramaki-star aramaki-star--3" />
-            <span className="aramaki-grid" />
-          </div>
-          <div className="site-container aramaki-hero-inner">
-            <p className="aramaki-kicker">群馬大学作曲部</p>
-            <h1 id="aramaki-title" className="aramaki-title">
-              <span>{aramaki2026.name}</span>
-              <span className="aramaki-title-year">{aramaki2026.year}</span>
-            </h1>
-            <p className="aramaki-dates">{aramaki2026.dateRangeLabel}</p>
-            <p className="aramaki-campus">{campus.name}</p>
-            <HStack as="nav" aria-label="このページの案内" gap={3} wrap="wrap" className="aramaki-hero-actions">
-              <Button label="野外ステージ" href="#outdoor-stage" variant="primary" size="lg" endContent={<AppIcon name="arrowRight" />} />
-              <Button label="DJステージ" href="#dj-stage" variant="primary" size="lg" endContent={<AppIcon name="arrowRight" />} />
-              <Button label="物販" href="#merch" variant="secondary" size="lg" endContent={<AppIcon name="arrowRight" />} />
-            </HStack>
-          </div>
-        </section>
-
-        {/* いつ・どこで、を最初に一覧できるようにします。 */}
-        <section aria-labelledby="aramaki-summary" className="site-container site-section">
-          <Heading level={2} id="aramaki-summary" className="aramaki-label">日程と場所</Heading>
-          <Grid columns={{ minWidth: 260, max: 3 }} gap={4}>
-            <Card padding={5} elevation="low" data-reveal>
-              <VStack gap={2}>
-                <Text type="supporting">{outdoorStage.name}</Text>
-                <Text as="p" weight="bold" size="lg">11/14（土） {outdoorStage.start}–{outdoorStage.end}</Text>
-                <Link href="#outdoor-stage" isStandalone hasUnderline>タイムテーブル</Link>
-              </VStack>
-            </Card>
-            <Card padding={5} elevation="low" data-reveal>
-              <VStack gap={2}>
-                <Text type="supporting">{djStage.name}（{djStage.room}）</Text>
-                {djStage.days.map((day) => (
-                  <Text as="p" weight="bold" size="lg" key={day.date}>
-                    {day.date === "2026-11-14" ? "11/14（土）" : "11/15（日）"} {day.start}–{day.end}
-                  </Text>
-                ))}
-                <Link href="#dj-stage" isStandalone hasUnderline>タイムテーブル</Link>
-              </VStack>
-            </Card>
-            <Card padding={5} elevation="low" data-reveal>
-              <VStack gap={2}>
-                <Text type="supporting">物販（DJステージの会場で販売）</Text>
-                {merch.prices.map((price) => (
-                  <Text as="p" weight="bold" size="lg" key={price.item}>{price.item} {price.price}</Text>
-                ))}
-                <Link href="#merch" isStandalone hasUnderline>お得情報</Link>
-              </VStack>
-            </Card>
-          </Grid>
-        </section>
-
-        <section aria-labelledby="outdoor-stage" className="aramaki-outdoor site-section">
-          <div className="site-container">
-            <VStack gap={2} className="aramaki-outdoor-heading" data-reveal>
-              <Heading level={2} id="outdoor-stage">{outdoorStage.name}</Heading>
-              <HStack gap={3} vAlign="center" wrap="wrap">
-                <p className="aramaki-time">
-                  {outdoorStage.dateLabel} {outdoorStage.start}-{outdoorStage.end}
-                </p>
-                <LiveMark date={outdoorStage.date} start={outdoorStage.start} end={outdoorStage.end} />
+        {/* 冒頭：左に題字、右の群青の列に「いつ・どこで」の一覧。下を音圧警告ラベルの帯が走ります。 */}
+        <Section variant="stage" padding={0} role="region" aria-labelledby="aramaki-title" className="fest-hero" data-depth>
+          <Grid columns={{ minWidth: 320, max: 2 }} gap={0} align="stretch" className="fest-hero-grid">
+            <VStack gap={5} hAlign="start" className="fest-hero-copy">
+              <Text type="eyebrow">群馬大学作曲部</Text>
+              <Heading level={1} type="festival-title" id="aramaki-title" className="fest-title" data-text={aramaki2026.name}>
+                {aramaki2026.name}
+                <Text type="time" className="fest-title-year">{aramaki2026.year}</Text>
+              </Heading>
+              <Text type="time" className="fest-dates">{aramaki2026.dateRangeLabel}</Text>
+              <Text weight="bold" className="fest-campus">{campus.name}</Text>
+              <HStack as="nav" aria-label="このページの案内" gap={3} wrap="wrap">
+                <Button label={djStage.name} href="#dj-stage" variant="primary" size="lg" />
+                <Button label={outdoorStage.name} href="#outdoor-stage" variant="secondary" size="lg" />
+                <Button label="物販" href="#merch" variant="secondary" size="lg" />
               </HStack>
             </VStack>
-            <div className="aramaki-with-poster">
-              <Card padding={6} elevation="none" className="aramaki-outdoor-card" data-reveal>
-                <VStack gap={4}>
-                  <Text as="p" weight="bold">タイムテーブル（出演順）</Text>
-                  <ol className="aramaki-acts">
-                    {outdoorStage.acts.map((act, index) => (
-                      <li key={act.name}>
-                        <span className="aramaki-act-number" aria-hidden="true">{index + 1}</span>
-                        <span className="aramaki-act-copy">
-                          <Text weight="bold" display="block" size="lg">{act.name}</Text>
-                          <Text display="block">『{act.song}』</Text>
-                          {act.lyricPath && (
-                            <Link href={act.lyricPath} hasUnderline weight="bold">「{act.song}」の歌詞はこちら</Link>
-                          )}
-                        </span>
-                      </li>
-                    ))}
-                  </ol>
-                </VStack>
-              </Card>
-              <PosterFigure poster={outdoorStage.poster} />
-            </div>
-          </div>
-        </section>
-
-        <section aria-labelledby="dj-stage" className="site-container site-section">
-          <VStack gap={2} className="aramaki-dj-heading" data-reveal>
-            <p className="aramaki-caution-strip" aria-hidden="true">CAUTION ⚠ SOUND PRESSURE WARNING</p>
-            <Heading level={2} id="dj-stage">{djStage.name}</Heading>
-            <Text as="p" weight="bold" size="lg">{campus.name} {djStage.room}</Text>
-            <Text as="p">会場では、作曲部のアルバムも販売しています。</Text>
-          </VStack>
-
-          <Grid columns={{ minWidth: 300, max: 2 }} gap={6} className="aramaki-days">
-            {djStage.days.map((day) => (
-              <section key={day.date} aria-labelledby={`dj-${day.date}`} className="aramaki-day" data-reveal>
-                <div className="aramaki-day-heading">
-                  <h3 id={`dj-${day.date}`}>{day.label}</h3>
-                  <p className="aramaki-time">{day.dateLabel} {day.start} - {day.end}</p>
-                </div>
-                <ol className="aramaki-slots">
-                  {day.slots.map((slot) => (
-                    <li key={`${slot.start}-${slot.name}`}>
-                      <span className="aramaki-slot-time">
-                        <time dateTime={`${day.date}T${slot.start}+09:00`}>{slot.start}</time>
-                        <span aria-hidden="true"> - </span>
-                        <span className="sr-only">から</span>
-                        <time dateTime={`${day.date}T${slot.end}+09:00`}>{slot.end}</time>
-                      </span>
-                      <span className="aramaki-slot-name">{slot.name}</span>
-                      <LiveMark date={day.date} start={slot.start} end={slot.end} />
-                    </li>
-                  ))}
-                </ol>
-              </section>
-            ))}
-          </Grid>
-
-          <div className="aramaki-with-poster aramaki-cautions">
-            <VStack gap={3}>
-              {djStage.cautions.map((caution) => (
-                <Banner key={caution.title} status="warning" title={caution.title} description={caution.text} collapsible={false} />
-              ))}
+            <VStack gap={4} className="fest-hero-side">
+              <Heading level={2} id="aramaki-summary" className="fest-side-heading">日程と場所</Heading>
+              <Section variant="panel" padding={5} className="fest-summary-panel">
+                <FestivalSummary />
+              </Section>
             </VStack>
-            <PosterFigure poster={djStage.poster} />
-          </div>
-        </section>
+          </Grid>
+          <CautionLabel className="fest-hero-label" />
+        </Section>
 
-        <section aria-labelledby="merch" className="site-container site-section">
-          <VStack gap={2} data-reveal>
-            <Heading level={2} id="merch">物販</Heading>
-            <Text as="p">{djStage.name}の会場（{djStage.room}）で販売しています。</Text>
-          </VStack>
-          <div className="aramaki-with-poster aramaki-merch-area">
-            <Card padding={6} elevation="med" className="aramaki-merch" data-reveal>
-              <VStack gap={6}>
-                <ul className="aramaki-merch-albums">
-                  {merchAlbums.map((album) => (
-                    <li key={album.year}>
-                      {album.artwork && (
-                        <Artwork src={album.artwork} alt={`${album.title}のアルバムジャケット`} sizes="(max-width: 640px) 28vw, 180px" />
-                      )}
-                      <Text type="supporting" display="block">{album.year}年度</Text>
-                      {album.detailPath ? (
-                        <Link href={album.detailPath} hasUnderline weight="bold">{album.title}</Link>
-                      ) : (
-                        <Text weight="bold">{album.title}</Text>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-                <dl className="aramaki-prices">
-                  {merch.prices.map((price) => (
-                    <div key={price.item}>
-                      <dt>{price.item}</dt>
-                      <dd>{price.price}</dd>
-                    </div>
-                  ))}
-                </dl>
-                <div className="aramaki-deals">
-                  <p className="aramaki-deals-label">お得情報</p>
-                  <dl>
-                    {merch.deals.map((deal) => (
-                      <div key={deal.item}>
-                        <dt>{deal.item}</dt>
-                        <dd>{deal.price}</dd>
-                      </div>
+        {/* DJステージ：画面いっぱいの「DJ STAGE」の文字の上に、DAWのタイムラインを置きます。 */}
+        <Section variant="transparent" padding={0} role="region" aria-labelledby="dj-stage" className="fest-dj">
+          <VStack gap={8} className="site-container fest-dj-inner">
+            {/* 見出しの帯：ポスターの上部と同じ群青。背景に輪郭だけの「DJ STAGE」、右端に警告の三角。 */}
+            <MediaTheme mode="dark">
+              <HStack gap={6} vAlign="end" hAlign="between" wrap="wrap" className="fest-dj-head" data-word="DJ STAGE">
+                <VStack gap={3} hAlign="start">
+                  <Heading level={2} type="poster-heading" id="dj-stage" className="fest-dj-title">
+                    {djStage.name}
+                  </Heading>
+                  <Text weight="bold" size="lg">{campus.name} {djStage.room}</Text>
+                  <Text>会場では、作曲部のアルバムも販売しています。</Text>
+                </VStack>
+                <Text type="time" className="fest-dj-room" aria-hidden="true">{djStage.room}</Text>
+              </HStack>
+            </MediaTheme>
+
+            <DjTimeline days={djStage.days} />
+
+            <Grid columns={{ minWidth: 300, max: 2 }} gap={8} align="start" className="fest-dj-notes">
+              <Section variant="band" padding={6} role="region" aria-label="DJステージのご注意" className="fest-cautions">
+                <MediaTheme mode="dark">
+                  <VStack gap={6}>
+                    {djStage.cautions.map((caution) => (
+                      <VStack key={caution.title} gap={2} hAlign="start">
+                        <Heading level={3} className="fest-caution-title">{caution.title}</Heading>
+                        <Text>{caution.text}</Text>
+                      </VStack>
                     ))}
-                  </dl>
-                </div>
-                <Text as="p" type="supporting">
-                  ダウンロードカードは、カードに印刷されたコードで
-                  <Link href="/download/" hasUnderline>ダウンロードページ</Link>
-                  から音源を受け取れます。
-                </Text>
-              </VStack>
-            </Card>
-            <PosterFigure poster={merch.poster} />
-          </div>
-        </section>
-
-        <section aria-labelledby="access" className="site-container site-section">
-          <VStack gap={3} hAlign="start" data-reveal>
-            <Heading level={2} id="access">会場</Heading>
-            <Text as="p" weight="bold" size="lg">{campus.name}</Text>
-            <Text as="p">{campus.address}</Text>
-            <Text as="p">DJステージ・物販：{djStage.room}</Text>
-            <Link href={mapUrl} isExternalLink isStandalone hasUnderline>地図で場所を見る</Link>
+                  </VStack>
+                </MediaTheme>
+              </Section>
+              <PosterFigure poster={djStage.poster} />
+            </Grid>
           </VStack>
-        </section>
+        </Section>
+
+        {/* 野外ステージ：ポスターと同じ水彩の空に、出演順のセットリスト。 */}
+        <Section variant="sky" padding={0} paddingBlock={10} role="region" aria-labelledby="outdoor-stage" className="fest-outdoor">
+          <Grid columns={{ minWidth: 300, max: 2 }} gap={10} align="start" className="site-container fest-outdoor-grid">
+            <VStack gap={6}>
+              <VStack gap={2} hAlign="start">
+                <Heading level={2} type="poster-heading" id="outdoor-stage">{outdoorStage.name}</Heading>
+                <HStack gap={3} vAlign="center" wrap="wrap">
+                  <Text type="time" size="xl" className="fest-outdoor-time">
+                    {outdoorStage.dateLabel} {outdoorStage.start}-{outdoorStage.end}
+                  </Text>
+                  <LiveMark date={outdoorStage.date} start={outdoorStage.start} end={outdoorStage.end} />
+                </HStack>
+                <Text color="secondary">タイムテーブル（出演順）</Text>
+              </VStack>
+              <List hasDividers edge="flush" density="spacious" className="fest-setlist">
+                {outdoorStage.acts.map((act, index) => (
+                  <ListItem
+                    key={act.name}
+                    align="start"
+                    startContent={<Text type="track-number">{index + 1}</Text>}
+                    label={<Text weight="bold" size="lg">{act.name}</Text>}
+                    description={
+                      <VStack gap={1} hAlign="start">
+                        <Text>『{act.song}』</Text>
+                        {act.lyricPath && (
+                          <Link href={act.lyricPath} hasUnderline weight="bold">「{act.song}」の歌詞はこちら</Link>
+                        )}
+                      </VStack>
+                    }
+                  />
+                ))}
+              </List>
+            </VStack>
+            <PosterFigure poster={outdoorStage.poster} />
+          </Grid>
+        </Section>
+
+        {/* 物販：ポスターのカードと同じ、濃い線と群青のずれた影。値段は縦長の大きな数字で。 */}
+        <Section variant="transparent" padding={0} role="region" aria-labelledby="merch" className="site-container site-section fest-merch">
+          <VStack gap={6}>
+            <VStack gap={2} hAlign="start">
+              <Heading level={2} type="poster-heading" id="merch">物販</Heading>
+              <Text>{djStage.name}の会場（{djStage.room}）で販売しています。</Text>
+            </VStack>
+            <Grid columns={{ minWidth: 300, max: 2 }} gap={10} align="start" className="fest-merch-grid">
+              <Section variant="panel" padding={6}>
+                <VStack gap={6}>
+                  <Grid columns={3} gap={3}>
+                    {merchAlbums.map((album) => (
+                      <VStack key={album.year} gap={1} hAlign="center">
+                        {album.artwork && (
+                          <Artwork src={album.artwork} alt={`${album.title}のアルバムジャケット`} sizes="(max-width: 640px) 28vw, 180px" className="fest-merch-art" />
+                        )}
+                        <Text type="supporting">{album.year}年度</Text>
+                        {album.detailPath ? (
+                          <Link href={album.detailPath} hasUnderline weight="bold">{album.title}</Link>
+                        ) : (
+                          <Text weight="bold">{album.title}</Text>
+                        )}
+                      </VStack>
+                    ))}
+                  </Grid>
+                  <VStack gap={2}>
+                    {merch.prices.map((price) => (
+                      <HStack key={price.item} gap={3} hAlign="between" vAlign="end" className="fest-price">
+                        <Text size="lg">{price.item}</Text>
+                        <Text type="time" className="fest-price-value">{price.price}</Text>
+                      </HStack>
+                    ))}
+                  </VStack>
+                  <VStack gap={3} className="fest-deals">
+                    <Text type="eyebrow">お得情報</Text>
+                    {merch.deals.map((deal) => (
+                      <HStack key={deal.item} gap={3} hAlign="between" vAlign="end" className="fest-price">
+                        <Text>{deal.item}</Text>
+                        <Text type="time" className="fest-price-value fest-price-value--deal">{deal.price}</Text>
+                      </HStack>
+                    ))}
+                  </VStack>
+                  <Text type="supporting">
+                    ダウンロードカードは、カードに印刷されたコードで
+                    <Link href="/download/" hasUnderline>ダウンロードページ</Link>
+                    から音源を受け取れます。
+                  </Text>
+                </VStack>
+              </Section>
+              <PosterFigure poster={merch.poster} />
+            </Grid>
+          </VStack>
+        </Section>
+
+        <Section variant="band" padding={0} paddingBlock={10} role="region" aria-labelledby="access" className="site-section fest-access">
+          <MediaTheme mode="dark">
+            <VStack gap={3} hAlign="start" className="site-container">
+              <Heading level={2} id="access">会場</Heading>
+              <Text weight="bold" size="lg">{campus.name}</Text>
+              <Text>{campus.address}</Text>
+              <Text>{djStage.name}・物販：{djStage.room}</Text>
+              <Link href={mapUrl} isExternalLink isStandalone hasUnderline>地図で場所を見る</Link>
+            </VStack>
+          </MediaTheme>
+        </Section>
       </AlbumMotion>
     </ClientWrapper>
   );

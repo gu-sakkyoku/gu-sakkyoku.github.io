@@ -156,27 +156,6 @@
   min-width: 0;
 }
 
-/* サイト名とページのh1。空の一番濃い部分に白い文字で置きます（コントラスト 5.7:1）。 */
-.site-world--tansan .tansan-hero-site {
-  color: #fff;
-}
-
-.site-world--tansan .tansan-hero-site p {
-  font-family: var(--font-family-code);
-  font-size: var(--font-size-xs);
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-}
-
-.site-world--tansan .tansan-hero-site h1 {
-  margin-top: 0.25rem;
-  color: #fff;
-  font-family: var(--font-family-body);
-  font-size: var(--font-size-base);
-  font-weight: 700;
-  letter-spacing: 0.08em;
-}
-
 /* 「New Album!!!」は、斜めに貼ったシールのように。 */
 .site-world--tansan .tansan-kicker {
   display: inline-block;
@@ -232,6 +211,19 @@
     background: none;
     color: CanvasText;
     filter: none;
+  }
+
+  .site-world--tansan .tansan-stage-title {
+    -webkit-text-fill-color: CanvasText;
+    background: none;
+    filter: none;
+  }
+
+  .site-world--tansan .tansan-stage::before,
+  .site-world--tansan .tansan-stage::after,
+  .site-world--tansan .tansan-stage-inner::before,
+  .site-world--tansan .tansan-band::before {
+    display: none;
   }
 }
 
@@ -289,6 +281,7 @@
   border-radius: 0.25rem;
 }
 
+/* 写真の下の余白に書き込んだような、年と曲数。題字と同じ丸い書体で。 */
 .site-world--tansan .tansan-polaroid-caption {
   display: flex;
   align-items: baseline;
@@ -296,9 +289,9 @@
   gap: 1rem;
   padding: 0.75rem 0.25rem;
   color: var(--color-text-secondary);
-  font-family: var(--font-family-code);
-  font-size: 0.75rem;
-  letter-spacing: 0.14em;
+  font-family: var(--font-display-pop), var(--font-family-heading);
+  font-size: 0.9375rem;
+  letter-spacing: 0.04em;
 }
 
 /* 狭い画面でも年度の4桁は分割しません。枚数・曲数側だけを縮めて自然に改行します。 */
@@ -388,25 +381,183 @@
   }
 }
 
-/* 区切りの見出し：左に泡を3つ並べた小さな飾りを付けます。 */
-.site-world--tansan .section-heading::before {
-  content: "";
-  width: 3.25rem;
-  height: 0.875rem;
-  background:
-    radial-gradient(circle at 0.4375rem 50%, var(--color-accent) 0 0.4375rem, transparent 0.5rem),
-    radial-gradient(circle at 1.625rem 50%, var(--tansan-pink) 0 0.3125rem, transparent 0.375rem),
-    radial-gradient(circle at 2.75rem 50%, #b7a8f5 0 0.1875rem, transparent 0.25rem);
-}
-
-/* クロスフェードの動画も、ジャケットと同じ白いふちで囲みます。 */
-.site-world--tansan .crossfade-video-frame {
-  padding: 0.625rem;
-  border-radius: var(--radius-page);
-}
-
+/* クロスフェードの動画は、ジャケットと同じ白いふちの写真（テーマの Card variant="jacket"）に入れます。 */
 .site-world--tansan .crossfade-video-frame iframe {
-  border-radius: calc(var(--radius-page) - 0.5rem);
+  border-radius: 4px;
+}
+
+/*
+ * ===== 作品ページ（/TansanYohou/）=====
+ * 夏空の真ん中に題字とジャケットを縦に積みます（ジャケットの、空を見上げる構図）。
+ * 空そのものはテーマの Section variant="stage"。ここでは雲・光の玉・しぶき・泡だけを、
+ * 疑似要素（::before / ::after）として重ねます。読み上げ・操作の対象にはなりません。
+ */
+.site-world--tansan .tansan-stage {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+}
+
+/* 光の玉としぶき。スクロールに合わせてわずかに動きます（AlbumMotion の --depth-scene）。 */
+.site-world--tansan .tansan-stage::before {
+  content: "";
+  position: absolute;
+  inset: -10% 0 0;
+  z-index: -1;
+  background-image:
+    radial-gradient(circle at 18% 22%, rgb(255 255 255 / 16%) 0 7rem, transparent 7.1rem),
+    radial-gradient(circle at 86% 14%, rgb(255 255 255 / 20%) 0 10rem, transparent 10.1rem),
+    radial-gradient(circle at 70% 46%, rgb(255 255 255 / 12%) 0 5rem, transparent 5.1rem),
+    radial-gradient(circle, rgb(255 255 255 / 90%) 0 1.5px, transparent 2px),
+    radial-gradient(circle, rgb(255 255 255 / 70%) 0 1px, transparent 1.5px),
+    radial-gradient(circle, rgb(255 255 255 / 80%) 0 2.5px, transparent 3px);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 97px 113px, 61px 71px, 193px 167px;
+  background-position: 0 0, 0 0, 0 0, 12px 20px, 40px 8px, 90px 60px;
+  mask-image: linear-gradient(180deg, #000 0%, #000 55%, transparent 85%);
+  translate: 0 var(--depth-scene, 0);
+}
+
+/* 雲：丸を重ねた白い塊を、ジャケットの後ろ、空がまだ青い高さに流します。 */
+.site-world--tansan .tansan-stage::after {
+  content: "";
+  position: absolute;
+  inset: auto -6% 16%;
+  z-index: -1;
+  height: clamp(9rem, 22vw, 16rem);
+  background-image:
+    radial-gradient(ellipse 9% 30% at 6% 70%, #fff 0 97%, transparent 100%),
+    radial-gradient(ellipse 8% 42% at 13% 52%, #fff 0 97%, transparent 100%),
+    radial-gradient(ellipse 11% 30% at 21% 74%, #fff 0 97%, transparent 100%),
+    radial-gradient(ellipse 20% 22% at 14% 86%, #fff 0 97%, transparent 100%),
+    radial-gradient(ellipse 8% 34% at 79% 64%, #fff 0 97%, transparent 100%),
+    radial-gradient(ellipse 10% 46% at 87% 50%, #fff 0 97%, transparent 100%),
+    radial-gradient(ellipse 9% 30% at 95% 70%, #fff 0 97%, transparent 100%),
+    radial-gradient(ellipse 22% 22% at 88% 86%, #fff 0 97%, transparent 100%);
+  filter: drop-shadow(0 14px 22px rgb(31 86 140 / 14%));
+  translate: 0 var(--depth-art, 0);
+}
+
+.site-world--tansan .tansan-stage-inner {
+  position: relative;
+  padding-block: clamp(2rem, 6vw, 4.5rem) clamp(3rem, 8vw, 6rem);
+}
+
+/* 開いた瞬間に、下から泡が一度だけ吹き上がります（輪だけの泡を、大きさを変えて散らした1枚の絵）。 */
+.site-world--tansan .tansan-stage-inner::before {
+  content: "";
+  position: absolute;
+  inset: 0 -10%;
+  z-index: 0;
+  background-image:
+    radial-gradient(circle at 8% 78%, transparent 0 1.1rem, rgb(255 255 255 / 85%) 1.15rem 1.3rem, transparent 1.35rem),
+    radial-gradient(circle at 18% 40%, transparent 0 0.5rem, rgb(255 255 255 / 75%) 0.55rem 0.65rem, transparent 0.7rem),
+    radial-gradient(circle at 34% 88%, transparent 0 1.8rem, rgb(255 255 255 / 70%) 1.85rem 2rem, transparent 2.05rem),
+    radial-gradient(circle at 46% 22%, transparent 0 0.7rem, rgb(255 255 255 / 80%) 0.75rem 0.85rem, transparent 0.9rem),
+    radial-gradient(circle at 58% 70%, transparent 0 0.45rem, rgb(255 255 255 / 85%) 0.5rem 0.6rem, transparent 0.65rem),
+    radial-gradient(circle at 72% 12%, transparent 0 1.3rem, rgb(255 255 255 / 65%) 1.35rem 1.5rem, transparent 1.55rem),
+    radial-gradient(circle at 88% 56%, transparent 0 0.9rem, rgb(255 255 255 / 80%) 0.95rem 1.1rem, transparent 1.15rem),
+    radial-gradient(circle at 95% 90%, transparent 0 0.4rem, rgb(255 255 255 / 85%) 0.45rem 0.55rem, transparent 0.6rem);
+  pointer-events: none;
+  animation: tansan-fizz 1600ms cubic-bezier(0.16, 1, 0.3, 1) 150ms 1 both;
+}
+
+@keyframes tansan-fizz {
+  from { translate: 0 45%; opacity: 0; }
+  30% { opacity: 1; }
+  to { translate: 0 0; opacity: 1; }
+}
+
+.site-world--tansan .tansan-stage-copy {
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+}
+
+/*
+ * 題字：ジャケットと同じ2×2。1行に2文字だけ入る幅にして「炭酸／予報」に折り返し、空いっぱいの大きさにします。
+ * 色・影はテーマの Heading type="album-title"。
+ */
+.site-world--tansan .tansan-stage-title {
+  max-width: 2.08em;
+  margin-block: -0.08em 0;
+  font-size: clamp(7rem, 38vw, 17rem);
+  line-height: 0.98;
+  letter-spacing: 0;
+  animation: tansan-title-rise 900ms cubic-bezier(0.16, 1, 0.3, 1) 1 both;
+}
+
+@keyframes tansan-title-rise {
+  from { translate: 0 0.25em; }
+  to { translate: 0 0; }
+}
+
+/* ジャケット：少し傾けた写真を、題字の右肩に重ねます。マウスを載せると枠ごと傾きます。 */
+.site-world--tansan .tansan-stage-jacket {
+  position: relative;
+  z-index: 2;
+  justify-self: center;
+  width: min(100%, 30rem);
+  margin-top: 2rem;
+  rotate: 3deg;
+  transform: perspective(900px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+  transition: transform 240ms ease-out;
+}
+
+.site-world--tansan .tansan-stage-jacket img {
+  border-radius: 4px;
+}
+
+.site-world--tansan .tansan-stage-jacket-note {
+  padding-inline: 0.25rem;
+  font-family: var(--font-display-pop), var(--font-family-heading);
+  font-weight: 400;
+}
+
+@media (min-width: 64rem) {
+  .site-world--tansan .tansan-stage-inner {
+    grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+  }
+
+  .site-world--tansan .tansan-stage-jacket {
+    justify-self: end;
+    margin-top: 0;
+    margin-left: -8rem;
+  }
+}
+
+/* 濃い空の帯（テーマの Section variant="band"）。泡の粒を薄く散らします。 */
+.site-world--tansan .tansan-band {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+}
+
+.site-world--tansan .tansan-band::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image:
+    radial-gradient(circle, rgb(255 255 255 / 55%) 0 1.5px, transparent 2px),
+    radial-gradient(circle, rgb(255 255 255 / 30%) 0 3px, transparent 3.5px);
+  background-size: 83px 97px, 211px 173px;
+  background-position: 10px 30px, 60px 90px;
+}
+
+.site-world--tansan .tansan-band .crossfade-video {
+  width: min(100%, 56rem);
+  margin-inline: auto;
+  rotate: -0.6deg;
+}
+
+/* 曲リスト：歌詞のある曲は、行の地を淡い桃色にして見つけやすくします（文字の「歌詞はこちら」も必ず出ます）。 */
+.site-world--tansan .track-row--lyric {
+  background: linear-gradient(90deg, var(--color-background-pink), transparent 70%);
+}
+
+.site-world--tansan .track-disc-heading {
+  padding-bottom: 0.75rem;
+  border-bottom: 2px dashed var(--color-border);
 }
 
 /* トップの「部の言葉」。題字と同じ書体で大きく置きます。 */
@@ -435,8 +586,19 @@
     rotate: none !important;
   }
 
-  .site-world--tansan .tansan-polaroid-frame {
+  .site-world--tansan .tansan-polaroid-frame,
+  .site-world--tansan .tansan-stage-jacket {
     transform: none;
     transition: none;
+  }
+
+  .site-world--tansan .tansan-stage-title,
+  .site-world--tansan .tansan-stage-inner::before {
+    animation: none;
+  }
+
+  .site-world--tansan .tansan-stage::before,
+  .site-world--tansan .tansan-stage::after {
+    translate: none;
   }
 }

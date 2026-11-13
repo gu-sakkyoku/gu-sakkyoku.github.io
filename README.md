@@ -48,13 +48,28 @@
 
 ### 検索結果に「GitHub」と表示されたとき
 
-検索結果のURLの上に出る呼び名（サイト名）は、GitHub Organizationの名前とは別です。このサイトは**「GU sakkyoku」**を希望名としてGoogleへ伝えます。日本語のページタイトル「群馬大学作曲部 | 公式サイト」は残します。希望名・説明は`src/data/site.ts`でまとめて管理し、トップの見える英語表記、`WebSite`構造化データ、SNS用の`og:site_name`を同じ名前に揃えています。
+検索結果のURLの上に出る呼び名（サイト名）は、GitHub Organizationの名前とは別です。このサイトは**「群馬大学作曲部」**を希望名としてGoogleへ伝えます（「GU sakkyoku」「群大作曲部」は別名）。希望名・説明は`src/data/site.ts`でまとめて管理し、ページタイトル「群馬大学作曲部 | 公式サイト」、トップの見出し、`WebSite`構造化データ、SNS用の`og:site_name`をすべて同じ名前に揃えています。
+
+以前は希望名を英語の「GU sakkyoku」にしていましたが、タイトルや見出しの「群馬大学作曲部」と食い違っていたため採用されず、`github.io`全体の名前である「GitHub」が表示されていました（2026-11）。希望名を変えるときは、これらの場所を必ず一緒に変えてください（`tests/site-metadata.test.mjs`で確認しています）。
 
 検索結果の小さい画像は「ファビコン」です。正式ロゴは青い透過素材の`public/site-logo-blue.png`です。白いヘッダー・SNS共有・検索用アイコンは、`src/data/site.ts`の`logo`を共通の参照先にしています。白色版の`public/site-logo-white.png`は濃い背景で使うための支給素材で、元画像は加工せず保管しています。
 
 検索用`public/site-icon.png`、Apple用`public/apple-touch-icon.png`、ブラウザ用`src/app/favicon.ico`は正式ロゴから小さく書き出した画像です。ロゴを変更したら技術担当が`src/data/site.ts`の`logo`と正方形の画像サイズ`logoSize`を確認し、`npm ci`の後に`node scripts/generate-site-icons.mjs`を実行します。元画像は変更せず、生成した3ファイルも一緒に公開してください。`robots.txt`でアイコンをブロックしないでください。
 
 **公開してもGoogleの表示はすぐには変わりません。** サイト名やアイコンの採用はGoogleが決めるため、設定で表示を保証することはできません。公開後、部のSearch ConsoleでトップURLの「URL検査」からインデックス登録をリクエストし、再クロールを待ちます。数日から数週間かかることがあります。同じ申請を繰り返したり、部の名前を不自然に何度も本文へ追加したりする必要はありません。[サイト名の公式案内](https://developers.google.com/search/docs/appearance/site-names?hl=ja)と[ファビコンの公式案内](https://developers.google.com/search/docs/appearance/favicon-in-search?hl=ja)を参照してください。
+
+### 検索で旧サイトが新サイトより上に出るとき
+
+旧サイト（`https://gu-sakkyoku-album.pages.dev/`）は2025年から公開されていて、外からのリンクも長く集まっているため、しばらくは新サイトより上に出ることがあります。旧サイトは過去のCDに印刷したURLを守るため、**削除・転送・書き換えをしない**方針です（2026-11に部として再確認）。新サイト側では次の手当てをしています。
+
+- サイト名・ページタイトル・見出しを「群馬大学作曲部」に揃え、トップに`WebSite`と`Organization`（作曲部と公式X・YouTubeのつながり）の構造化データを載せています（`src/data/site.ts`）。
+- サイトマップにトップ・作品・歌詞ページを載せています。
+
+順位はGoogleが決めるので保証はできませんが、部の側で次を行うと新サイトが公式だと伝わりやすくなります。
+
+1. 公式X（@GUsakkyoku）のプロフィールと、YouTubeチャンネルの説明・リンク欄を、新サイト `https://gu-sakkyoku.github.io/` にする。
+2. 大学のサークル紹介など、部が頼めるページのリンクを新サイトにしてもらう。
+3. Search Consoleでサイトマップを送り、トップの「URL検査」からインデックス登録をリクエストする（上の手順）。
 
 ### サイトマップの取得エラーを調べる技術担当へ
 

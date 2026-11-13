@@ -281,6 +281,16 @@ export const tansanTheme = {
         "fontFamily": "var(--font-family-heading)",
         "fontSize": "var(--text-display-3-size)",
         "lineHeight": "var(--text-display-3-leading)"
+      },
+      "type:album-title": {
+        "fontSize": "clamp(4rem, 16vw, 10.5rem)",
+        "lineHeight": "1.02",
+        "letterSpacing": "0.02em",
+        "backgroundImage": "linear-gradient(165deg, #fffbe2 8%, #ffd0e2 46%, #e4dcff 74%, #c9f0ff 100%)",
+        "backgroundClip": "text",
+        "WebkitBackgroundClip": "text",
+        "WebkitTextFillColor": "transparent",
+        "filter": "drop-shadow(0.045em 0.05em 0 #5953b6)"
       }
     },
     "text": {
@@ -323,6 +333,26 @@ export const tansanTheme = {
         "fontFamily": "var(--font-family-heading)",
         "fontSize": "var(--text-display-3-size)",
         "lineHeight": "var(--text-display-3-leading)"
+      },
+      "type:eyebrow": {
+        "fontSize": "1rem",
+        "fontWeight": "var(--font-weight-bold)",
+        "letterSpacing": "0.06em",
+        "lineHeight": "1.6"
+      },
+      "type:track-number": {
+        "display": "inline-grid",
+        "placeItems": "center",
+        "width": "2.5rem",
+        "height": "2.5rem",
+        "flexShrink": "0",
+        "borderRadius": "50%",
+        "backgroundImage": "radial-gradient(circle at 32% 28%, #ffffff 0 18%, #cfe9ff 42%, #8cc8f6 100%)",
+        "boxShadow": "inset 0 0 0 1.5px #ffffff, 0 4px 10px rgb(31 86 140 / 0.18)",
+        "color": "#0b4f94",
+        "fontFamily": "var(--font-display-pop)",
+        "fontSize": "0.875rem",
+        "fontVariantNumeric": "tabular-nums"
       }
     },
     "item": {
@@ -440,11 +470,31 @@ export const tansanTheme = {
     "card": {
       "base": {
         "padding": "var(--spacing-3)"
+      },
+      "variant:jacket": {
+        "backgroundColor": "#ffffff",
+        "borderRadius": "10px",
+        "boxShadow": "0 32px 64px rgb(15 60 120 / 0.30), 0 6px 14px rgb(15 60 120 / 0.14)"
       }
     },
     "section": {
       "base": {
         "padding": "var(--spacing-3)"
+      },
+      "variant:stage": {
+        "backgroundColor": "#4fa6ee",
+        "backgroundImage": "radial-gradient(ellipse 60% 40% at 50% 0%, rgb(255 255 255 / 0.28), transparent 70%), linear-gradient(180deg, #1568c0 0%, #2a7fd6 28%, #4fa6ee 52%, #a9d9fb 80%, #eef7ff 100%)",
+        "borderRadius": "0px"
+      },
+      "variant:band": {
+        "backgroundColor": "#1568c0",
+        "backgroundImage": "linear-gradient(165deg, #0f5aad 0%, #1a73cf 50%, #3f98e6 100%)",
+        "borderRadius": "0px"
+      },
+      "variant:panel": {
+        "backgroundColor": "#ffffff",
+        "borderRadius": "var(--radius-page)",
+        "boxShadow": "var(--shadow-med)"
       }
     }
   },
@@ -453,7 +503,19 @@ export const tansanTheme = {
       "color-scheme": "dark",
       "--color-text-primary": "var(--color-on-dark)",
       "--color-icon-primary": "var(--color-on-dark)",
-      "--color-accent": "var(--color-on-dark)"
+      "--color-accent": "#ffffff",
+      "--color-on-accent": "#0b4f94",
+      "--color-text-accent": "#ffffff",
+      "--focus-outline-color": "#ffffff"
+    },
+    "components": {
+      "button": {
+        "variant:secondary": {
+          "backgroundColor": "transparent",
+          "color": "#ffffff",
+          "borderColor": "rgb(255 255 255 / 0.75)"
+        }
+      }
     }
   },
   __onLight: {

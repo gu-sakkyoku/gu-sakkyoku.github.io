@@ -64,7 +64,8 @@ test("ダウンロードは常設の移動リンクとし、作品メニュー�
 });
 
 test("動きを減らす設定を尊重し、検索用サイト名をトップに残す", async () => {
-  assert.match(await source("src/component/NewAlbumAnnouncement.tsx"), /\{site\.name\}/);
+  // トップの見出し（h1）に検索用サイト名を含めます。
+  assert.match(await source("src/component/Mainpage.tsx"), /<Heading level=\{1\}[^>]*>[^<]*\{site\.name\}/);
   assert.match(await source("src/component/AlbumMotion.tsx"), /prefers-reduced-motion: reduce/);
   assert.match(await source("src/app/globals.css"), /prefers-reduced-motion: reduce/);
 });

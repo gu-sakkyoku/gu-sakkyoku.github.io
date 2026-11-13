@@ -18,8 +18,8 @@ export default function SectionHeading({
   note?: ReactNode;
 }) {
   return (
-    <VStack gap={2} className="section-heading" data-reveal>
-      <Heading level={2} id={id}>{children}</Heading>
+    <VStack gap={2} className="section-heading">
+      <Heading level={2} type="display-3" id={id}>{children}</Heading>
       {note && <Text as="p" type="supporting">{note}</Text>}
     </VStack>
   );
