@@ -1,13 +1,11 @@
-"use client";
-
-import { motion, useInView, useReducedMotion } from "framer-motion";
-import { useRef, useState } from "react";
+import type { CSSProperties } from "react";
 import { Button } from "@astryxdesign/core/Button";
-import { Icon } from "@astryxdesign/core/Icon";
 import { Link } from "@astryxdesign/core/Link";
 import { Text } from "@astryxdesign/core/Text";
-import { ArrowRight, CirclePlay, Sparkles } from "lucide-react";
 import type { Album } from "../data/albums";
+import TansanBurst from "./TansanBurst";
+import ViewportPlay from "./ViewportPlay";
+import AppIcon from "./ui/AppIcon";
 import Artwork from "./ui/Artwork";
 
 // ランダム生成せず、SSRとブラウザで同じ装飾を描きます。すべて読み上げ対象外です。
@@ -20,54 +18,31 @@ const bubbles = [
   { left: "93%", top: "82%", size: 54 },
 ];
 
-// 泡の方向は固定値にし、SSRとブラウザで変わらないようにします。音・通信は発生しません。
-const popParticles = Array.from({ length: 12 }, (_, index) => ({
-  x: Math.cos((index * Math.PI) / 6) * (index % 2 ? 120 : 155),
-  y: Math.sin((index * Math.PI) / 6) * (index % 2 ? 120 : 155),
-}));
-
 /**
- * 最新作のヒーロー（ページ最上部の大きな紹介）です。トップと作品ページの両方で使います。
- * ジャケットの夏空を背景に広げ、題字はジャケットと同じ丸い書体・淡い色のグラデーションにしています。
+ * トップページの新作の紹介です。ジャケットの夏空を背景に広げ、題字はジャケットと同じ丸い書体・淡い色のグラデーションにしています。
  * 作品名・年度・曲数・配信状態は年度データから受け取るので、ここに作品情報を直接書きません。
- * 動きは「画面に入ったときに一度だけ」。OSで動きを減らす設定の人には静止表示にします。
+ *
+ * 動きは「画面に入ったときに一度だけ」。泡が上がり、題字が1文字ずつ跳ね、ジャケットが一度ゆれて光が走ります。
+ * 動き自体はすべてCSS（worlds/tansan.css）で、画面に入った合図だけを ViewportPlay が付けます。
+ * OSで動きを減らす設定の人とJavaScriptが動かない環境では、最初から止まった完成形を表示します。
+ * 押して反応するのは「泡をはじく」だけで、そこだけを小さな部品（TansanBurst）に分けています。
  */
-export default function NewAlbumAnnouncement({
-  album,
-  context = "home",
-}: {
-  album: Album;
-  context?: "home" | "album";
-}) {
-  const sectionRef = useRef<HTMLElement>(null);
-  const artworkRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(sectionRef, { once: true, amount: 0.15 });
-  const artworkInView = useInView(artworkRef, { once: true, amount: 0.25 });
-  const reducedMotion = useReducedMotion();
-  const [burst, setBurst] = useState(0);
-  const burstSequence = useRef(0);
-  // 設定が未確定のSSRでは静止表示。JSなしでも画像・説明・リンクは見えるままです。
-  const animate = isInView && reducedMotion === false;
-  // スマホでは題字と絵が別々の高さに来るため、絵が見えてからジャケットの演出を始めます。
-  const animateArtwork = artworkInView && reducedMotion === false;
-  const Title = context === "album" ? "h1" : "h2";
+export default function NewAlbumAnnouncement({ album }: { album: Album }) {
   const tracks = album.discs.reduce((total, disc) => total + disc.tracks.length, 0);
 
   return (
-    <section ref={sectionRef} className="tansan-hero" aria-labelledby="new-album-title" data-depth>
+    <section className="tansan-hero" aria-labelledby="new-album-title" data-depth data-play-on-view="0.15">
+      <ViewportPlay />
       <div className="tansan-sky" aria-hidden="true">
         <span className="tansan-sky-bokeh tansan-sky-bokeh--1" />
         <span className="tansan-sky-bokeh tansan-sky-bokeh--2" />
         <span className="tansan-sky-bokeh tansan-sky-bokeh--3" />
         <span className="tansan-sky-spray" />
         {bubbles.map((bubble, index) => (
-          <motion.span
+          <span
             key={bubble.left}
             className="tansan-bubble"
-            initial={false}
-            style={{ left: bubble.left, top: bubble.top, width: bubble.size, height: bubble.size }}
-            animate={{ y: animate ? [0, -90, -40] : 0, opacity: animate ? [0.4, 0.95, 0.7] : 0.7 }}
-            transition={{ duration: animate ? 4 : 0, delay: animate ? index * 0.18 : 0, ease: "easeInOut" }}
+            style={{ left: bubble.left, top: bubble.top, width: bubble.size, height: bubble.size, "--i": index } as CSSProperties}
           />
         ))}
         <span className="tansan-cloud tansan-cloud--1" />
@@ -77,29 +52,15 @@ export default function NewAlbumAnnouncement({
 
       <div className="tansan-hero-inner site-container">
         <div className="tansan-hero-copy">
-          <motion.p
-            className="tansan-kicker"
-            initial={false}
-            animate={{ rotate: animate ? [-3, 2, -3] : -3, scale: animate ? [1, 1.06, 1] : 1 }}
-            transition={{ duration: animate ? 0.9 : 0, delay: animate ? 0.25 : 0, ease: "easeInOut" }}
-          >
-            New Album!!!
-          </motion.p>
-          <Title id="new-album-title" aria-label={album.title} className="tansan-title">
+          <p className="tansan-kicker">New Album!!!</p>
+          <h2 id="new-album-title" aria-label={album.title} className="tansan-title">
             {/* 読み上げは見出しのaria-labelで一語に保ち、文字ごとの演出を重複して読ませません。 */}
             {[...album.title].map((character, index) => (
-              <motion.span
-                key={`${character}-${index}`}
-                aria-hidden="true"
-                initial={false}
-                // 題字は動かしても薄くはしません。途中で止まっても必ず読めるようにするためです。
-                animate={animate ? { y: [26, -6, 0], rotate: [-6, 2, 0] } : { y: 0, rotate: 0 }}
-                transition={{ duration: animate ? 0.85 : 0, delay: animate ? index * 0.09 : 0, ease: "easeOut" }}
-              >
+              <span key={`${character}-${index}`} aria-hidden="true" style={{ "--i": index } as CSSProperties}>
                 {character}
-              </motion.span>
+              </span>
             ))}
-          </Title>
+          </h2>
 
           <div className="tansan-hero-card">
             {/* 年度・曲数はそれぞれまとまりで折り返し、「全18」と「曲」が別の行に分かれないようにします。 */}
@@ -108,14 +69,13 @@ export default function NewAlbumAnnouncement({
               <span className="inline-block">{album.discs.length}枚組 / 全{tracks}曲</span>
             </Text>
             <div className="tansan-hero-actions">
-              {/* 同じ紹介を作品ページでも再利用し、そちらでは曲リストへ直接進みます。 */}
               {album.detailPath && (
                 <Button
-                  label={context === "album" ? "曲リスト・歌詞を見る" : "アルバム詳細・歌詞はこちら"}
-                  href={context === "album" ? "#track-list" : album.detailPath}
+                  label="アルバム詳細・歌詞はこちら"
+                  href={album.detailPath}
                   variant="primary"
                   size="lg"
-                  endContent={<Icon icon={ArrowRight} />}
+                  endContent={<AppIcon name="arrowRight" />}
                 />
               )}
               {album.crossfadeVideoId && (
@@ -124,7 +84,7 @@ export default function NewAlbumAnnouncement({
                   href="#crossfade"
                   variant="secondary"
                   size="lg"
-                  icon={<Icon icon={CirclePlay} />}
+                  icon={<AppIcon name="circlePlay" />}
                 />
               )}
             </div>
@@ -140,14 +100,9 @@ export default function NewAlbumAnnouncement({
         </div>
 
         {album.artwork && (
-          <div className="tansan-hero-art" ref={artworkRef} data-tilt>
-            <motion.div
-              className="tansan-polaroid"
-              initial={false}
-              // ジャケットの「ゆらゆら」は一度だけ。幅や高さは変えず、レイアウトを動かさないtransformだけです。
-              animate={animateArtwork ? { rotate: [3, -2, 5, 2, 3], y: [0, -10, 0, -4, 0] } : { rotate: 3, y: 0 }}
-              transition={{ duration: animateArtwork ? 2.6 : 0, delay: animateArtwork ? 0.2 : 0, ease: "easeInOut" }}
-            >
+          // スマホでは題字と絵が別々の高さに来るため、絵が見えてからジャケットの演出を始めます。
+          <div className="tansan-hero-art" data-tilt data-play-on-view="0.25">
+            <TansanBurst>
               <span className="tansan-disc" aria-hidden="true" />
               <div className="tansan-polaroid-frame">
                 <Artwork
@@ -156,44 +111,13 @@ export default function NewAlbumAnnouncement({
                   sizes="(max-width: 640px) 80vw, 448px"
                   priority
                 />
-                <motion.span
-                  aria-hidden="true"
-                  className="tansan-shine"
-                  initial={false}
-                  animate={{ x: animateArtwork ? ["-130%", "260%"] : "-130%", opacity: animateArtwork ? [0, 0.6, 0] : 0 }}
-                  transition={{ duration: animateArtwork ? 2.4 : 0, delay: animateArtwork ? 0.9 : 0, ease: "easeInOut" }}
-                />
+                <span aria-hidden="true" className="tansan-shine" />
                 <p className="tansan-polaroid-caption">
                   <span>{album.year}</span>
                   <span>{album.discs.length}枚組 / 全{tracks}曲</span>
                 </p>
               </div>
-              {burst > 0 && (
-                <div className="tansan-pop" aria-hidden="true">
-                  {popParticles.map((particle, index) => (
-                    <motion.span
-                      key={`${burst}-${index}`}
-                      className={index % 2 ? "tansan-pop-bubble" : "tansan-pop-star"}
-                      // 動きを減らす場合は、離れた位置に静止した泡をゆっくりフェードするだけにします。
-                      style={reducedMotion ? { left: `calc(50% + ${particle.x}px)`, top: `calc(45% + ${particle.y}px)` } : undefined}
-                      initial={reducedMotion ? { opacity: 0 } : { opacity: 0, x: 0, y: 0, scale: 0.2 }}
-                      animate={reducedMotion ? { opacity: [0, 0.8, 0] } : { x: particle.x, y: particle.y, scale: [0.2, 1.2, 0.8], opacity: [0, 1, 0] }}
-                      transition={{ duration: 1.1, delay: index * 0.02, ease: "easeOut" }}
-                      onAnimationComplete={index === popParticles.length - 1 ? () => setBurst((current) => (current === burst ? 0 : current)) : undefined}
-                    />
-                  ))}
-                </div>
-              )}
-            </motion.div>
-            <div className="tansan-pop-button">
-              <Button
-                label="泡をはじく"
-                size="sm"
-                variant="secondary"
-                icon={<Icon icon={Sparkles} />}
-                onClick={() => setBurst(++burstSequence.current)}
-              />
-            </div>
+            </TansanBurst>
           </div>
         )}
       </div>

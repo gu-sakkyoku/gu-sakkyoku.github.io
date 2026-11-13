@@ -14,6 +14,7 @@ export default function Artwork({
   sizes,
   className,
   priority = false,
+  jacketHref,
 }: {
   src: string;
   alt: string;
@@ -22,6 +23,8 @@ export default function Artwork({
   className?: string;
   /** 最初に見える大きな絵だけtrueにします。それ以外は画面に近づいてから読み込みます。 */
   priority?: boolean;
+  /** 作品一覧のジャケットに付ける、その作品のページのURL。ページ移動のときに作品ページのジャケットへつなげます（JacketHandoff）。 */
+  jacketHref?: string;
 }) {
   const source = sources[src];
   const largest = source?.variants.at(-1);
@@ -38,6 +41,7 @@ export default function Artwork({
       loading={priority ? "eager" : "lazy"}
       fetchPriority={priority ? "high" : undefined}
       decoding="async"
+      data-jacket-href={jacketHref}
     />
   );
 }

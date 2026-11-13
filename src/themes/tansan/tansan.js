@@ -488,7 +488,7 @@ export const tansanTheme = {
       },
       "variant:band": {
         "backgroundColor": "#1568c0",
-        "backgroundImage": "linear-gradient(165deg, #0f5aad 0%, #1a73cf 50%, #3f98e6 100%)",
+        "backgroundImage": "linear-gradient(165deg, #0f5aad 0%, #1568c0 55%, #1d6fc4 100%)",
         "borderRadius": "0px"
       },
       "variant:panel": {

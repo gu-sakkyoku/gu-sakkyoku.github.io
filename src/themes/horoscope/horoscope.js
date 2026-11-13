@@ -349,7 +349,7 @@ export const horoscopeTheme = {
         "fontWeight": "700",
         "letterSpacing": "0.08em",
         "fontVariantNumeric": "tabular-nums",
-        "textShadow": "0 0 12px rgb(142 230 255 / 0.65)"
+        "textShadow": "0.09em 0.09em 0 rgb(255 95 208 / 0.8)"
       }
     },
     "item": {
@@ -474,7 +474,7 @@ export const horoscopeTheme = {
         "borderStyle": "solid",
         "borderColor": "rgb(255 255 255 / 0.5)",
         "borderRadius": "4px",
-        "boxShadow": "0 0 0 6px rgb(255 255 255 / 0.05), 0 24px 60px rgb(3 2 30 / 0.6), 0 0 56px rgb(91 224 255 / 0.16)"
+        "boxShadow": "0 0 0 6px rgb(255 255 255 / 0.05), 0 24px 60px rgb(3 2 30 / 0.6)"
       }
     },
     "section": {

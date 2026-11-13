@@ -68,6 +68,97 @@ body {
   color: var(--color-on-accent);
 }
 
+/*
+ * ブラウザが描く部分（入力中の点滅する線・チェックボックスの色・押した瞬間の色・下線の位置）も、作品の色にそろえます。
+ * 色はどれも作品のテーマのアクセント色なので、作品ごとに自動で変わります。
+ */
+.site-world {
+  accent-color: var(--color-accent);
+  caret-color: var(--color-accent);
+  -webkit-tap-highlight-color: color-mix(in srgb, var(--color-accent) 22%, transparent);
+}
+
+.site-world a {
+  text-underline-offset: 0.2em;
+}
+
+/* 押せる場所では、ダブルタップ拡大を待つ一瞬の遅れをなくします（2本指での拡大はそのまま使えます）。 */
+.site-world :is(a, button, label, summary, [role="button"], [role="tab"]) {
+  touch-action: manipulation;
+}
+
+/*
+ * 日本語の改行。見出し・ボタン・リンク・曲の行などの短い文字は、言葉（文節）の途中で折り返しません
+ * （「クロスフ／ェード」「見／る」のような改行を防ぎます。対応ブラウザはChrome・Edgeで、ほかは従来どおり）。
+ * 見出しは各行の長さをそろえ、文章は最後の行に1〜2文字だけ取り残されないようにします。
+ * 歌詞は原稿の改行のまま見せるため、ここでは対象にしません。
+ */
+.site-world :is(h1, h2, h3, h4, h5, h6) {
+  word-break: auto-phrase;
+  text-wrap: balance;
+}
+
+.site-world :is(.astryx-button, .astryx-link, .astryx-item, .astryx-metadata-list, .astryx-top-nav-item, label, .album-shelf-link) {
+  word-break: auto-phrase;
+}
+
+.site-world p:not(:where(.lyric-sheet *)) {
+  text-wrap: pretty;
+}
+
+/*
+ * スクロールバーとページ全体の明暗も、いま開いている作品の色にします。
+ * 作品の世界は .site-world に付く1つだけなので、:has() でページの作品を見分けます（作品一覧のカードの入れ子とは区別されます）。
+ */
+:root:has(.site-world--tansan) {
+  scrollbar-color: #1568c0 #eef7ff;
+}
+
+:root:has(.site-world--horoscope) {
+  color-scheme: dark;
+  scrollbar-color: #8ee6ff #0b0930;
+  background: #0b0930;
+}
+
+:root:has(.site-world--nijiiro) {
+  scrollbar-color: #2f2438 #ecebff;
+}
+
+:root:has(.site-world--aramaki) {
+  scrollbar-color: #1d14d4 #f4f4f6;
+}
+
+/*
+ * ページを移るとき、ヘッダーを残したまま本文だけを短く入れ替え、作品一覧のジャケットを作品ページのジャケットへつなげます。
+ * ブラウザどうしのページ移動の機能（クロスドキュメントのView Transition）で、JavaScriptは使いません。
+ * 対応していないブラウザ・動きを減らす設定では、ふつうのページ移動のままです。
+ */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+
+  .site-header {
+    view-transition-name: site-header;
+  }
+
+  /* 作品ページの大きなジャケット。作品一覧から来たときは、押したカードのジャケットがここまで移ってきます。 */
+  .album-jacket {
+    view-transition-name: album-jacket;
+  }
+
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 220ms;
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  ::view-transition-group(*) {
+    animation-duration: 420ms;
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+}
+
 /* キーボードでTabを押したときだけ現れる、本文への近道です。 */
 .site-skip-link {
   position: fixed;

@@ -50,6 +50,16 @@ for (const { file, includeOriginal = false } of sources) {
   manifest[`/${file}`] = { width, height, variants };
 }
 
+// ヘッダーのロゴ。表示は最大104px幅なので、高解像度の画面（3倍）でもにじまない320px幅のWebPだけを作ります。
+// 元のPNG（2084px・4167px）は、検索結果・SNSで共有したときの画像としてそのまま使います。
+for (const file of ["site-logo-blue.png", "site-logo-white.png"]) {
+  const output = `art/${file.replace(/\.png$/i, "")}-320.webp`;
+  await sharp(fileURLToPath(new URL(file, publicDir)))
+    .resize({ width: 320 })
+    .webp({ quality: 90, alphaQuality: 100 })
+    .toFile(fileURLToPath(new URL(output, publicDir)));
+}
+
 await writeFile(
   new URL("../src/data/artwork.generated.json", import.meta.url),
   `${JSON.stringify(manifest, null, 2)}\n`,

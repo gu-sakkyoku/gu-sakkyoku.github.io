@@ -15,6 +15,11 @@ export const site = {
   // 暗い背景（Horoscope）のヘッダー用に支給された白色版。形は同じで、色だけが違います。
   logoOnDark: "/site-logo-white.png",
   logoOnDarkSize: 4167,
+  // ヘッダーに表示する縮小版（320px四方のWebP、scripts/generate-artwork.mjs が作ります）。
+  // 元のPNG（113KB）をそのまま読み込むと、どのページでも最初の表示が遅れるためです。
+  headerLogo: "/art/site-logo-blue-320.webp",
+  headerLogoOnDark: "/art/site-logo-white-320.webp",
+  headerLogoSize: 320,
   icon: "/site-icon.png",
   appleIcon: "/apple-touch-icon.png",
 };

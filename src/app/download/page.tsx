@@ -9,7 +9,8 @@ import DownloadArchive from "../../component/DownloadArchive";
 import { albums } from "../../data/albums";
 
 export const metadata: Metadata = {
-  title: "Music Download | 群馬大学作曲部",
+  // タブの表示を、ページの見出し・メニューの項目名（アルバムダウンロード）とそろえます。
+  title: "アルバムダウンロード | 群馬大学作曲部",
   description: "群馬大学作曲部のダウンロードカードからアルバムを受け取るページです。",
   // カードから訪れるページなので、既存の歌詞ページのSEOには触れず、このページだけ検索対象外にします。
   robots: { index: false, follow: false },

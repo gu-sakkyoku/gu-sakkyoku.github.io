@@ -61,9 +61,6 @@ export default function TansanYohouPage() {
           {/* ジャケットと同じ2×2の題字「炭酸／予報」を空いっぱいに置き、写真をその右肩に重ねます。 */}
           <Grid columns={{ minWidth: 300, max: 2 }} gap={0} align="center" className="site-container tansan-stage-inner">
             <VStack gap={5} hAlign="start" className="tansan-stage-copy">
-              <MediaTheme mode="dark">
-                <Text type="eyebrow">群馬大学作曲部 3rdアルバム</Text>
-              </MediaTheme>
               <Heading level={1} type="album-title" id="album-title" className="tansan-stage-title">
                 {album2026.title}
               </Heading>
@@ -73,7 +70,7 @@ export default function TansanYohouPage() {
                 <Button label="ダウンロード" href={`/download/#album-${album2026.year}`} variant="secondary" size="lg" icon={<AppIcon name="download" />} />
               </HStack>
             </VStack>
-            <Card variant="jacket" padding={3} className="tansan-stage-jacket" data-tilt>
+            <Card variant="jacket" padding={3} className="tansan-stage-jacket album-jacket" data-tilt>
               <VStack gap={3}>
                 <AspectRatio ratio={1} fit="cover">
                   <Artwork
@@ -83,8 +80,11 @@ export default function TansanYohouPage() {
                     priority
                   />
                 </AspectRatio>
-                {/* 写真の下の余白に、年だけを書き込みます。 */}
-                <Text type="eyebrow" color="secondary" className="tansan-stage-jacket-note">{album2026.year}</Text>
+                {/* 写真の下の余白に、ペンで書き込むように作品と年を添えます（題字の上に小さなラベルは置きません）。 */}
+                <HStack gap={3} hAlign="between" vAlign="end" wrap="wrap" className="tansan-stage-jacket-note">
+                  <Text type="eyebrow" color="secondary">群馬大学作曲部 3rdアルバム</Text>
+                  <Text type="eyebrow" color="secondary">{album2026.year}</Text>
+                </HStack>
               </VStack>
             </Card>
           </Grid>

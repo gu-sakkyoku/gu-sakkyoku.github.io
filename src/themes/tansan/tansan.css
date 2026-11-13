@@ -587,7 +587,7 @@
 
   .astryx-section[data-variant="band"] {
     background-color: #1568c0;
-    background-image: linear-gradient(165deg, #0f5aad 0%, #1a73cf 50%, #3f98e6 100%);
+    background-image: linear-gradient(165deg, #0f5aad 0%, #1568c0 55%, #1d6fc4 100%);
     border-radius: 0px;
   }
 

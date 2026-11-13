@@ -53,9 +53,18 @@ test("正式な青色ロゴをヘッダーと共有画像で共用し、透過�
   assert.equal(info.channels, 4);
   const header = await readFile(new URL("../src/component/header.tsx", import.meta.url), "utf8");
   // 明るい世界では青色版、暗い世界（Horoscope）では支給された白色版を使います。
-  assert.match(header, /const logo = onDark \? site\.logoOnDark : site\.logo;/);
-  assert.match(header, /const logoSize = onDark \? site\.logoOnDarkSize : site\.logoSize;/);
+  // ヘッダーには、元のPNGから作った軽い縮小版（320px四方のWebP）を表示します。
+  assert.match(header, /const logo = onDark \? site\.headerLogoOnDark : site\.headerLogo;/);
+  assert.match(header, /const logoSize = site\.headerLogoSize;/);
   assert.match(header, /width=\{logoSize\}/);
+  for (const path of [site.headerLogo, site.headerLogoOnDark]) {
+    const small = await readFile(new URL(`../public${path}`, import.meta.url));
+    const info = await sharp(small).metadata();
+    assert.equal(info.format, "webp");
+    assert.equal(info.width, site.headerLogoSize);
+    assert.equal(info.hasAlpha, true, "ヘッダーの色が透けて見えるよう、透明部分を残す");
+    assert.ok(small.length < 30_000, `${path} は30KB未満にする（元のPNGは最大113KB）`);
+  }
   assert.equal(site.logoOnDark, "/site-logo-white.png");
   const darkLogo = await sharp(await readFile(new URL(`../public${site.logoOnDark}`, import.meta.url))).metadata();
   assert.equal(darkLogo.width, site.logoOnDarkSize);

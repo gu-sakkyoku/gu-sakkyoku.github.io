@@ -42,7 +42,8 @@ jobs:
         env:
           NEXT_PUBLIC_DOWNLOAD_WORKER_URL: ${{ vars.NEXT_PUBLIC_DOWNLOAD_WORKER_URL }}
           NEXT_PUBLIC_TURNSTILE_SITE_KEY: ${{ vars.NEXT_PUBLIC_TURNSTILE_SITE_KEY }}
-        run: npm run build
+        # Googleフォントの一時的な取得失敗のときだけ、1回やり直します（理由はスクリプトに記載）。
+        run: bash scripts/ci-build.sh
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4

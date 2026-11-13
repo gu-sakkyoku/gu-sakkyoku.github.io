@@ -45,7 +45,7 @@ export default function ArchiveArtworkStage({
           })}
         </svg>
       )}
-      <Card variant="jacket" padding={cosmic ? 0 : 2} className="archive-cover">
+      <Card variant="jacket" padding={cosmic ? 0 : 2} className="archive-cover album-jacket">
         <AspectRatio ratio={1} fit="cover">
           <Artwork src={artwork} alt={`${title}のアルバムジャケット`} sizes="(max-width: 767px) 80vw, 520px" priority />
         </AspectRatio>

@@ -128,3 +128,55 @@ test("見出しや段落ごとに現れる演出は付けず、動きは各ペ�
   for (const file of files) assert.doesNotMatch(await source(file), /data-reveal/, file);
   assert.doesNotMatch(await source("src/component/AlbumMotion.tsx"), /IntersectionObserver/);
 });
+
+test("ページ移動のつなぎは動きを減らす設定で止まり、ジャケットは画面に見えているものだけをつなぐ", async () => {
+  const css = await source("src/app/globals.css");
+  const motionBlock = css.slice(css.indexOf("@media (prefers-reduced-motion: no-preference)"));
+  assert.match(motionBlock, /@view-transition \{\s*navigation: auto;/);
+  assert.match(motionBlock, /\.album-jacket \{\s*view-transition-name: album-jacket;/);
+  assert.doesNotMatch(css.slice(0, css.indexOf("@media (prefers-reduced-motion: no-preference)")), /@view-transition/);
+  const handoff = await source("src/component/ui/JacketHandoff.tsx");
+  assert.match(handoff, /"pageswap"/);
+  assert.match(handoff, /isOnScreen\(item\)/);
+  // 同じ名前が1ページに2つあると、ブラウザはつなぎ自体を取りやめます。移る直前に大きなジャケットの名前を外します。
+  assert.match(handoff, /viewTransitionName = "none"/);
+});
+
+test("ブラウザが描く部分（スクロールバー・入力中の線・押した瞬間の色）も作品の色にそろえ、日本語は文節の途中で折り返さない", async () => {
+  const css = await source("src/app/globals.css");
+  for (const world of worlds) assert.match(css, new RegExp(`:root:has\\(\\.site-world--${world}\\) \\{[^}]*scrollbar-color`));
+  assert.match(css, /:root:has\(\.site-world--horoscope\) \{[^}]*color-scheme: dark/);
+  assert.match(css, /caret-color: var\(--color-accent\)/);
+  assert.match(css, /-webkit-tap-highlight-color/);
+  assert.match(css, /:is\(h1, h2, h3, h4, h5, h6\) \{\s*word-break: auto-phrase;\s*text-wrap: balance;/);
+  // 歌詞は原稿の改行どおりに表示するので、文章の折り返し調整の対象から外します。
+  assert.match(css, /p:not\(:where\(\.lyric-sheet \*\)\)/);
+});
+
+test("光のにじみ（同じ位置の色付きの影）と、行の左端の色線を飾りに使わない", async () => {
+  const horoscopeTheme = await source("src/themes/horoscope/horoscopeTheme.ts");
+  // 影の始まりが「0 0 ぼかし 色」のもの（ずらさずにぼかした光）を探します。「0 0 0 6px」の細い輪は対象外です。
+  assert.doesNotMatch(horoscopeTheme, /(textShadow|boxShadow): '(?:[^']*, )?0 0 [1-9]\d*px rgb/);
+  const horoscopeCss = await source("src/app/worlds/horoscope.css");
+  assert.doesNotMatch(horoscopeCss, /box-shadow: inset 2px 0 0/);
+  assert.doesNotMatch(horoscopeCss, /box-shadow: 0 0 \d+px/);
+  // 白地に白い文字になっていた、トップの荒牧祭のまとめの題字の上のラベルは置かない。
+  assert.doesNotMatch(await source("src/component/aramaki/FestivalNotice.tsx"), /type="eyebrow"/);
+});
+
+test("トップの新作紹介はアニメーション用のライブラリを読み込まず、クロスフェードの枠は列の幅いっぱいに広がる", async () => {
+  const pkg = JSON.parse(await source("package.json"));
+  assert.equal(pkg.dependencies["framer-motion"], undefined);
+  const shared = await source("src/app/worlds/shared.css");
+  assert.match(shared, /\.crossfade-video \{\s*align-self: stretch;\s*width: 100%;/);
+});
+
+test("CIと公開のビルドは、Googleフォントの一時的な取得失敗のときだけ1回やり直す", async () => {
+  const script = await source("scripts/ci-build.sh");
+  assert.match(script, /set -uo pipefail/);
+  assert.match(script, /grep -qE "next-font-loader\|from Google Fonts"/);
+  assert.match(script, /else\s+exit 1/);
+  for (const workflow of ["ci.yml", "deploy-pages.yml"]) {
+    assert.match(await source(`.github/workflows/${workflow}`), /run: bash scripts\/ci-build.sh/);
+  }
+});

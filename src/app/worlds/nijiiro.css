@@ -160,6 +160,24 @@
 }
 
 /* 区切りの見出し：下に七色の帯を引きます。 */
+.site-world--nijiiro .niji-stage .section-heading > p {
+  color: var(--niji-ink);
+}
+
+/*
+ * 題字の面 → 動画の方眼 → ダウンロードの帯は、1冊のノートのように隙間なく続けます。
+ * 間に地の色の細い帯ができると、上下の濃い線と合わせて「何もない段」に見えるためです。線は境目に1本だけ残します。
+ */
+.site-world--nijiiro .niji-band,
+.site-world--nijiiro .album-download-note {
+  margin-top: 0;
+}
+
+.site-world--nijiiro .niji-band > .astryx-section,
+.site-world--nijiiro .album-download-note > .astryx-section {
+  border-top-width: 0;
+}
+
 .site-world--nijiiro .section-heading::after {
   content: "";
   width: 7rem;

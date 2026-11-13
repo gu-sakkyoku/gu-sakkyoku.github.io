@@ -68,7 +68,7 @@ export default function TrackList({
                   href={track.lyricHref}
                   align="start"
                   className={track.lyricHref ? "track-row track-row--lyric" : "track-row"}
-                  startContent={<Text type="track-number">{String(index + 1).padStart(2, "0")}</Text>}
+                  startContent={<Text type="track-number" className="track-number">{String(index + 1).padStart(2, "0")}</Text>}
                   label={<Text weight="bold" className="track-title">{track.title}</Text>}
                   description={
                     (track.credits?.length || track.lyricHref) && (

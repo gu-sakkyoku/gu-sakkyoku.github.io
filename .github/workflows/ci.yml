@@ -44,7 +44,8 @@ jobs:
         run: python3 -m unittest discover -s tests -p test_album_zip.py -v
 
       - name: Build static site
-        run: npm run build
+        # Googleフォントの一時的な取得失敗のときだけ、1回やり直します（理由はスクリプトに記載）。
+        run: bash scripts/ci-build.sh
 
       # Critical/Highの既知脆弱性は、レビュー前に失敗として扱います。
       - name: Audit production and development dependencies
