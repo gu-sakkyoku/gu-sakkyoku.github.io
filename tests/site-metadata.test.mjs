@@ -6,13 +6,16 @@ import { site, websiteSchema } from "../src/data/site.ts";
 
 const sharp = createRequire(import.meta.resolve("next"))("sharp");
 
-test("検索の希望サイト名を英語表記に揃え、日本語名も残す", () => {
-  assert.equal(site.name, "GU sakkyoku");
+test("検索の希望サイト名を、タイトル・見出し・構造化データ・og:site_name で同じ「群馬大学作曲部」に揃える", async () => {
+  assert.equal(site.name, "群馬大学作曲部");
   assert.equal(websiteSchema.name, site.name);
   assert.equal(websiteSchema.url, site.url);
   assert.equal(websiteSchema["@type"], "WebSite");
-  assert.ok(websiteSchema.alternateName.includes("群馬大学作曲部"));
-  assert.ok(site.title.includes("群馬大学作曲部"));
+  assert.ok(site.title.startsWith(site.name));
+  // 英語表記・略称は別名として残し、最後の候補にサイトのアドレスを置きます（Googleの案内どおり）。
+  assert.deepEqual(websiteSchema.alternateName, ["GU sakkyoku", "群大作曲部", "gu-sakkyoku.github.io"]);
+  const layout = await readFile(new URL("../src/app/layout.tsx", import.meta.url), "utf8");
+  assert.match(layout, /siteName: site\.name/);
 });
 
 test("検索・Apple用アイコンはクロールできるpublic内の正方形PNG", async () => {

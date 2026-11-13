@@ -23,8 +23,8 @@ export default function MainPage() {
   return (
     <>
       {/* ページの見出し（h1）。画面の上部はロゴと荒牧祭・新作の題字が占めるので、読み上げ用に先頭へ置きます。 */}
-      {/* 検索用のサイト名（site.name）もここに含め、トップのHTMLに残します。 */}
-      <Heading level={1} className="sr-only">群馬大学作曲部（{site.name}）公式サイト</Heading>
+      {/* サイト名（site.name）は、ページタイトル・構造化データ・og:site_name と同じ表記にします。 */}
+      <Heading level={1} className="sr-only">{site.name} 公式サイト</Heading>
       {/* 学園祭の期間は、荒牧祭のまとめを最上部に出します（src/data/aramaki2026.ts の showOnHome で出し入れします）。 */}
       <FestivalNotice />
 
