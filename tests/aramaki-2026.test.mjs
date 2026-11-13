@@ -31,8 +31,8 @@ test("DJステージの場所・2日分のタイムテーブルをポスター�
   assert.equal(aramaki2026.campus.address, "群馬県前橋市荒牧町4-2");
   const table = dj.days.map((day) => [day.date, `${day.start}-${day.end}`, day.slots.map((slot) => `${slot.start}-${slot.end} ${slot.name}`)]);
   assert.deepEqual(table, [
-    ["2026-11-14", "11:30-17:30", ["11:30-12:30 Howl", "12:30-13:30 Taiyo", "13:30-14:30 37SH a.k.a. 天鴞", "14:30-15:30 体験会", "15:30-16:30 na", "17:00-17:30 別部"]],
-    ["2026-11-15", "11:30-16:30", ["11:30-12:30 Miriha", "12:30-13:30 astraire", "13:30-14:30 hosi", "14:30-15:30 ムギスタジオ", "15:30-16:30 NΛЯURU"]],
+    ["2026-11-14", "11:30-17:30", ["11:30-12:30 Howl", "12:30-13:30 Taiyo", "13:30-14:30 37SH a.k.a. 天鴞", "14:30-15:30 体験会", "15:30-16:30 hosi", "16:30-17:30 別部"]],
+    ["2026-11-15", "11:30-16:30", ["11:30-12:30 Miriha", "12:30-13:30 ムギスタジオ", "13:30-14:30 na", "14:30-15:30 astraire", "15:30-16:30 NΛЯURU"]],
   ]);
   for (const day of dj.days) {
     for (const slot of day.slots) assert.ok(slot.start < slot.end, `${day.date} ${slot.name}`);

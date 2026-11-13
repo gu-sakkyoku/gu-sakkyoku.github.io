@@ -66,8 +66,8 @@ export const aramaki2026 = {
           { start: "12:30", end: "13:30", name: "Taiyo" },
           { start: "13:30", end: "14:30", name: "37SH a.k.a. 天鴞" },
           { start: "14:30", end: "15:30", name: "体験会" },
-          { start: "15:30", end: "16:30", name: "na" },
-          { start: "17:00", end: "17:30", name: "別部" },
+          { start: "15:30", end: "16:30", name: "hosi" },
+          { start: "16:30", end: "17:30", name: "別部" },
         ],
       },
       {
@@ -78,9 +78,9 @@ export const aramaki2026 = {
         end: "16:30",
         slots: [
           { start: "11:30", end: "12:30", name: "Miriha" },
-          { start: "12:30", end: "13:30", name: "astraire" },
-          { start: "13:30", end: "14:30", name: "hosi" },
-          { start: "14:30", end: "15:30", name: "ムギスタジオ" },
+          { start: "12:30", end: "13:30", name: "ムギスタジオ" },
+          { start: "13:30", end: "14:30", name: "na" },
+          { start: "14:30", end: "15:30", name: "astraire" },
           { start: "15:30", end: "16:30", name: "NΛЯURU" },
         ],
       },
