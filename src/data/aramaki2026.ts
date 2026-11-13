@@ -37,7 +37,7 @@ export const aramaki2026 = {
     acts: [
       { name: "弦楽隊", song: "弦楽四重奏第二番ロ短調 大学生活" },
       { name: "群馬を副首都にする会", song: "群馬を副首都にするソング" },
-      { name: "ぎりぎり^^", song: "ふりのふり" },
+      { name: "ぎりぎり^^", song: "光" },
       // 「タラレバ」は2026年アルバム「炭酸予報」の収録曲で、歌詞ページがあります。
       { name: "赤貝", song: "タラレバ", lyricPath: "/TansanYohou/tarareba/" },
       { name: "例えばしめじ", song: "🌸←桜" },
