@@ -76,11 +76,17 @@ test("特設ページは検索対象・サイトマップに含め、トップ�
   assert.match(await source("src/component/aramaki/FestivalNotice.tsx"), /if \(!aramaki2026\.showOnHome\) return null;/);
 });
 
-test("「いま」の印は日本時間で判定し、画面を動かさない", async () => {
+test("「いま」の印と再生ヘッドは日本時間で判定し、画面を動かさない", async () => {
+  assert.match(await source("src/lib/tokyo-now.ts"), /timeZone: "Asia\/Tokyo"/);
   const live = await source("src/component/aramaki/LiveMark.tsx");
-  assert.match(live, /timeZone: "Asia\/Tokyo"/);
+  assert.match(live, /tokyoNow\(\)/);
   assert.match(live, /now\.date === date && now\.time >= start && now\.time < end/);
   assert.match(live, /clearInterval/);
+  const playhead = await source("src/component/aramaki/DjPlayhead.tsx");
+  assert.match(playhead, /tokyoNow\(\)/);
+  assert.match(playhead, /now\.date === date/);
+  assert.match(playhead, /clearInterval/);
+  assert.match(playhead, /aria-hidden="true"/);
   for (const license of ["dela-gothic-one", "oswald", "zen-kaku-gothic-new"]) {
     assert.match(await source(`public/licenses/${license}-OFL.txt`), /SIL OPEN FONT LICENSE Version 1.1/);
   }
@@ -103,4 +109,17 @@ test("ポスター3枚を各区切りに掲載し、デザインした人の表�
   const page = await source("src/app/aramakisai2026/page.tsx");
   assert.equal((page.match(/<PosterFigure /g) || []).length, 3);
   assert.match(await source("src/component/aramaki/PosterFigure.tsx"), /designed by \{poster\.credit\}/);
+});
+
+test("DJのタイムラインは出演枠をデータから並べ、時刻・名前を順に読めるリストにする", async () => {
+  const timeline = await source("src/component/aramaki/DjTimeline.tsx");
+  assert.match(timeline, /<ol className="dj-lane">/);
+  assert.match(timeline, /day\.slots\.map/);
+  assert.match(timeline, /<span className="sr-only">から<\/span>/);
+  assert.match(timeline, /<LiveMark /);
+  // 位置はデータから計算します。ページにも部品にも、出演者名や時刻を直接書きません。
+  assert.doesNotMatch(timeline, /Howl|NΛЯURU|11:30/);
+  const css = await source("src/app/worlds/aramaki.css");
+  assert.match(css, /grid-column: calc\(var\(--start\) \+ 1\) \/ span var\(--span\)/);
+  assert.match(css, /grid-row: calc\(var\(--start\) \+ 1\) \/ span var\(--span\)/);
 });

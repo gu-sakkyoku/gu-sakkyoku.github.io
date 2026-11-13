@@ -363,6 +363,33 @@
     line-height: var(--text-display-3-leading);
   }
 
+  .astryx-heading[data-type="festival-title"] {
+    display: block;
+    width: fit-content;
+    max-width: 100%;
+    padding-inline: 0.08em;
+    font-size: clamp(4.5rem, 21vw, 12rem);
+    line-height: 1.08;
+    -webkit-text-fill-color: #0d0b2b;
+    background-image: linear-gradient(transparent 16%, #4e46ff 16% 84%, transparent 84%);
+    -webkit-text-stroke: 0.035em #ffffff;
+    paint-order: stroke fill;
+    text-shadow: 0.05em 0.05em 0 #ffffff;
+  }
+
+  .astryx-heading[data-type="poster-heading"] {
+    display: block;
+    width: fit-content;
+    max-width: 100%;
+    padding-inline: 0.1em;
+    font-size: clamp(2.25rem, 7vw, 3.75rem);
+    line-height: 1.15;
+    -webkit-text-fill-color: #0d0b2b;
+    background-image: linear-gradient(transparent 22%, #c9c7f2 22% 86%, transparent 86%);
+    -webkit-text-stroke: 0.04em #ffffff;
+    paint-order: stroke fill;
+  }
+
   .astryx-text[data-type="body"] {
     font-family: var(--font-family-body);
     font-size: var(--text-body-size);
@@ -409,6 +436,35 @@
     font-family: var(--font-family-heading);
     font-size: var(--text-display-3-size);
     line-height: var(--text-display-3-leading);
+  }
+
+  .astryx-text[data-type="eyebrow"] {
+    display: inline-block;
+    padding-block: 0.2rem;
+    padding-inline: 0.75rem;
+    background-color: #ffe600;
+    color: #0d0b2b;
+    font-family: var(--font-display-block);
+    font-size: clamp(1rem, 2.4vw, 1.25rem);
+    letter-spacing: 0.04em;
+  }
+
+  .astryx-text[data-type="time"] {
+    font-family: var(--font-display-condensed);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .astryx-text[data-type="track-number"] {
+    display: inline-block;
+    min-width: 1.5ch;
+    flex-shrink: 0;
+    color: #1d14d4;
+    font-family: var(--font-display-condensed);
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1;
   }
 
   .astryx-item[data-selected="selected"] {
@@ -535,6 +591,31 @@
 
   .astryx-section {
     --astryx-section-padding: var(--spacing-3);
+  }
+
+  .astryx-section[data-variant="stage"] {
+    background-color: #f4f4f6;
+    border-radius: 0px;
+  }
+
+  .astryx-section[data-variant="band"] {
+    background-color: #1d14d4;
+    border-radius: 0px;
+  }
+
+  .astryx-section[data-variant="panel"] {
+    background-color: #ffffff;
+    border-width: 2px;
+    border-style: solid;
+    border-color: #0d0b2b;
+    border-radius: 6px;
+    box-shadow: 6px 6px 0 #1d14d4;
+  }
+
+  .astryx-section[data-variant="sky"] {
+    background-color: #e3f3fd;
+    background-image: radial-gradient(ellipse 50% 40% at 15% 20%, rgb(159 211 243 / 0.75), transparent 70%), radial-gradient(ellipse 45% 50% at 85% 75%, rgb(120 190 238 / 0.55), transparent 72%), radial-gradient(ellipse 35% 30% at 60% 10%, rgb(255 255 255 / 0.8), transparent 70%);
+    border-radius: 0px;
   }
 
   .astryx-text[data-color="primary"] { color: var(--color-text-primary); }
@@ -675,7 +756,10 @@
     color-scheme: dark;
     --color-text-primary: var(--color-on-dark);
     --color-icon-primary: var(--color-on-dark);
-    --color-accent: var(--color-on-dark);
+    --color-accent: #ffe600;
+    --color-on-accent: #0d0b2b;
+    --color-text-accent: #ffe600;
+    --focus-outline-color: #ffe600;
   }
 
   [data-astryx-media="light"] {

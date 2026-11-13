@@ -6,11 +6,11 @@ import { useEffect, useRef, type ReactNode } from "react";
  * 静的HTMLの上に動きだけを足す共通部品です。JavaScriptがなくても全ての情報とリンクは見えます。
  *
  * 使い方（どの作品のページでも同じ）：
- * - data-reveal を付けた要素は、画面に入ったときに一度だけ、下からふわっと現れます。
  * - data-depth を付けた領域（ページ上部の絵のある部分）を基準に、スクロール量に応じた
  *   CSS変数（--depth-scene、--depth-art、--depth-turn）を更新します。絵の飾りがこれを使って少しだけ動きます。
  * - data-tilt を付けた要素は、マウスを載せたときだけ少し傾きます（指での操作では動きません）。
  *
+ * 見出しや段落ごとに現れる演出は付けません。動きは各作品の題字の登場（作品のCSS）の1か所に絞っています。
  * 歌詞本文・ヘッダー・認証フォームには付けません。読んでいる文章や入力欄を動かさないためです。
  * スクロール自体の速度や位置は変更しません。OSで「動きを減らす」を選んだ人には何も動かしません。
  */
@@ -26,32 +26,7 @@ export default function AlbumMotion({ children }: { children: ReactNode }) {
     const configure = () => {
       dispose();
       // 設定を途中で切り替えた場合も、その場で演出を止めて通常の読みやすい表示へ戻します。
-      if (preference.matches || typeof root.animate !== "function" || !("IntersectionObserver" in window)) return;
-
-      const animations = new Map<Element, Animation>();
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries
-            .filter(({ isIntersecting }) => isIntersecting)
-            .forEach(({ target }, index) => {
-              observer.unobserve(target);
-              // 画面幅の変更などで読み終えた部分を再演出しないよう、完了はDOMに記録します。
-              if (target.hasAttribute("data-revealed")) return;
-              target.setAttribute("data-revealed", "true");
-              const animation = target.animate(
-                [
-                  { opacity: 0.3, transform: "translate3d(0, 28px, 0)" },
-                  { opacity: 1, transform: "translate3d(0, 0, 0)" },
-                ],
-                { duration: 700, delay: Math.min(index, 3) * 70, easing: "cubic-bezier(.16,1,.3,1)", fill: "none" },
-              );
-              animations.set(target, animation);
-              animation.onfinish = () => animations.delete(target);
-            });
-        },
-        { threshold: 0.1, rootMargin: "0px 0px -24px 0px" },
-      );
-      root.querySelectorAll<HTMLElement>("[data-reveal]").forEach((element) => observer.observe(element));
+      if (preference.matches) return;
 
       const hero = root.querySelector<HTMLElement>("[data-depth]");
       const tiltTarget = root.querySelector<HTMLElement>("[data-tilt]");
@@ -91,33 +66,19 @@ export default function AlbumMotion({ children }: { children: ReactNode }) {
           root.style.setProperty("--tilt-y", `${(x * 5).toFixed(2)}deg`);
         });
       };
-      const settleFocused = (event: FocusEvent) => {
-        // Tabで進んだリンクは、その場で静止させてフォーカス枠を追いやすくします。
-        if (!(event.target instanceof Element)) return;
-        const target = event.target.closest("[data-reveal]");
-        if (target) {
-          animations.get(target)?.cancel();
-          animations.delete(target);
-        }
-      };
-
       window.addEventListener("scroll", scheduleDepth, { passive: true });
       window.addEventListener("resize", scheduleDepth);
       tiltTarget?.addEventListener("pointermove", tilt);
       tiltTarget?.addEventListener("pointerleave", resetTilt);
-      root.addEventListener("focusin", settleFocused);
       updateDepth();
 
       dispose = () => {
-        observer.disconnect();
-        animations.forEach((animation) => animation.cancel());
         cancelAnimationFrame(scrollFrame);
         resetTilt();
         window.removeEventListener("scroll", scheduleDepth);
         window.removeEventListener("resize", scheduleDepth);
         tiltTarget?.removeEventListener("pointermove", tilt);
         tiltTarget?.removeEventListener("pointerleave", resetTilt);
-        root.removeEventListener("focusin", settleFocused);
         ["--depth-scene", "--depth-art", "--depth-turn", "--tilt-x", "--tilt-y"].forEach((property) =>
           root.style.removeProperty(property),
         );

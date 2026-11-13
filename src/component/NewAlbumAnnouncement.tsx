@@ -8,7 +8,6 @@ import { Link } from "@astryxdesign/core/Link";
 import { Text } from "@astryxdesign/core/Text";
 import { ArrowRight, CirclePlay, Sparkles } from "lucide-react";
 import type { Album } from "../data/albums";
-import { site } from "../data/site";
 import Artwork from "./ui/Artwork";
 
 // ランダム生成せず、SSRとブラウザで同じ装飾を描きます。すべて読み上げ対象外です。
@@ -78,12 +77,6 @@ export default function NewAlbumAnnouncement({
 
       <div className="tansan-hero-inner site-container">
         <div className="tansan-hero-copy">
-          {context === "home" && (
-            <div className="tansan-hero-site">
-              <p>{site.name}</p>
-              <h1>群馬大学作曲部 公式サイト</h1>
-            </div>
-          )}
           <motion.p
             className="tansan-kicker"
             initial={false}
@@ -172,7 +165,7 @@ export default function NewAlbumAnnouncement({
                 />
                 <p className="tansan-polaroid-caption">
                   <span>{album.year}</span>
-                  <span>{album.discs.length} DISCS / {tracks} TRACKS</span>
+                  <span>{album.discs.length}枚組 / 全{tracks}曲</span>
                 </p>
               </div>
               {burst > 0 && (

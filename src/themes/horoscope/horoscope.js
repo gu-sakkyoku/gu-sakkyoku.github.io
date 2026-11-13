@@ -281,6 +281,14 @@ export const horoscopeTheme = {
         "fontFamily": "var(--font-family-heading)",
         "fontSize": "var(--text-display-3-size)",
         "lineHeight": "var(--text-display-3-leading)"
+      },
+      "type:album-title": {
+        "fontFamily": "var(--font-display-orbit)",
+        "fontSize": "clamp(2.5rem, 10vw, 6.5rem)",
+        "fontWeight": "700",
+        "lineHeight": "1.1",
+        "letterSpacing": "-0.01em",
+        "textShadow": "0 0.42em 0 #ffe95c"
       }
     },
     "text": {
@@ -323,6 +331,25 @@ export const horoscopeTheme = {
         "fontFamily": "var(--font-family-heading)",
         "fontSize": "var(--text-display-3-size)",
         "lineHeight": "var(--text-display-3-leading)"
+      },
+      "type:eyebrow": {
+        "fontFamily": "var(--font-display-orbit)",
+        "fontSize": "0.875rem",
+        "fontWeight": "700",
+        "letterSpacing": "0.08em",
+        "color": "#8ee6ff"
+      },
+      "type:track-number": {
+        "display": "inline-block",
+        "minWidth": "2.5ch",
+        "flexShrink": "0",
+        "color": "#8ee6ff",
+        "fontFamily": "var(--font-display-orbit)",
+        "fontSize": "0.875rem",
+        "fontWeight": "700",
+        "letterSpacing": "0.08em",
+        "fontVariantNumeric": "tabular-nums",
+        "textShadow": "0 0 12px rgb(142 230 255 / 0.65)"
       }
     },
     "item": {
@@ -440,11 +467,43 @@ export const horoscopeTheme = {
     "card": {
       "base": {
         "padding": "var(--spacing-3)"
+      },
+      "variant:jacket": {
+        "backgroundColor": "rgb(11 9 48 / 0.7)",
+        "borderWidth": "1px",
+        "borderStyle": "solid",
+        "borderColor": "rgb(255 255 255 / 0.5)",
+        "borderRadius": "4px",
+        "boxShadow": "0 0 0 6px rgb(255 255 255 / 0.05), 0 24px 60px rgb(3 2 30 / 0.6), 0 0 56px rgb(91 224 255 / 0.16)"
       }
     },
     "section": {
       "base": {
         "padding": "var(--spacing-3)"
+      },
+      "variant:stage": {
+        "backgroundColor": "#0b0930",
+        "backgroundImage": "radial-gradient(ellipse 55% 45% at 18% 8%, rgb(214 208 255 / 0.30), transparent 70%), radial-gradient(ellipse 70% 60% at 92% 88%, rgb(43 34 201 / 0.78), transparent 72%), radial-gradient(ellipse 45% 40% at 62% 30%, rgb(108 76 230 / 0.42), transparent 70%), linear-gradient(180deg, #171399 0%, #120e6e 46%, #0b0930 100%)",
+        "borderRadius": "0px"
+      },
+      "variant:band": {
+        "backgroundColor": "#0e0b3f",
+        "backgroundImage": "linear-gradient(180deg, #0b0930 0%, #15106a 50%, #0b0930 100%)",
+        "borderTopWidth": "1px",
+        "borderBottomWidth": "1px",
+        "borderStyle": "solid",
+        "borderColor": "rgb(142 230 255 / 0.22)",
+        "borderInlineWidth": "0px",
+        "borderRadius": "0px"
+      },
+      "variant:panel": {
+        "backgroundColor": "rgb(25 21 105 / 0.55)",
+        "backdropFilter": "blur(12px)",
+        "borderWidth": "1px",
+        "borderStyle": "solid",
+        "borderColor": "rgb(255 255 255 / 0.16)",
+        "borderRadius": "6px",
+        "boxShadow": "0 24px 64px rgb(3 2 30 / 0.55)"
       }
     }
   },
@@ -453,7 +512,10 @@ export const horoscopeTheme = {
       "color-scheme": "dark",
       "--color-text-primary": "var(--color-on-dark)",
       "--color-icon-primary": "var(--color-on-dark)",
-      "--color-accent": "var(--color-on-dark)"
+      "--color-accent": "#8ee6ff",
+      "--color-on-accent": "#0b0930",
+      "--color-text-accent": "#8ee6ff",
+      "--focus-outline-color": "#fff07a"
     }
   },
   __onLight: {

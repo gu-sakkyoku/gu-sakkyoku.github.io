@@ -281,6 +281,17 @@ export const nijiiroTheme = {
         "fontFamily": "var(--font-family-heading)",
         "fontSize": "var(--text-display-3-size)",
         "lineHeight": "var(--text-display-3-leading)"
+      },
+      "type:album-title": {
+        "fontFamily": "var(--font-display-slant), var(--font-display-pop)",
+        "fontSize": "clamp(4rem, 17vw, 10rem)",
+        "lineHeight": "1.05",
+        "letterSpacing": "0.02em",
+        "backgroundImage": "linear-gradient(95deg, #ff5fa2 0%, #12b3a0 22%, #8a4dff 45%, #2f8fff 64%, #ffa81f 84%, #ff5fa2 100%)",
+        "backgroundClip": "text",
+        "WebkitBackgroundClip": "text",
+        "WebkitTextFillColor": "transparent",
+        "filter": "drop-shadow(0.02em 0 0 #ffffff) drop-shadow(-0.02em 0 0 #ffffff) drop-shadow(0 0.02em 0 #ffffff) drop-shadow(0 -0.02em 0 #ffffff) drop-shadow(0.055em 0.055em 0 #2f2438)"
       }
     },
     "text": {
@@ -323,6 +334,30 @@ export const nijiiroTheme = {
         "fontFamily": "var(--font-family-heading)",
         "fontSize": "var(--text-display-3-size)",
         "lineHeight": "var(--text-display-3-leading)"
+      },
+      "type:eyebrow": {
+        "display": "inline-block",
+        "paddingBlock": "0.25rem",
+        "paddingInline": "0.75rem",
+        "borderWidth": "2px",
+        "borderStyle": "solid",
+        "borderColor": "#2f2438",
+        "backgroundColor": "#ffffff",
+        "color": "#2f2438",
+        "boxShadow": "3px 3px 0 #2f2438",
+        "fontFamily": "var(--font-display-slant)",
+        "fontSize": "0.875rem",
+        "letterSpacing": "0.04em"
+      },
+      "type:track-number": {
+        "display": "inline-block",
+        "minWidth": "2.25ch",
+        "flexShrink": "0",
+        "fontFamily": "var(--font-display-slant)",
+        "fontSize": "1.75rem",
+        "lineHeight": "1",
+        "fontVariantNumeric": "tabular-nums",
+        "color": "#2f2438"
       }
     },
     "item": {
@@ -440,11 +475,44 @@ export const nijiiroTheme = {
     "card": {
       "base": {
         "padding": "var(--spacing-3)"
+      },
+      "variant:jacket": {
+        "backgroundColor": "#ffffff",
+        "borderWidth": "3px",
+        "borderStyle": "solid",
+        "borderColor": "#2f2438",
+        "borderRadius": "4px",
+        "boxShadow": "12px 12px 0 #2f2438"
       }
     },
     "section": {
       "base": {
         "padding": "var(--spacing-3)"
+      },
+      "variant:stage": {
+        "backgroundColor": "#a9b1ff",
+        "backgroundImage": "linear-gradient(115deg, transparent 0 62%, #dffbe0 62% 100%), linear-gradient(200deg, #ffc9dd 0 30%, transparent 30% 100%)",
+        "borderBottomWidth": "3px",
+        "borderBottomStyle": "solid",
+        "borderBottomColor": "#2f2438",
+        "borderRadius": "0px"
+      },
+      "variant:band": {
+        "backgroundColor": "#eceaff",
+        "backgroundImage": "linear-gradient(rgb(143 140 255 / 0.18) 1px, transparent 1px), linear-gradient(90deg, rgb(143 140 255 / 0.18) 1px, transparent 1px)",
+        "backgroundSize": "24px 24px",
+        "borderBlockWidth": "3px",
+        "borderBlockStyle": "solid",
+        "borderBlockColor": "#2f2438",
+        "borderRadius": "0px"
+      },
+      "variant:panel": {
+        "backgroundColor": "#ffffff",
+        "borderWidth": "3px",
+        "borderStyle": "solid",
+        "borderColor": "#2f2438",
+        "borderRadius": "14px",
+        "boxShadow": "8px 8px 0 #a9b1ff"
       }
     }
   },
